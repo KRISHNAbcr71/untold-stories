@@ -271,9 +271,11 @@ const googleAuthCallback = (req, res, next) => {
             const message = info?.message ||
                 'Google sign-in failed. Please try again.';
 
-            return res.redirect(
-                `/signup?error=${encodeURIComponent(message)}`
-            );
+            // return res.redirect(
+            //     `/login?error=${encodeURIComponent(message)}`
+            // );
+            req.session.message = message
+            return res.redirect('/login')
         }
 
         req.session.user = {
@@ -284,6 +286,305 @@ const googleAuthCallback = (req, res, next) => {
     })(req, res, next);
 };
 
+// LOGIN
+
+const loadLogin = (req,res)=>{
+    const message = req.session.message
+    delete req.session.message
+    return res.render('login',{
+        message: message
+    })
+}
+
+
+const login = async (req,res)=>{
+    try {
+        const {email,password} = req.body
+        if(!email || !password){
+            req.session.message = 'Email and password are required.';
+            return res.redirect('/login');
+        }
+
+        const user = await User.findOne({email:email.trim()})
+        if(!user){
+            req.session.message = 'Invalid email or password.';
+            return res.redirect('/login');
+        }
+        if(!user.password){
+            req.session.message = 'Invalid email or password.';
+            return res.redirect('/login');
+        }
+
+        const isPasswordValid = await bcrypt.compare(password, user.password)
+        if(!isPasswordValid){
+            req.session.message = 'Invalid email or password.';
+            return res.redirect('/login');
+        }
+
+        if(user.isBlocked){
+            req.session.message = 'Your account has been blocked'
+            return res.redirect('/login')
+        }
+
+        req.session.user = {
+            id: user._id
+        }
+
+        return res.redirect('/')
+        
+    } catch (error) {
+        console.error('Login error: ',error)
+        return res.status(500).render('500')
+    }
+}
+
+
+const loadForgotPassword = (req,res) => {
+    const message = req.session.message
+    const successMessage = req.session.successMessage
+
+    delete req.session.message
+    delete req.session.successMessage
+
+    return res.render('forgotPassword',{
+        message: message,
+        successMessage: successMessage
+    })
+}
+
+const forgotPassword = async (req,res) => {
+    try {
+        const {email} = req.body
+        if(!email || !email.trim()){
+            return res.status(400).render('forgotPassword',{
+                message: 'Please enter your email address'
+            })
+        }
+
+        const user = await User.findOne({email:email.trim()})
+        if(!user){
+            req.session.message = 'No account found with this email address.'
+            return res.redirect('/verify-forgot-password-otp')
+        }
+
+
+        const otp = crypto.randomInt(100000,1000000).toString()
+        const hashedOtp = await bcrypt.hash(otp,10)
+        const otpExpiresAt = Date.now() + 60 * 1000
+
+        req.session.resetPasswordOtp = {
+            otp: hashedOtp,
+            email: email.trim(),
+            expiresAt: otpExpiresAt
+        }
+
+        const emailSent = await sendVerificationEmail(email.trim(),otp,'password-reset')
+        if(!emailSent){
+            delete req.session.resetPasswordOtp
+            req.session.message = 'Unable to send OTP. Please try again'
+            return res.redirect('/forgot-password')
+        }
+
+
+        req.session.successMessage = 'OTP sent successfully to your email'
+        return res.redirect('/forgot-password?otpSent=true')
+
+    } catch (error) {
+        console.error('Forgot password error:', error);
+        return res.status(500).render('forgotPassword', {
+            message: 'Something went wrong. Please try again.'
+        });
+    }
+}
+
+
+const loadVerifyForgotPasswordOtp = (req,res)=>{
+    const resetPasswordOtp = req.session.resetPasswordOtp
+    if(!resetPasswordOtp){
+        return res.redirect('/forgot-password')
+    }
+
+    const successMessage = req.session.successMessage
+    delete req.session.successMessage
+
+    return res.render('verifyForgotPasswordOtp',{
+        email: resetPasswordOtp.email,
+        otpExpiresAt: resetPasswordOtp.expiresAt,
+        successMessage: successMessage
+    })
+}
+
+
+
+const verifyForgotPasswordOtp = async(req,res) =>{
+    try {
+       const resetPasswordOtp = req.session.resetPasswordOtp
+       if(!resetPasswordOtp){
+        return res.status(400).json({
+            icon: 'error',
+            message: 'Your password reset session has expired. Please try again.'
+        })
+       } 
+
+       if(Date.now() > resetPasswordOtp.expiresAt){
+        delete req.session.resetPasswordOtp
+        return res.status(400).json({
+            icon: 'errror',
+            message: 'Your OTP has expired. Please request a new one.'
+        })
+       }
+
+       const {otp1,otp2,otp3,otp4,otp5,otp6} = req.body
+       const enteredOtp = otp1+otp2+otp3+otp4+otp5+otp6
+       const isOtpValid = await bcrypt.compare(enteredOtp, resetPasswordOtp.otp)
+       if(!isOtpValid){
+        return res.status(400).json({
+            icon: 'error',
+            message: 'Invalid OTP. Please try again'
+        })
+       }
+
+       req.session.resetPasswordOtp.verified = true
+
+       return res.json({
+        icon: 'success',
+        message: 'OTP verified successfully.',
+        redirectToPasswordReset: true
+       })
+
+
+    } catch (error) {
+        console.error('Forgot password OTP verification error:', error);
+
+        return res.status(500).json({
+            icon: 'error',
+            message: 'Something went wrong. Please try again.'
+        });
+    }
+}
+
+
+const resendForgotPasswordOtp = async(req,res) =>{
+    try {
+        const resetPasswordOtp = req.session.resetPasswordOtp
+        if(!resetPasswordOtp){
+            return res.status(400).json({
+                icon:'error',
+                message:'Your password reset session has expired. Please try again.'
+            })
+        }
+
+        const otp = crypto.randomInt(100000,1000000).toString()
+        const hashedOtp = await bcrypt.hash(otp,10)
+        const otpExpiresAt = Date.now() + 60 * 1000
+
+        req.session.resetPasswordOtp = {
+            otp: hashedOtp,
+            email: resetPasswordOtp.email,
+            expiresAt: otpExpiresAt
+        }
+
+        const emailSent = await sendVerificationEmail(resetPasswordOtp.email, otp, 'reset-password')
+
+        if(!emailSent){
+            delete req.session.resetPasswordOtp
+            return res.status(500).json({
+                icon:'error',
+                message:'Unable to send the OTP. Please try again.'
+            })
+        }
+
+        return res.json({
+            icon:'success',
+            message:'A new OTP has been sent to your email.',
+            otpExpiresAt:otpExpiresAt
+        })
+
+
+    } catch (error) {
+        console.error('Resend forgot password OTP error:', error);
+
+        return res.status(500).json({
+            icon: 'error',
+            message: 'Something went wrong. Please try again.'
+        });
+
+    }
+}
+
+
+const loadResetPassword = (req,res) =>{
+    try {
+        const resetPasswordOtp = req.session.resetPasswordOtp
+        if(!resetPasswordOtp || !resetPasswordOtp.verified){
+            return res.redirect('/forgot-password')
+        }
+
+        return res.render('resetPassword')
+
+
+    } catch (error) {
+        console.error('Load reset password page error:', error);
+
+        return res.status(500).render('500');
+    }
+
+}
+
+
+const resetPassword = async (req,res) =>{
+    try {
+        const resetPasswordOtp = req.session.resetPasswordOtp
+        if(!resetPasswordOtp || !resetPasswordOtp.verified){
+            return res.status(400).redirect('/forgot-password')
+        }
+
+        const {newPassword,confirmPassword} = req.body
+        if(!newPassword && !confirmPassword){
+            return res.status(400).render('resetPassword',{
+                message: 'Please fill in both password fields'
+            })
+        }
+
+        const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9\s])\S{8,}$/
+        if(!passwordPattern.test(newPassword)){
+            return res.status(400).render('resetPassword',{
+                message: 'Use at least 8 characters with uppercase, lowercase, a number and a special character. Spaces are not allowed'
+            })
+        }
+
+        if(newPassword !== confirmPassword){
+            return res.status(400).render('resetPassword',{
+                message: 'Passwords do not match'
+            })
+        }
+
+        const user = await User.findOne({email:resetPasswordOtp.email})
+        if(!user){
+            delete req.session.resetPasswordOtp
+            return res.redirect('/forgot-password')
+        }
+
+        const hashedPassword = await bcrypt.hash(newPassword,10)
+        user.password = hashedPassword
+        await user.save()
+
+        delete req.session.resetPasswordOtp
+
+        return res.json({
+            icon:'success',
+            message:'Your password has been reset successfully!',
+            redirectUrl: '/login'
+        })
+
+
+    } catch (error) {
+        console.error('Reset password error:', error);
+
+        return res.status(500).render('500');
+    }
+}
+
 
 module.exports = {
     loadHome,
@@ -292,5 +593,14 @@ module.exports = {
     loadVerifyOtp,
     verifyOtp,
     resendOtp,
-    googleAuthCallback
+    googleAuthCallback,
+    loadLogin,
+    login,
+    loadForgotPassword,
+    forgotPassword,
+    loadVerifyForgotPasswordOtp,
+    verifyForgotPasswordOtp,
+    resendForgotPasswordOtp,
+    loadResetPassword,
+    resetPassword
 }

@@ -311,9 +311,6 @@
     <!-- END: MainContent -->
     <%- include('../partials/user/footer')%>
 
-
-
-
 </body>
 
 <script>
@@ -408,18 +405,16 @@
         phoneError.textContent = ''
     })
 
-    password.addEventListener('input',()=>{
-        passwordError.textContent = ''
-        if(confirmPassword !== ''){
-            confirmPasswordError.textContent = ''
-        }
+    password.addEventListener('input', () => {
+    passwordError.textContent = ''
+    confirmPasswordError.textContent = ''
     })
 
 
 
 
 
-
+    // password visibility button
     const togglePassword = document.getElementById('togglePassword')
     togglePassword.addEventListener('click', () =>{
         if(password.type === 'password'){
@@ -450,7 +445,5 @@
 
 
 </script>
-
-
 
 </html>
