@@ -127,7 +127,7 @@
                                     your bibliophile credentials to access your curatorial vaults and private
                                     reservations.</p>
                             </div>
-                            <form id="loginForm" action="/login" class="space-y-4" method="POST" novalidate>
+                            <form id="loginForm" action="/login" class="space-y-4" method="POST" novalidate autocomplete="off">
                                 <% if(typeof message !== 'undefined' && message) {%>
                                     <div id="error-message" class="bg-red-50 border border-red-200 text-red-700 text-sm rounded-md px-4 py-3">
                                         <%= message%>
@@ -153,7 +153,7 @@
                                                 </div>
                                                 <input
                                                     class="w-full bg-[#f8f4ee] border border-[#e5dcd0] text-[#25221f] text-xs rounded-xl pl-10 pr-3.5 py-3 focus:ring-1 focus:ring-[#9a532d] focus:bg-white placeholder:text-[#888179] transition"
-                                                    id="email" name="email" placeholder="eleanor.vance@archival.org" 
+                                                    id="email" name="email" placeholder="eleanor.vance@archival.org" autocomplete="off"
                                                     type="email">
                                             </div>
                                             <p id="emailError" class="text-red-600 text-sm mt-1"></p>   
@@ -187,7 +187,7 @@
                                                 </div>
                                                 <input
                                                     class="w-full bg-[#f8f4ee] border border-[#e5dcd0] text-[#25221f] text-xs rounded-xl pl-10 pr-10 py-3 focus:ring-1 focus:ring-[#9a532d] focus:bg-white placeholder:text-[#888179] transition"
-                                                    id="password" name="password" placeholder="••••••••"
+                                                    id="password" name="password" placeholder="••••••••" autocomplete="new-password"
                                                     type="password">
 
                                                 <button aria-label="Toggle password visibility"
