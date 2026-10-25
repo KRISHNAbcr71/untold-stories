@@ -22,7 +22,15 @@ router.get(
     userController.googleAuthCallback
 );
 
+router.get('/login',userController.loadLogin)
+router.post('/login',userController.login)
 
-
+router.get('/forgot-password',userController.loadForgotPassword)
+router.post('/forgot-password',userController.forgotPassword)
+router.get('/verify-forgot-password-otp',userController.loadVerifyForgotPasswordOtp)
+router.post('/verify-forgot-password-otp',userController.verifyForgotPasswordOtp)
+router.post('/resend-forgot-password-otp',userController.resendForgotPasswordOtp)
+router.get('/reset-password',userController.loadResetPassword)
+router.post('/reset-password',userController.resetPassword)
 
 module.exports = router

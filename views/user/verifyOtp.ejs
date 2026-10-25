@@ -214,22 +214,12 @@
                     <span>Verify</span>
                 </button>
             </form>
-            <!-- Subtext / Return Link -->
-            <div class="text-center mt-7 pt-4 border-t border-[#f4ede3]">
-                <a class="inline-flex items-center gap-1.5 text-xs text-[#7d7162] hover:text-[#1c1b1a] transition-colors"
-                    href="#">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-linecap="round"
-                        stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24">
-                        <line x1="19" x2="5" y1="12" y2="12"></line>
-                        <polyline points="12 19 5 12 12 5"></polyline>
-                    </svg>
-                    <span>Return to enrollment or change email</span>
-                </a>
-            </div>
         </section>
     </main>
     <!-- END: VerificationContentSection -->
     <%- include('../partials/user/footer')%>
+</body>
+
     <!-- Interactive script to handle OTP input focusing -->
      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script data-purpose="otp-input-autofocus">
@@ -439,6 +429,4 @@
 
     </script>
 
-
-</body>
 </html>
