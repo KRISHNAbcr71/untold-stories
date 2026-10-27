@@ -5,6 +5,7 @@ const connectDB = require('./config/db')
 require('dotenv').config()
 const loadCurrentUser = require('./middlewares/loadCurrentUser')
 const passport = require('./config/passport')
+const nocache = require('nocache')
 const userRoutes = require('./routes/userRoutes')
 
 
@@ -30,6 +31,8 @@ app.use(session({
         sameSite:'lax'
     }
 }))
+
+app.use(nocache())
 
 app.use(passport.initialize())
 app.use(loadCurrentUser)

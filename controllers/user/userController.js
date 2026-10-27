@@ -289,6 +289,10 @@ const googleAuthCallback = (req, res, next) => {
 // LOGIN
 
 const loadLogin = (req,res)=>{
+    if(req.session.user){
+        return res.redirect('/')
+    }
+    
     const message = req.session.message
     delete req.session.message
     return res.render('login',{
@@ -586,6 +590,20 @@ const resetPassword = async (req,res) =>{
 }
 
 
+
+const logout = (req,res) =>{
+    req.session.destroy((error)=>{
+        if(error){
+            console.error('Logout error:', error);
+            return res.status(500).render('500');
+        }
+        res.clearCookie('connect.sid')
+        return res.redirect('/')
+    })
+}
+
+
+
 module.exports = {
     loadHome,
     loadSignup,
@@ -602,5 +620,6 @@ module.exports = {
     verifyForgotPasswordOtp,
     resendForgotPasswordOtp,
     loadResetPassword,
-    resetPassword
+    resetPassword,
+    logout
 }
