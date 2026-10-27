@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login | The Untold Stories</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        archive: ['Cormorant Garamond', 'Georgia', 'serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif']
+                    }
+                }
+            }
+        };
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #FAF7F2;
+            color: #292524;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-archive {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        .archival-card-shadow {
+            box-shadow: 0 20px 40px -15px rgba(45, 35, 20, 0.07),
+                0 0 0 1px rgba(220, 210, 195, 0.4);
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="border-b border-[#EAE3D6]">
+        <div class="max-w-7xl mx-auto px-6 py-5 flex items-center gap-3">
+
+            <div class="w-10 h-10 rounded border border-[#E5DEC9]
+                bg-[#F5EFE6] flex items-center justify-center text-[#78350F]">
+
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24">
+                    <path d="M12 6.253v13m0-13C10.832 5.477 9.246 5
+                    7.5 5S4.168 5.477 3 6.253v13C4.168
+                    18.477 5.754 18 7.5 18s3.332.477
+                    4.5 1.253m0-13C13.168 5.477
+                    14.754 5 16.5 5c1.747 0 3.332.477
+                    4.5 1.253v13C19.832 18.477
+                    18.247 18 16.5 18c-1.746 0-3.332.477
+                    -4.5 1.253" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </div>
+
+            <div>
+                <h1 class="font-archive text-2xl font-semibold text-[#1F1D1A]">
+                    The Untold Stories
+                </h1>
+
+                <p class="text-[9px] uppercase tracking-[0.2em] font-medium text-[#A66038]">
+                    Rare Editions & Literary Archive
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Login Container -->
+    <main class="flex-grow flex items-center justify-center px-5 py-12">
+
+        <div class="max-w-6xl w-full bg-white rounded-lg
+            archival-card-shadow overflow-hidden border border-[#EBE3D7]
+            grid grid-cols-1 lg:grid-cols-2">
+
+            <!-- Left Panel -->
+            <section class="bg-[#F7F4EE] p-8 sm:p-10 lg:p-12
+                border-b lg:border-b-0 lg:border-r border-[#EFE8DC]
+                flex flex-col justify-between">
+
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1
+                        rounded bg-[#EFE6D8] border border-[#E2D5C3]
+                        text-[#78543E] text-[11px] font-medium tracking-wider mb-6">
+
+                        <span>✦</span>
+                        CURATORIAL GOVERNANCE § AD-01
+                    </div>
+
+                    <h2 class="font-archive text-4xl sm:text-5xl
+                        text-[#1E1B18] leading-tight mb-5">
+
+                        Restricted Vault Custody &amp;
+                        Curatorial Administration.
+                    </h2>
+
+                    <p class="text-sm leading-relaxed text-[#595248] mb-8">
+                        Authorized personnel portal for managing book
+                        collections, inventory records, customer orders,
+                        and catalogue archives. Administrative access
+                        is restricted and monitored.
+                    </p>
+
+                    <!-- Archival Image -->
+                    <div class="rounded overflow-hidden border border-[#DED4C3]
+                        shadow-sm aspect-[16/10] bg-[#2E2822]">
+
+                        <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1000&q=80"
+                            alt="Bookshelves in a historic library" class="w-full h-full object-cover">
+                    </div>
+                </div>
+
+                <!-- Quote -->
+                <div class="bg-[#EFEAE0] border border-[#E2DACD]
+                    rounded p-5 mt-8">
+
+                    <blockquote class="font-archive italic text-xl
+                        text-[#2F2922] leading-snug mb-2">
+
+                        “Only those entrusted with the memory of the
+                        past may shape the shelves of tomorrow.”
+                    </blockquote>
+
+                    <p class="text-[10px] tracking-[0.16em] uppercase
+                        text-[#885A3F] font-semibold">
+                        — Chief Archivist Log
+                    </p>
+                </div>
+            </section>
+
+            <!-- Right Panel -->
+            <section class="bg-white p-8 sm:p-10 lg:p-14
+                flex flex-col justify-between">
+
+                <div>
+                    <!-- Access Badge -->
+                    <div class="inline-flex items-center gap-2 px-3 py-1
+                        rounded bg-[#FBEFEA] border border-[#F5D8CE]
+                        text-[#A25032] text-[11px] font-medium tracking-wider mb-6">
+
+                        <span>🔒</span>
+                        RESTRICTED ACCESS
+                    </div>
+
+                    <h2 class="font-archive text-4xl
+                        text-[#1A1816] mb-3">
+
+                        Administrator Login
+                    </h2>
+
+                    <p class="text-sm leading-relaxed text-[#686055] mb-8">
+                        Enter your administrative credentials to access
+                        the management portal.
+                    </p>
+
+                    <!-- Temporary UI-only form -->
+                    <form id="adminLoginForm" class="space-y-6" action="/admin/login" method="POST" novalidate>
+                        <% if (typeof message !== 'undefined' && message) { %>
+                            <p class="text-red-600 text-sm mb-4">
+                            <%= message %>
+                            </p>
+                        <% } %>
+
+                        <!-- Email -->
+                        <div>
+                            <label for="email" class="block text-[11px] uppercase tracking-wider
+                                font-semibold text-[#3D372E] mb-2">
+
+                                Administrator Email
+                            </label>
+
+                            <input type="email" id="email" name="email" placeholder="Enter your email address"
+                                autocomplete="username" required class="w-full px-4 py-3 bg-[#F9F7F4]
+                                border border-[#E6E0D5] rounded text-sm
+                                focus:outline-none focus:ring-1
+                                focus:ring-[#8C5E3C]
+                                focus:border-[#8C5E3C]">
+                            <p id="emailError" class="text-red-600 text-sm mt-1"></p>
+                        </div>
+                        
+                        <!-- Password -->
+                        <div>
+                            <div class="flex items-center justify-between mb-2">
+                                <label for="password" class="text-[11px] uppercase tracking-wider
+                                    font-semibold text-[#3D372E]">
+
+                                    Password
+                                </label>
+                            </div>
+
+                            <div class="relative">
+                                <input type="password" id="password" name="password" placeholder="Enter your password"
+                                    autocomplete="current-password" required class="w-full px-4 pr-16 py-3 bg-[#F9F7F4]
+                                    border border-[#E6E0D5] rounded text-sm
+                                    focus:outline-none focus:ring-1
+                                    focus:ring-[#8C5E3C]
+                                    focus:border-[#8C5E3C]">
+
+                                <button aria-label="Toggle password visibility"
+                                                    class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#7d756d] hover:text-[#25221f]"
+                                                    type="button" id="togglePassword">
+
+                                    <!-- Eye icon -->
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                                                        stroke-width="1.8" viewBox="0 0 24 24">
+
+                                        <path d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"
+                                                            stroke-linecap="round" stroke-linejoin="round" />
+
+                                        <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round"
+                                                            stroke-linejoin="round"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <p id="passwordError" class="text-red-600 text-sm mt-1"></p>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit" class="w-full bg-[#272522] hover:bg-[#181614]
+                            text-white py-4 px-6 rounded text-xs
+                            font-semibold tracking-wider uppercase
+                            transition-colors duration-200">
+
+                            Authenticate & Enter Portal →
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Footer Note -->
+                <div class="mt-12 text-center">
+                    <p class="text-[9px] uppercase tracking-[0.2em]
+                        font-medium text-[#A3998C]">
+
+                        The Untold Stories • Administration
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="border-t border-[#EAE3D6] py-5 px-6 text-center">
+        <p class="text-[10px] tracking-wider text-[#786F63]">
+            © <%= new Date().getFullYear() %> The Untold Stories
+        </p>
+    </footer>
+
+    <!-- Temporary UI-only JavaScript -->
+    <script>
+        const emailInput = document.getElementById('email')
+        const passwordInput = document.getElementById('password');
+        const emailError = document.getElementById('emailError')
+        const passwordError = document.getElementById('passwordError')
+        const togglePassword = document.getElementById('togglePassword');
+        const adminLoginForm = document.getElementById('adminLoginForm');
+
+        togglePassword.addEventListener('click', function () {
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+            } else {
+                passwordInput.type = 'password';
+            }
+        });
+
+        // Prevent submission until the backend is connected.
+        adminLoginForm.addEventListener('submit', function (event) {
+            const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+            if(emailInput.value.trim() === ''){
+                event.preventDefault()
+                emailError.textContent = 'Email is required'
+            }else if(!emailPattern.test(emailInput.value.trim())){
+                event.preventDefault()
+                emailError.textContent = 'Please enter a valid email address'
+            }else{
+                emailError.textContent = ''
+            }
+
+            if(passwordInput.value.trim() === ''){
+                event.preventDefault()
+                passwordError.textContent = 'Password is required'
+            }else{
+                passwordError.textContent = ''
+            }
+        });
+
+        emailInput.addEventListener('input',()=>{
+            emailError.textContent = ''
+        })
+
+        passwordInput.addEventListener('input',()=>{
+            passwordError.textContent = ''
+        })
+
+
+    </script>
+
+</body>
+
+</html>

@@ -6,7 +6,8 @@ require('dotenv').config()
 const loadCurrentUser = require('./middlewares/loadCurrentUser')
 const passport = require('./config/passport')
 const nocache = require('nocache')
-const userRoutes = require('./routes/userRoutes')
+const userRouter = require('./routes/userRouter')
+const adminRouter = require('./routes/adminRouter')
 
 
 const app = express()
@@ -36,7 +37,8 @@ app.use(nocache())
 
 app.use(passport.initialize())
 app.use(loadCurrentUser)
-app.use('/',userRoutes)
+app.use('/',userRouter)
+app.use('/admin',adminRouter)
 
 
 app.use((req,res)=>{
