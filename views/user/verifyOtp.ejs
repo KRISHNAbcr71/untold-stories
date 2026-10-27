@@ -302,7 +302,7 @@
                         })
                     })
 
-                    const result = await response.json()
+                    const result = await response.json().catch(()=>({}))
 
                     if(!response.ok){
                         await Swal.fire({
@@ -385,13 +385,13 @@
                         method: 'POST'
                     })
 
-                    const result = await response.json()
+                    const result = await response.json().catch(() => ({}));
 
                     if(!response.ok){
                         await Swal.fire({
                             icon: 'error',
                             title: 'Unable to resend OTP',
-                            text: 'Please try again'
+                            text: result.message || 'Please try again'
                         })
                         resendOtp.disabled = true
                         return
