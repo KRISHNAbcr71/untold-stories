@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>The Storykeepers - The Untold Stories Admin</title>
+    <!-- Google Fonts: Cormorant Garamond (Classical Serif) & Inter (Clean UI Sans) -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Tailwind Configuration for Archival / Parchment Theme -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        parchment: {
+                            50: '#fbf9f5',
+                            100: '#f7f4ed',
+                            200: '#efe9dc',
+                            300: '#e3d9c6',
+                            400: '#d1c1a5',
+                            500: '#b8a180',
+                            800: '#423b32',
+                            900: '#2b2620',
+                        },
+                        archival: {
+                            charcoal: '#1c1b1a',
+                            ink: '#262422',
+                            muted: '#736d64',
+                            border: '#e4ded3',
+                            crimson: '#8a2b2b',
+                            crimsonBg: '#faefee',
+                            gold: '#a68249',
+                            green: '#2d6a4f',
+                            roseBg: '#eae1d9',
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- BEGIN: Custom Archival Styles -->
+    <style data-purpose="typography">
+        body {
+            background-color: #fbf9f5;
+            color: #262422;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-archive-serif {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+    </style>
+    <style data-purpose="table-layout">
+        /* Subtle custom scrollbar and crisp border lines for ledger styling */
+        .ledger-table th,
+        .ledger-table td {
+            border-bottom: 1px solid #eee8dc;
+        }
+
+        .ledger-table tr:hover {
+            background-color: rgba(247, 244, 237, 0.6);
+        }
+    </style>
+    <!-- END: Custom Archival Styles -->
+</head>
+<%- include('../partials/admin/header')%>
+<body class="min-h-screen flex flex-col bg-[#fbf9f5] text-[#262422] antialiased selection:bg-[#d1c1a5] selection:text-black">
+
+    <!-- BEGIN: MainContent -->
+    <main class="flex-1 w-full max-w-[1520px] mx-auto px-6 lg:px-12 py-8">
+        <!-- BEGIN: TitleSection -->
+        <section class="mb-8" data-purpose="page-introduction">
+            <h2 class="text-3xl lg:text-4xl font-normal font-archive-serif text-[#1c1b1a] tracking-tight">
+                User Management</h2>
+            <p class="text-xs lg:text-[13px] text-[#736d64] mt-1.5 font-normal tracking-wide">
+                Manage all registered customers of The Untold Stories. View customer details, search for users, and
+                manage account access by blocking or unblocking accounts.
+            </p>
+        </section>
+        <!-- END: TitleSection -->
+        <!-- BEGIN: MetricCardsSection -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-7" data-purpose="patron-metrics">
+            <!-- Metric 1: Total Patrons Ledger -->
+            <div
+                class="bg-[#f5f1e8]/75 border border-[#e5dfd2] rounded p-4 relative flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+                <div>
+                    <div class="flex items-start justify-between">
+                        <span
+                            class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">
+                            Total Customers
+                        </span>
+
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.5" viewbox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="9" cy="7" r="4"></circle>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                        </svg>
+                    </div>
+                    <div class="text-2xl lg:text-3xl font-normal font-archive-serif text-[#1c1b1a] mt-2 tracking-tight">
+                        <%= totalCustomers.toLocaleString('en-IN') %>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between mt-3 pt-1 border-t border-[#ece4d5]/60 text-[11px]">
+                    <span class="text-[#8c8578] text-[10.5px]">
+                        Total registered customers
+                    </span>
+                </div>
+            </div>
+            <!-- Metric 2: Active Clearance -->
+            <div
+                class="bg-[#f5f1e8]/75 border border-[#e5dfd2] rounded p-4 relative flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.02)]">
+                <div>
+                    <div class="flex items-start justify-between">
+                        <span
+                            class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">
+                            Active Accounts
+                        </span>
+                        <!-- Shield Clearance Icon -->
+                        <svg class="w-4 h-4 text-[#8a8071]" fill="none" stroke="currentColor" stroke-width="1.5"
+                            viewbox="0 0 24 24">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        </svg>
+                    </div>
+                    <div class="flex items-baseline space-x-2 mt-2">
+                        <span class="text-2xl lg:text-3xl font-normal font-archive-serif text-[#1c1b1a] tracking-tight">
+                            <%= activeAccounts.toLocaleString('en-IN') %>
+                        </span>
+                    </div>
+                </div>
+                <div
+                    class="flex items-center space-x-1.5 mt-3 pt-1 border-t border-[#ece4d5]/60 text-[10.5px] text-[#787165]">
+                    <span>Users with active accounts</span>
+                </div>
+            </div>
+        </section>
+        <!-- END: MetricCardsSection -->
+        <!-- BEGIN: SearchAndFilters -->
+        <section class="space-y-2 mb-4" data-purpose="ledger-controls">
+            <div class="flex flex-col md:flex-row gap-2.5 items-stretch">
+                <!-- Search Input -->          
+                <form action="/admin/users" method="GET" class="relative flex-1">
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none">
+                            <svg class="h-4 w-4 text-[#8a8071]" fill="currentColor" viewBox="0 0 20 20">
+                                <path clip-rule="evenodd"
+                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                    fill-rule="evenodd">
+                                </path>
+                            </svg>
+                        </div>
+                        <input
+                            class="block w-full pl-10 pr-9 py-2 text-xs bg-white/70 border border-[#dfd7c8] rounded text-[#262422] placeholder-[#9c9486] focus:outline-none focus:ring-1 focus:ring-[#8c7a60] focus:border-[#8c7a60]"
+                            type="text"
+                            name="search"
+                            value="<%= search || '' %>"
+                            placeholder="Search patron by name or email..."
+                        />
+                        <button
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9c9486] hover:text-[#262422]"
+                            type="button"
+                            onclick="window.location.href='/admin/users'"
+                            aria-label="Clear search">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path d="M6 18L18 6M6 6l12 12"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Status Filter Dropdown & Refresh Button -->
+                <div class="flex items-center space-x-2">
+                    <div class="relative min-w-[170px]">
+                        <select
+                            id="statusFilter"
+                            class="w-full text-[11px] font-medium bg-white/70 border border-[#dfd7c8] rounded py-2 pl-3 pr-8 text-[#4a443a] focus:outline-none focus:ring-1 focus:ring-[#8c7a60] appearance-none">
+                            <option value="all" <%= status === 'all' ? 'selected' : '' %> >STATUS: All Statuses</option>
+                            <option value="active" <%= status === 'active'? 'selected' : '' %>>STATUS: Active Users</option>
+                            <option value="blocked" <%= status === 'blocked' ? 'selected' : '' %>>STATUS: Blocked Users</option>
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#736d64]">
+                            <svg class="w-3.5 h-3.5" fill="currentColor" viewbox="0 0 20 20">
+                                <path clip-rule="evenodd"
+                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                    fill-rule="evenodd"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <button
+                        class="p-2 border border-[#dfd7c8] bg-white/70 hover:bg-white text-[#736d64] hover:text-[#1c1b1a] rounded transition-colors"
+                        title="Reload Customer List" type="button" id="refreshCustomers" >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24">
+                            <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+            <!-- Record Count Notice -->
+            <div class="flex justify-end pt-1">
+                <span class="text-[9.5px] uppercase font-semibold tracking-[0.16em] text-[#8c8577]">
+                    Showing <%= users.length %> of <%= totalUsers.toLocaleString('en-IN') %> Registered Records
+                </span>
+            </div>
+        </section>
+        <!-- END: SearchAndFilters -->
+        <!-- BEGIN: PatronLedgerTable -->
+        <div class="border border-[#e2dacf] rounded bg-white overflow-hidden shadow-[0_1px_4px_rgba(0,0,0,0.02)]"
+            data-purpose="ledger-table-container">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left ledger-table border-collapse">
+                    <thead>
+                        <tr
+                            class="bg-[#f5f1e7] text-[10px] uppercase font-semibold text-[#70695d] tracking-[0.14em] border-b border-[#dfd7c8]">
+                            <th class="py-3 px-5 font-semibold" scope="col">Customer</th>
+                            <th class="py-3 px-5 font-semibold" scope="col">Email</th>
+                            <th class="py-3 px-5 font-semibold" scope="col">Phone Number</th>
+                            <th class="py-3 px-5 font-semibold" scope="col">Account Status</th>
+                            <th class="py-3 px-5 text-right font-semibold" scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-[#f0ebd9] text-[12px]">
+                        <!-- Row 1: Lady Eleanor Vance -->
+                         <% if(users && users.length > 0){ %>
+                            <% users.forEach((user)=>{ %>
+                        <tr class="hover:bg-[#faf7f0] transition-colors">
+                            <td class="py-3.5 px-5">
+                                <%= user.name %>
+                            </td>
+                            <td class="py-3.5 px-5">
+                                <%= user.email %>
+                            </td>
+                            <td class="py-3.5 px-5">
+                                <%= user.phone || 'Not Provided' %>
+                            </td>
+                            <td class="py-3.5 px-5">
+                                <span
+                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-[10.5px] font-medium bg-[#ecf4ee] text-[#245e3f] border border-[#d2e7d7]">
+                                    <span class="w-1.5 h-1.5 mr-1.5 rounded-full bg-[#245e3f]"></span>
+                                    <%= user.isBlocked ? 'Blocked' : 'Active' %>
+                                </span>
+                            </td>
+                            <td class="py-3.5 px-5 text-right">
+                                <div class="flex items-center justify-end space-x-2">
+                                    <button type="button" onclick="confirmUserStatus('<%= user._id %>', <%= user.isBlocked %>)" 
+                                        
+                                        class="px-3 py-1 bg-white hover:bg-[#f3eee4] border border-[#d8d0c2] text-[#823a3a] text-[10px] font-semibold tracking-wider rounded uppercase transition-colors">
+                                        <%= user.isBlocked ? 'Unblock' : 'Block' %>
+                                        
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <% }) %>
+                        <%} else {%>
+                            <tr>
+                                <td colspan="5" class="text-center py-6">No users found.</td>
+                            </tr>
+                        <% } %>    
+                    </tbody>
+                </table>
+            </div>
+             
+            <!-- BEGIN: PaginationBar -->
+            <nav aria-label="Folio Pagination"
+                class="flex items-center justify-between px-5 py-3 bg-[#f5f1e8] border-t border-[#dfd7c8] text-[11px]"
+                data-purpose="table-pagination">
+
+                <!-- Previous Page Button -->
+                <% if (page > 1) { %>
+                <a href="/admin/users?page=<%= page - 1 %>&search=<%= encodeURIComponent(search) %>"
+                    class="flex items-center text-[#736d64] hover:text-[#1c1b1a] uppercase tracking-wider font-semibold text-[10px] transition-colors">
+                    <svg class="w-3.5 h-3.5 mr-1" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    Prev
+                </a>
+                <% } else { %>
+                <span class="flex items-center text-[#b5ad9f] uppercase tracking-wider font-semibold text-[10px]">
+                    Prev
+                </span>
+                <% } %>
+
+    
+                <!-- Page Number Chips -->
+                <div class="flex items-center space-x-1">
+                    <% if (totalPages > 0) { %>
+                    <% 
+                        let startPage = Math.max(1, page - 1);
+                        let endPage = Math.min(totalPages, page + 1);
+                    %>
+                    <!-- First page -->
+                    <% if (startPage > 1) { %>
+                    <a href="/admin/users?page=1&search=<%= encodeURIComponent(search) %>"
+                        class="w-6 h-6 rounded text-[#5e574c] hover:bg-[#eae3d5] font-medium flex items-center justify-center text-[11px]">
+                        1
+                    </a>
+                    <% if (startPage > 2) { %>
+                        <span class="px-1 text-[#8c8577]">...</span>
+                    <% } %>
+                    <% } %>
+                    <!-- Nearby pages -->
+                    <% for (let i = startPage; i <= endPage; i++) { %>
+                    <a href="/admin/users?page=<%= i %>&search=<%= encodeURIComponent(search) %>"
+                        class="w-6 h-6 rounded font-medium flex items-center justify-center text-[11px] transition-colors
+                            <%= i === page
+                                ? 'bg-[#1c1b1a] text-white'
+                                : 'text-[#5e574c] hover:bg-[#eae3d5]' %>">
+                        <%= i %>
+                    </a>
+                    <% } %>
+                    <!-- Last page -->
+                    <% if (endPage < totalPages) { %>
+                    <% if (endPage < totalPages - 1) { %>
+                    <span class="px-1 text-[#8c8577]">...</span>
+                    <% } %>
+                    <a href="/admin/users?page=<%= totalPages %>&search=<%= encodeURIComponent(search) %>"
+                        class="px-2 h-6 rounded text-[#5e574c] hover:bg-[#eae3d5] font-medium flex items-center justify-center text-[11px]">
+                        <%= totalPages %>
+                    </a>
+                    <% } %>
+                    <% } %>
+                </div>
+
+
+                <!-- Next Page Button -->
+                <% if (page < totalPages) { %>
+                <a href="/admin/users?page=<%= page + 1 %>&search=<%= encodeURIComponent(search) %>"
+                    class="flex items-center text-[#736d64] hover:text-[#1c1b1a] uppercase tracking-wider font-semibold text-[10px] transition-colors">
+                    Next
+                    <svg class="w-3.5 h-3.5 ml-1" fill="none" stroke="currentColor" stroke-width="2"
+                        viewBox="0 0 24 24">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </a>
+                <% } else { %>
+                <span class="flex items-center text-[#b5ad9f] uppercase tracking-wider font-semibold text-[10px]">
+                    Next
+                </span>
+                <% } %>
+            </nav>
+            <!-- END: PaginationBar -->
+
+        </div>
+        <!-- END: PatronLedgerTable -->
+    </main>
+    <!-- END: MainContent -->
+     <%- include('../partials/admin/footer')%>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    async function confirmUserStatus(userId, isBlocked){
+        const actionTitle = isBlocked ? 'Unblock User?' : 'Block User?'
+        const actionMessage = isBlocked 
+            ? 'This user will regain access to their account' 
+            : 'This user will no longer be able to access their account.';
+
+        const result = await Swal.fire({
+            title: actionTitle,
+            text: actionMessage,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d4a373',
+            cancelButtonColor: '#6b6258',
+            confirmButtonText: isBlocked ? 'Yes, unblock' : 'Yes, block',
+            cancelButtonText: 'Cancel',
+            reverseButtons: true
+        })
+
+        if(!result.isConfirmed){
+            return;
+        }
+
+        try {
+            const response = await fetch(
+                `/admin/users/${userId}/blockUser`,
+                {
+                    method: 'PATCH'
+                }
+            )
+
+            const data = await response.json()
+            if(!response.ok || !data.success){
+                throw new Error(
+                    data.message || 'Unable to update user status'
+                )
+            }
+
+            await Swal.fire({
+                title: 'Success!',
+                text: data.message,
+                icon: 'success',
+                confirmButtonColor: '#d4a373'
+            })
+            location.reload()
+
+            
+
+        } catch (error) {
+            console.error('Error updating user status:', error);
+            Swal.fire({
+                title: 'Error!',
+                text: error.message || 'Something went wrong.',
+                icon: 'error',
+                confirmButtonColor: '#d4a373'
+            });
+        }
+    }
+
+
+
+
+
+
+    const statusFilter = document.getElementById('statusFilter')
+    const refreshCustomers = document.getElementById('refreshCustomers')
+    statusFilter.addEventListener('change',function (){
+        const params = new URLSearchParams(window.location.search)
+        params.set('status',this.value)
+        params.delete('page')
+        window.location.href = `/admin/users?${params.toString()}`
+    })
+
+    refreshCustomers.addEventListener('click', function(){
+        window.location.href = '/admin/users';
+    })
+
+
+
+
+
+
+</script>
+
+</html>
