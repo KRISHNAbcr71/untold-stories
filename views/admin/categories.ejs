@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Category Management | The Untold Stories</title>
+  <!-- Tailwind CSS CDN with forms plugin -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            parchment: {
+              50: '#fbf9f6',
+              100: '#f6f3ee',
+              200: '#eee8df',
+              300: '#dfd7c9',
+              400: '#c8bcab',
+              800: '#3a342d',
+              900: '#221e1a',
+            },
+            archive: {
+              charcoal: '#1d1917',
+              border: '#e7e2dc',
+              muted: '#7e756c',
+              badgeGreen: '#e6f3eb',
+              badgeGreenText: '#1e683b',
+              badgeRed: '#fcebe9',
+              badgeRedText: '#a43425',
+              tagBg: '#f7f1e6',
+              tagText: '#7b5329',
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts: Playfair Display & Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap"
+    rel="stylesheet">
+  <style data-purpose="custom-typography">
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fbf9f6;
+      color: #1d1917;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-archive-serif {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+  </style>
+  <style data-purpose="table-layout">
+    /* Subtle custom borders and interactive transitions matching the reference design */
+    .table-row-hover {
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .table-row-hover:hover {
+      background-color: #ffffff;
+    }
+
+    /* Custom scrollbar styling for high density tables */
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #dfd7c9;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+
+  <body class="min-h-screen flex flex-col bg-[#fbf9f6] text-[#221e1a]">
+    <%- include('../partials/admin/header')%>
+
+    <!-- BEGIN: MainContent -->
+    <main class="flex-1 max-w-[1520px] w-full mx-auto px-6 py-10" data-purpose="category-management-view">
+      <!-- Page Title & Overview Copy -->
+      <section class="mb-8" data-purpose="header-section">
+        <h2 class="text-3xl lg:text-4xl font-normal font-archive-serif text-[#1c1b1a] tracking-tight">
+          The Categories Catalog
+        </h2>
+        <p class="text-xs lg:text-[13px] text-[#736d64] mt-1.5 font-normal tracking-wide">
+          Manage all registered literary classifications and archive categories of The Untold Stories. Organize rare
+          folio genres, oversee public storefront clearance, and govern collection access.
+        </p>
+      </section>
+      <!-- BEGIN: MetricCards (Top KPI Cards Layout) -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" data-purpose="kpi-overview">
+        <!-- Card 1: Total Categories -->
+        <article
+          class="bg-[#f7f4ee]/80 border border-[#e5dfd7] rounded-lg p-6 flex flex-col justify-between shadow-2xs hover:border-[#d9d0c5] transition">
+          <div>
+            <div class="flex items-center justify-between text-[#7d746b]">
+              <span class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">Total Categories</span>
+              <svg class="w-4 h-4 text-[#8a8177]" fill="none" stroke="currentColor" stroke-width="1.8"
+                viewBox="0 0 24 24">
+                <path
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="mt-4 flex items-baseline">
+              <span class="text-4xl font-archive-serif font-medium tracking-tight text-[#1c1815]">28</span>
+              <span class="ml-2.5 text-xs text-[#8c8278]">disciplines &amp; folios</span>
+            </div>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#eae4dc] flex items-center justify-between text-xs text-[#81776d]">
+            <div class="flex items-center space-x-1.5 text-[#1e683b] font-medium">
+              <span class="">↗</span>
+              <span class="">+2.4%</span>
+              <span class="text-[#81776d] font-normal">vs prior quarter</span>
+            </div>
+            <span class="text-[11px] text-[#938b82]">18 active sub-folios</span>
+          </div>
+        </article>
+        <!-- Card 2: Listed Classifications -->
+        <article
+          class="bg-[#f7f4ee]/80 border border-[#e5dfd7] rounded-lg p-6 flex flex-col justify-between shadow-2xs hover:border-[#d9d0c5] transition">
+          <div>
+            <div class="flex items-center justify-between text-[#7d746b]">
+              <span class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">Listed Classifications</span>
+              <svg class="w-4 h-4 text-[#8a8177]" fill="none" stroke="currentColor" stroke-width="1.8"
+                viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round">
+                </path>
+              </svg>
+            </div>
+            <div class="mt-4 flex items-baseline space-x-2.5">
+              <span class="text-4xl font-archive-serif font-medium tracking-tight text-[#1c1815]">24</span>
+              <span
+                class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]">85.7%</span>
+            </div>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#eae4dc] flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 text-[#686058]">
+              <span class="w-2 h-2 rounded-full bg-[#2a854d]"></span>
+              <span class="">Visible in storefront catalog</span>
+            </div>
+          </div>
+        </article>
+        <!-- Card 3: Unlisted / Archived -->
+        <article
+          class="bg-[#f7f4ee]/80 border border-[#e5dfd7] rounded-lg p-6 flex flex-col justify-between shadow-2xs hover:border-[#d9d0c5] transition">
+          <div>
+            <div class="flex items-center justify-between text-[#7d746b]">
+              <span class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">Unlisted / Archived</span>
+              <svg class="w-4 h-4 text-[#8a8177]" fill="none" stroke="currentColor" stroke-width="1.8"
+                viewBox="0 0 24 24">
+                <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+            <div class="mt-4 flex items-baseline space-x-2">
+              <span class="text-4xl font-archive-serif font-medium tracking-tight text-[#1c1815]">4</span>
+              <span class="text-xs text-[#8c8278]">on hold</span>
+            </div>
+          </div>
+          <div class="mt-6 pt-4 border-t border-[#eae4dc] flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 text-[#a43425]">
+              <span class="w-2 h-2 rounded-full bg-[#b33324]"></span>
+              <span class="">Under curatorial review / suspended</span>
+            </div>
+          </div>
+        </article>
+      </section>
+      <!-- END: MetricCards -->
+      <!-- BEGIN: SearchFilterBar -->
+      <section class="space-y-3 mb-6" data-purpose="filters-and-search">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <!-- Search Input Bar with Clear Button -->
+          <div
+            class="relative flex-1 bg-white border border-[#ded7ce] rounded-lg shadow-2xs focus-within:border-[#7d746b] focus-within:ring-1 focus-within:ring-[#7d746b] transition">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8e857b]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round">
+                </path>
+              </svg>
+            </div>
+            <input
+              class="w-full pl-10 pr-10 py-2.5 bg-transparent border-0 text-xs sm:text-[13px] text-[#221e1a] placeholder-[#9f968c] focus:ring-0 focus:outline-none"
+              id="searchInput" placeholder="Search category by name, genre code, or classification scope..."
+              type="text">
+            <button aria-label="Clear Search Input"
+              class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#b3aaa0] hover:text-[#221e1a] transition"
+              id="clearSearchBtn" type="button">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+          </div>
+          <!-- Add Category Primary Action Button -->
+          <button
+            class="h-[42px] px-4 bg-[#1e1b19] hover:bg-black text-white rounded-lg flex items-center justify-center space-x-2 text-xs font-semibold uppercase tracking-wider shadow-xs transition"
+            id="addCategoryBtn" type="button">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span class="">Add Category</span>
+          </button>
+        </div>
+        <!-- Result Counter Sub-text -->
+        <div class="flex justify-end pr-1">
+          <span class="text-[10px] tracking-[0.16em] uppercase font-semibold text-[#8a8176]">
+            SHOWING 8 OF 28 REGISTERED RECORDS
+          </span>
+        </div>
+      </section>
+      <!-- END: SearchFilterBar -->
+      <!-- BEGIN: CategoryTableContainer -->
+      <div class="border border-[#e7e2dc] bg-[#fbf9f6] rounded-t-lg overflow-hidden shadow-2xs"
+        data-purpose="category-table-wrapper">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse" id="categoriesTable">
+            <!-- Table Header matching exact aesthetic -->
+            <thead>
+              <tr
+                class="border-b border-[#e7e2dc] bg-[#f8f5ef] text-[10px] font-semibold text-[#837970] uppercase tracking-[0.16em]">
+                <th class="py-3.5 px-6 w-[28%] font-medium" scope="col">Category Name</th>
+                <th class="py-3.5 px-6 w-[34%] font-medium" scope="col">Description</th>
+                <th class="py-3.5 px-6 w-[12%] font-medium" scope="col">Status</th>
+                <th class="py-3.5 px-6 w-[12%] font-medium text-center" scope="col">Actions</th>
+                <th class="py-3.5 px-6 w-[7%] font-medium text-center" scope="col">Edit</th>
+                <th class="py-3.5 px-6 w-[7%] font-medium text-center" scope="col">Delete</th>
+              </tr>
+            </thead>
+            <!-- Table Body Rows -->
+            <tbody class="divide-y divide-[#ebe6e0] text-xs"><!-- Row 1: Illuminated Manuscripts -->
+              <% if(categories.length > 0) { %>
+                <% categories.forEach((category)=>{ %>
+              <tr class="table-row-hover group" data-category-status="<% category.isListed ? 'LISTED' : 'UNLISTED' %>">
+                <td class="py-4 px-6">
+                  <div class="flex items-center space-x-3.5">
+                    <div
+                      class="w-10 h-10 rounded bg-[#1e1b19] text-[#f7f3ed] font-medium text-xs flex items-center justify-center flex-shrink-0 tracking-wider">
+                      <%= category.name.substring(0,2).toUpperCase() %>
+                    </div>
+                    <!-- <div class="flex flex-col">
+                      <span class="font-medium text-sm text-[#1e1b18] group-hover:text-black">Illuminated
+                        Manuscripts</span>
+                      <div class="flex items-center space-x-1.5 mt-0.5">
+                        <span class="text-[11px] text-[#7d746b]">CAT-09201</span>
+                        <span class="text-[#998f86] text-[8px]">•</span>
+                        <span class="text-[11px] text-[#8c8278]">42 volumes</span>
+                      </div>
+                    </div> -->
+                    <div class="flex flex-col">
+                            <span class="font-medium text-sm text-[#1e1b18]">
+                                <%= category.name %>
+                            </span>
+                        </div>
+                  </div>
+                </td>
+                <td class="py-4 px-6">
+                  <div class="text-[12px] text-[#4d463e] line-clamp-1 leading-relaxed">
+                    <%= category.description %>
+                  </div>
+                  <div class="text-[10px] text-[#938b81] mt-0.5">Vellum folios &amp; monastic provenance</div>
+                </td>
+                <td class="py-4 px-6">
+                  <span
+                    class="category-status inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]
+                    <%= category.isListed ? 'bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]' : 'bg-[#fce8e6] text-[#b33324] border border-[#f5d0cc]' %>">
+
+                      <span class="status-dot w-1.5 h-1.5 rounded-full bg-[#1e683b] mr-1.5
+                      <%= category.isListed ? 'bg-[#1e683b]' : 'bg-[#b33324]' %>"></span>
+                      <span class="status-text">
+                        <%= category.isListed ? 'Listed' : 'Unlisted'%>
+                      </span>
+                  </span>
+                </td>
+
+                <td class="py-4 px-6 text-center">
+                  <button aria-label="<%= category.isListed ? 'Unlist' : 'List' %> Category"
+                    class="action-toggle-btn px-3 py-1 text-[11px] font-semibold tracking-wider rounded border border-[#cac2b6] text-[#332c25] hover:bg-white hover:border-[#1e1b18] transition uppercase"
+                    type="button">
+                    <%= category.isListed ? 'List' : 'Unlist' %>
+                  </button>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <button
+                    aria-label="Edit Category"
+                    class="edit-category-btn inline-flex items-center justify-center p-1.5 rounded hover:bg-[#eae4dc] text-[#6d645c] hover:text-[#1e1b18] transition"
+                    data-category-id="<%= category._id %>"
+                    data-category-name="<%= category.name %>"
+                    data-category-description="<%= category.description %>"
+                    title="Edit Category"
+                    type="button">
+
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor"
+                      stroke-width="1.8" viewBox="0 0 24 24">
+                      <path
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        stroke-linecap="round" stroke-linejoin="round">
+                      </path>
+                    </svg>
+                  </button>
+                </td>
+                <td class="py-4 px-6 text-center">
+                  <button aria-label="Delete Category"
+                    class="delete-category-btn inline-flex items-center justify-center p-1.5 rounded hover:bg-[#fdeeed] text-[#8c8278] hover:text-[#b33324] transition"
+                    data-category-id="<%= category._id %>"
+                    title="Delete Category" type="button">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                      <path
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                        stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+              <%})%>
+              <%}else{%>
+                <tr>
+                  <td colspan="6" class="py-10 text-center text-sm text-[#8c8278]">
+                    No categories found.
+                  </td>
+                </tr>
+                <%}%>
+            </tbody>
+          </table>
+        </div>
+        <!-- BEGIN: PaginationFooter (Exact layout matching the reference) -->
+        <footer
+          class="border-t border-[#e7e2dc] bg-[#f8f5ef] py-3 px-6 flex items-center justify-between text-xs text-[#6e655c]">
+          <!-- Previous Page Button -->
+          <button
+            class="flex items-center space-x-1 font-semibold uppercase tracking-wider text-[11px] text-[#5e554d] hover:text-black transition"
+            type="button">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span class="">Prev</span>
+          </button>
+          <!-- Page Numbers List -->
+          <div class="flex items-center space-x-1.5">
+            <button
+              class="w-7 h-7 rounded bg-[#1e1b18] text-white font-medium text-xs flex items-center justify-center shadow-xs"
+              type="button">
+              1
+            </button>
+            <button
+              class="w-7 h-7 rounded hover:bg-[#eae4dc] text-[#5e554d] font-medium text-xs flex items-center justify-center transition"
+              type="button">
+              2
+            </button>
+            <button
+              class="w-7 h-7 rounded hover:bg-[#eae4dc] text-[#5e554d] font-medium text-xs flex items-center justify-center transition"
+              type="button">
+              3
+            </button>
+            <span class="px-1 text-[#938b82]">…</span>
+            <button
+              class="w-7 h-7 rounded hover:bg-[#eae4dc] text-[#5e554d] font-medium text-xs flex items-center justify-center transition"
+              type="button">
+              4
+            </button>
+          </div>
+          <!-- Next Page Button -->
+          <button
+            class="flex items-center space-x-1 font-semibold uppercase tracking-wider text-[11px] text-[#5e554d] hover:text-black transition"
+            type="button">
+            <span class="">Next</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+        </footer>
+        <!-- END: PaginationFooter -->
+      </div>
+      <!-- END: CategoryTableContainer -->
+    </main>
+    <!-- END: MainContent -->
+
+
+    <!-- Add Category Modal -->
+    <div id="addCategoryModal"
+        class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+
+        <div class="w-full max-w-md rounded-xl bg-[#fbf9f5] p-6 shadow-xl">
+
+            <div class="mb-6 flex items-center justify-between">
+                <h2 id="categoryModalTitle" 
+                  class="font-serif text-2xl font-semibold text-[#1e1b19]">
+                    Add New Category
+                </h2>
+
+                <button type="button"
+                        id="closeCategoryModal"
+                        class="text-2xl text-[#8e8170] hover:text-black">
+                    &times;
+                </button>
+            </div>
+
+            <form id="addCategoryForm" novalidate>
+              <input type="hidden" id="categoryId" name="categoryId">
+
+                <div class="mb-4">
+                    <label for="categoryName"
+                          class="mb-2 block text-sm font-medium text-[#1e1b19]">
+                        Category Name
+                    </label>
+
+                    <input type="text"
+                          id="categoryName"
+                          name="name"
+                          required
+                          placeholder="Enter category name"
+                          class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]">
+                    <p id="categoryNameError" class="text-red-500 text-xs mt-1 min-h-[16px]"></p>
+                </div>
+
+                <div class="mb-6">
+                    <label for="categoryDescription"
+                          class="mb-2 block text-sm font-medium text-[#1e1b19]">
+                        Description
+                    </label>
+
+                    <textarea id="categoryDescription"
+                              name="description"
+                              rows="4"
+                              required
+                              placeholder="Enter category description"
+                              class="w-full resize-none rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]"></textarea>
+                    <p id="categoryDescriptionError" class="text-red-500 text-xs mt-1 min-h-[16px]"></p>
+                </div>
+
+                <div class="flex justify-end gap-3">
+                    <button type="button"
+                            id="cancelCategoryModal"
+                            class="rounded-lg border border-[#e5dfd2] px-5 py-2.5 text-sm font-semibold text-[#1e1b19] hover:bg-[#f5f1e8]">
+                        Cancel
+                    </button>
+
+                    <button type="submit"
+                            id="categoryModalSubmit"
+                            class="rounded-lg bg-[#1e1b19] px-5 py-2.5 text-sm font-semibold text-white hover:bg-black">
+                        Save Category
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+    
+     <%- include('../partials/admin/footer')%>
+
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script data-purpose="category-interaction">
+      document.addEventListener('DOMContentLoaded', () => {
+        const searchInput = document.getElementById('searchInput');
+        const clearSearchBtn = document.getElementById('clearSearchBtn');
+        const statusFilterSelect = document.getElementById('statusFilterSelect');
+        const refreshBtn = document.getElementById('refreshRecordsBtn');
+        const tableRows = document.querySelectorAll('#categoriesTable tbody tr');
+
+        // Search & Filter Trigger
+        function filterTable() {
+          const query = (searchInput.value || '').toLowerCase().trim();
+          const selectedStatus = statusFilterSelect.value;
+
+          tableRows.forEach(row => {
+            const rowText = row.innerText.toLowerCase();
+            const rowStatus = row.getAttribute('data-category-status');
+
+            const matchesQuery = !query || rowText.includes(query);
+            const matchesStatus = (selectedStatus === 'ALL') || (rowStatus === selectedStatus);
+
+            if (matchesQuery && matchesStatus) {
+              row.style.display = '';
+            } else {
+              row.style.display = 'none';
+            }
+          });
+        }
+
+        // Input event listener
+        searchInput.addEventListener('input', filterTable);
+
+        // Clear search button listener
+        clearSearchBtn.addEventListener('click', () => {
+          searchInput.value = '';
+          filterTable();
+          searchInput.focus();
+        });
+
+        // Filter select listener
+        statusFilterSelect.addEventListener('change', filterTable);
+
+        // Refresh button spin & reset
+        refreshBtn.addEventListener('click', () => {
+          refreshBtn.classList.add('rotate-180');
+          setTimeout(() => {
+            refreshBtn.classList.remove('rotate-180');
+            searchInput.value = '';
+            statusFilterSelect.value = 'ALL';
+            filterTable();
+          }, 300);
+        });
+
+        // Interactive Toggle for List / Unlist action buttons
+        document.querySelectorAll('.action-toggle-btn').forEach(btn => {
+          btn.addEventListener('click', function (e) {
+            const row = e.target.closest('tr');
+            const isCurrentlyListed = row.getAttribute('data-category-status') === 'LISTED';
+            const stateCell = row.querySelector('td:nth-child(4)');
+
+            if (isCurrentlyListed) {
+              // Switch to Unlisted
+              row.setAttribute('data-category-status', 'UNLISTED');
+              btn.textContent = 'LIST';
+              btn.className = 'action-toggle-btn px-3.5 py-1 text-[11px] font-semibold tracking-wider rounded bg-[#1e1b19] text-white hover:bg-black transition uppercase';
+              stateCell.innerHTML = `
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#fdeeed] text-[#b33324] border border-[#f7cfca]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#b33324] mr-1.5"></span>
+                Unlisted
+              </span>
+            `;
+            } else {
+              // Switch to Listed
+              row.setAttribute('data-category-status', 'LISTED');
+              btn.textContent = 'UNLIST';
+              btn.className = 'action-toggle-btn px-3 py-1 text-[11px] font-semibold tracking-wider rounded border border-[#cac2b6] text-[#332c25] hover:bg-white hover:border-[#1e1b18] transition uppercase';
+              stateCell.innerHTML = `
+              <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]">
+                <span class="w-1.5 h-1.5 rounded-full bg-[#1e683b] mr-1.5"></span>
+                Listed
+              </span>
+            `;
+            }
+          });
+        });
+      });
+
+
+
+
+
+
+      
+      
+
+      const addCategoryBtn = document.getElementById('addCategoryBtn')
+      const addCategoryModal = document.getElementById('addCategoryModal')
+      const closeCategoryModal = document.getElementById('closeCategoryModal')
+      const cancelCategoryModal = document.getElementById('cancelCategoryModal')
+
+      const categoryModalTitle = document.getElementById('categoryModalTitle');
+      const categoryModalSubmit = document.getElementById('categoryModalSubmit')
+      const categoryIdInput = document.getElementById('categoryId')
+      const addCategoryForm = document.getElementById('addCategoryForm')
+
+      // Open modal for adding a category
+      function openAddCategoryModal(){
+        addCategoryForm.reset()
+        categoryNameError.textContent = '';
+        categoryDescriptionError.textContent = '';
+        categoryIdInput.value = ''
+        categoryModalTitle.textContent = 'Add New Category'
+        categoryModalSubmit.textContent = 'Save Category'
+        addCategoryModal.classList.remove('hidden')
+        addCategoryModal.classList.add('flex')
+      }
+
+      // Open modal for editing a category
+      function openEditCategoryModal(category){
+        addCategoryForm.reset()
+        categoryNameError.textContent = '';
+        categoryDescriptionError.textContent = '';
+        categoryIdInput.value = category.id
+        document.getElementById('categoryName').value = category.name 
+        document.getElementById('categoryDescription').value = category.description
+        categoryModalTitle.textContent = 'Edit Category'
+        categoryModalSubmit.textContent = 'Update Category'
+        addCategoryModal.classList.remove('hidden')
+        addCategoryModal.classList.add('flex')
+      }
+
+      addCategoryBtn.addEventListener('click',openAddCategoryModal)
+      
+
+      
+      // Close modal
+      function closeModal(){
+        addCategoryModal.classList.remove('flex')
+        addCategoryModal.classList.add('hidden')
+
+        addCategoryForm.reset()
+
+        categoryNameError.textContent = ''
+        categoryDescriptionError.textContent = ''
+      }
+
+      closeCategoryModal.addEventListener('click',closeModal)
+      cancelCategoryModal.addEventListener('click',closeModal)
+
+
+
+
+
+
+      // form validation
+      // Connect add category modal to the backend
+      const categoryNameInput = document.getElementById('categoryName')
+      const categoryDescriptionInput = document.getElementById('categoryDescription')
+      const categoryNameError = document.getElementById('categoryNameError')
+      const categoryDescriptionError = document.getElementById('categoryDescriptionError')
+
+      addCategoryForm.addEventListener('submit',async (event)=>{
+        event.preventDefault()
+        const categoryName = categoryNameInput.value.trim();
+        const categoryDescription = categoryDescriptionInput.value.trim();
+
+        if(categoryName === ''){
+            categoryNameError.textContent = 'Category name is required'
+        }else if(categoryName.length<2){
+            categoryNameError.textContent = 'Category name must be at least 2 characters'
+        }else if(categoryName.length>50){
+            categoryNameError.textContent = 'Category name cannot exceed 50 characters'
+        }else if (!/^[a-zA-Z ]+$/.test(categoryName)) {
+          categoryNameError.textContent = 'Category name can contain only letters and spaces.';
+        }else{
+          categoryNameError.textContent = ''
+        }
+
+
+        if(categoryDescription === ''){
+          categoryDescriptionError.textContent = 'Category description is required'
+        }else if(categoryDescription.length<10){
+          categoryDescriptionError.textContent = 'Category description must be at least 10 characters'
+        }else if(categoryDescription.length>300){
+          categoryDescriptionError.textContent = 'Category description cannot exceed 300 characters'
+        }else if (!/^[a-zA-Z ]+$/.test(categoryDescription)) {
+          categoryDescriptionError.textContent = 'Description can contain only letters and spaces.';
+        }else{
+          categoryDescriptionError.textContent = ''
+        }
+
+
+        if(categoryNameError.textContent !== '' || categoryDescriptionError.textContent !== ''){
+          return
+        }
+
+
+
+        try {
+          const response = await fetch('/admin/categories/addCategory',{
+            method:'POST',
+            headers:{
+              'Content-Type':'application/json'
+            },
+            body: JSON.stringify({
+              name:categoryName,
+              description:categoryDescription
+            })
+          })
+
+          const result = await response.json()
+
+          // if(!response.ok){
+          //   throw new Error(result.message || 'Failed to add category')
+          // }
+
+          if(result.success){
+            await Swal.fire({
+              title: 'Success!',
+              text: result.message,
+              icon: 'success',
+              confirmButtonColor: '#1e1b19'
+            })
+            closeModal()
+            window.location.reload()
+          }else{
+            await Swal.fire({
+              title: 'Error!',
+              text: result.message,
+              icon: 'error',
+              confirmButtonColor: '#1e1b19'
+            })
+          }
+
+
+        } catch (error) {
+          console.error('Error adding category:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Something went wrong. Please try again.',
+            icon: 'error',
+            confirmButtonColor: '#1e1b19'
+          });
+        }
+
+      })
+
+      // clearing errors
+      categoryNameInput.addEventListener('input',()=>{
+        categoryNameError.textContent = ''
+      })
+
+      categoryDescriptionInput.addEventListener('input',()=>{
+        categoryDescriptionError.textContent = ''
+      })
+
+
+
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      // edit category button
+      const editCategoryButtons = document.querySelectorAll('.edit-category-btn')
+      editCategoryButtons.forEach((button)=>{
+        button.addEventListener('click',()=>{
+          const category = {
+            id: button.dataset.categoryId,
+            name: button.dataset.categoryName,
+            description: button.dataset.categoryDescription
+          }
+          openEditCategoryModal(category)
+        })
+      })
+
+
+      // delete category button
+      const deleteCategoryButtons = document.querySelectorAll('.delete-category-btn')
+      deleteCategoryButtons.forEach((button)=>{
+        button.addEventListener('click',()=>{
+          Swal.fire({
+            title: 'Delete Category?',
+            text: 'Are you sure you want to delete this category?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#b33324',
+            cancelButtonColor: '#8c8278',
+            reverseButtons: true
+          }).then((result)=>{
+            if(result.isConfirmed){
+              Swal.fire({
+                title: 'Confirmed!',
+                  text: 'The delete action will be implemented soon.',
+                  icon: 'success',
+                  confirmButtonColor: '#1e1b19'
+              })
+            }
+          })
+        })
+      })
+
+
+      // list or unlist
+      const actionToggleButtons = document.querySelectorAll('.action-toggle-btn')
+      actionToggleButtons.forEach((button)=>{
+        button.addEventListener('click',()=>{
+          const row = button.closest('tr')
+          const statusBadge = row.querySelector('.category-status')
+          const statusDot = row.querySelector('.status-dot')
+          const statusText = row.querySelector('.status-text')
+
+          const isListed = statusText.textContent.trim() === 'Listed'
+          const action = isListed ? 'Unlist' : 'List'
+          const newStatus = isListed ? 'Unlisted' : 'Listed'
+
+          Swal.fire({
+            title: `${action} Category?`,
+            text: `Are you sure you want to ${action.toLowerCase()} this category?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: `Yes, ${action}`,
+            cancelButtonText: 'Cancel',
+            confirmButtonColor: '#1e1b19',
+            cancelButtonColor: '#8c8278',
+            reverseButtons: true
+          }).then((result)=>{
+            if(result.isConfirmed){
+              if(newStatus === 'Listed'){
+                statusBadge.classList.remove(
+                  'bg-[#fce8e6]',
+                  'text-[#b33324]',
+                  'border-[#f5d0cc]'
+                );
+                statusBadge.classList.add(
+                  'bg-[#e6f4ea]',
+                  'text-[#1e683b]',
+                  'border-[#d2ead7]'
+                )
+                statusDot.classList.remove('bg-[#b33324]');
+                statusDot.classList.add('bg-[#1e683b]');
+
+                button.textContent = 'Unlist';
+                button.setAttribute('aria-label', 'Unlist Category');
+              }else{
+                statusBadge.classList.remove(
+                  'bg-[#e6f4ea]',
+                  'text-[#1e683b]',
+                  'border-[#d2ead7]'
+                );
+                statusBadge.classList.add(
+                  'bg-[#fce8e6]',
+                  'text-[#b33324]',
+                  'border-[#f5d0cc]'
+                );
+                statusDot.classList.remove('bg-[#1e683b]');
+                statusDot.classList.add('bg-[#b33324]');
+
+                button.textContent = 'List';
+                button.setAttribute('aria-label', 'List Category');
+              }
+              statusText.textContent = newStatus;
+            }
+          })
+        })
+      })
+
+
+
+
+
+    </script>
+
+</html>
