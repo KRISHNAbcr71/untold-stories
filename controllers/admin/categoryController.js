@@ -3,11 +3,51 @@ const mongoose = require('mongoose')
 
 const loadCategories = async (req,res)=>{
     try {
-        const categories = await Category.find({isDeleted:false}).sort({createdAt: -1})
+        const search = req.query.search || ''
+        const currentPage = parseInt(req.query.page) || 1
+        const limit = 5
+        const skip = (currentPage-1)*limit
+
+        const query = {
+            isDeleted:false
+        }
+
+        if(search.trim()){
+            query.name = {
+                $regex:search.trim(),
+                $options:'i'
+            }
+        }
+
+        
+        const totalCategories = await Category.countDocuments(query)
+        const totalPages = Math.ceil(totalCategories/limit)
+        const categories = await Category.find(query)
+            .sort({createdAt: -1})
+            .skip(skip)
+            .limit(limit)
+
+        const categoryCount = await Category.countDocuments({isDeleted:false})
+        const listedCategories = await Category.countDocuments({
+            isDeleted:false,
+            isListed:true
+        })
+        const unlistedCategories = await Category.countDocuments({
+            isDeleted:false,
+            isListed:false
+        })
 
         res.render('categories',{
-            categories
+            categories,
+            search,
+            currentPage,
+            totalPages,
+            totalCategories,
+            categoryCount,
+            listedCategories,
+            unlistedCategories
         })
+
     } catch (error) {
         console.error('Error loading categories:', error);
         res.status(500).send('Internal Server Error');
