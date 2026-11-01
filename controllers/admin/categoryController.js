@@ -205,8 +205,58 @@ const updateCategory = async(req,res)=>{
 }
 
 
+
+const updateCategoryListingStatus = async (req,res)=>{
+    try {
+        const {id} = req.params
+        const {isListed} = req.body
+
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            return res.status(400).json({
+                success:false,
+                message:'Invalid category ID.'
+            })
+        }
+
+        if(typeof isListed !== 'boolean'){
+            return res.status(400).json({
+                success:false,
+                message:'Listing status must be true or false.'
+            })
+        }
+
+        const category = await Category.findOne({
+            _id:id,
+            isDeleted:false
+        })
+        if(!category){
+            return res.status(400).json({
+                success:false,
+                message:'Category not found'
+            })
+        }
+
+        category.isListed = isListed
+        await category.save()
+
+        return res.status(200).json({
+            success:true,
+            message:isListed ? 'Category listed successfully' : 'Category unlisted successfully'
+        })
+
+    } catch (error) {
+        console.error('Error updating category listing status: ',error)
+        return res.status(500).json({
+            success:false,
+            message:'Something went wrong. Please try again.'
+        })
+    }
+}
+
+
 module.exports = {
     loadCategories,
     addCategory,
-    updateCategory
+    updateCategory,
+    updateCategoryListingStatus
 }

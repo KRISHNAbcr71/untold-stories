@@ -266,7 +266,6 @@
                   <span
                     class="category-status inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]
                     <%= category.isListed ? 'bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]' : 'bg-[#fce8e6] text-[#b33324] border border-[#f5d0cc]' %>">
-
                       <span class="status-dot w-1.5 h-1.5 rounded-full bg-[#1e683b] mr-1.5
                       <%= category.isListed ? 'bg-[#1e683b]' : 'bg-[#b33324]' %>"></span>
                       <span class="status-text">
@@ -278,8 +277,10 @@
                 <td class="py-4 px-6 text-center">
                   <button aria-label="<%= category.isListed ? 'Unlist' : 'List' %> Category"
                     class="action-toggle-btn px-3 py-1 text-[11px] font-semibold tracking-wider rounded border border-[#cac2b6] text-[#332c25] hover:bg-white hover:border-[#1e1b18] transition uppercase"
+                    data-category-id="<%= category._id %>"
+                    data-is-listed="<%= category.isListed %>"
                     type="button">
-                    <%= category.isListed ? 'List' : 'Unlist' %>
+                    <%= category.isListed ? 'Unlist' : 'List' %>
                   </button>
                 </td>
                 <td class="py-4 px-6 text-center">
@@ -762,9 +763,11 @@
           const statusDot = row.querySelector('.status-dot')
           const statusText = row.querySelector('.status-text')
 
-          const isListed = statusText.textContent.trim() === 'Listed'
+          const categoryId = button.dataset.categoryId
+          const isListed = button.dataset.isListed === 'true'
+          const newIsListed = !isListed
           const action = isListed ? 'Unlist' : 'List'
-          const newStatus = isListed ? 'Unlisted' : 'Listed'
+          const newStatus = newIsListed ? 'Listed' : 'Unlisted'
 
           Swal.fire({
             title: `${action} Category?`,
@@ -776,43 +779,95 @@
             confirmButtonColor: '#1e1b19',
             cancelButtonColor: '#8c8278',
             reverseButtons: true
-          }).then((result)=>{
+          }).then(async(result)=>{
             if(result.isConfirmed){
-              if(newStatus === 'Listed'){
-                statusBadge.classList.remove(
-                  'bg-[#fce8e6]',
-                  'text-[#b33324]',
-                  'border-[#f5d0cc]'
-                );
-                statusBadge.classList.add(
-                  'bg-[#e6f4ea]',
-                  'text-[#1e683b]',
-                  'border-[#d2ead7]'
+              try {
+                const response = await fetch(`/admin/categories/${categoryId}/listing-status`,
+                  {
+                    method:'PATCH',
+                    headers:{
+                      'Content-Type':'application/json'
+                    },
+                    body:JSON.stringify({
+                      isListed:newIsListed
+                    })
+                  }
                 )
-                statusDot.classList.remove('bg-[#b33324]');
-                statusDot.classList.add('bg-[#1e683b]');
 
-                button.textContent = 'Unlist';
-                button.setAttribute('aria-label', 'Unlist Category');
-              }else{
-                statusBadge.classList.remove(
-                  'bg-[#e6f4ea]',
-                  'text-[#1e683b]',
-                  'border-[#d2ead7]'
-                );
-                statusBadge.classList.add(
-                  'bg-[#fce8e6]',
-                  'text-[#b33324]',
-                  'border-[#f5d0cc]'
-                );
-                statusDot.classList.remove('bg-[#1e683b]');
-                statusDot.classList.add('bg-[#b33324]');
+                const data = await response.json()
 
-                button.textContent = 'List';
-                button.setAttribute('aria-label', 'List Category');
+                if(!data.success){
+                  await Swal.fire({
+                    title: 'Error!',
+                    text: data.message,
+                    icon: 'error',
+                    confirmButtonColor: '#1e1b19'
+                  })
+                  return
+                }
+
+
+                if(newIsListed){
+                  statusBadge.classList.remove(
+                    'bg-[#fce8e6]',
+                    'text-[#b33324]',
+                    'border-[#f5d0cc]'
+                  )
+                  statusBadge.classList.add(
+                    'bg-[#e6f4ea]',
+                    'text-[#1e683b]',
+                    'border-[#d2ead7]'
+                  )
+
+                  statusDot.classList.remove('bg-[#b33324]')
+                  statusDot.classList.add('bg-[#1e683b]')
+
+                  button.textContent = 'Unlist'
+                  button.setAttribute('aria-label', 'Unlist Category')
+                }else{
+                  statusBadge.classList.remove(
+                    'bg-[#e6f4ea]',
+                    'text-[#1e683b]',
+                    'border-[#d2ead7]'
+                  )
+                  statusBadge.classList.add(
+                    'bg-[#fce8e6]',
+                    'text-[#b33324]',
+                    'border-[#f5d0cc]'
+                  )
+
+                  statusDot.classList.remove('bg-[#1e683b]')
+                  statusDot.classList.add('bg-[#b33324]')
+
+                  button.textContent = 'List'
+                  button.setAttribute('aria-label', 'List Category')
+                }
+
+                statusText.textContent = newStatus
+                button.dataset.isListed = String(newIsListed)
+
+                await Swal.fire({
+                  title: 'Success!',
+                  text: data.message,
+                  icon: 'success',
+                  confirmButtonColor: '#1e1b19'
+                })
+                
+              } catch (error) {
+                console.error('Error updating category status:', error);
+
+                Swal.fire({
+                  title: 'Error!',
+                  text: 'Something went wrong. Please try again.',
+                  icon: 'error',
+                  confirmButtonColor: '#1e1b19'
+                });
               }
-              statusText.textContent = newStatus;
+
             }
+
+
+
           })
         })
       })
