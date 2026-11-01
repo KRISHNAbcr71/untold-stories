@@ -249,15 +249,6 @@
                       class="w-10 h-10 rounded bg-[#1e1b19] text-[#f7f3ed] font-medium text-xs flex items-center justify-center flex-shrink-0 tracking-wider">
                       <%= category.name.substring(0,2).toUpperCase() %>
                     </div>
-                    <!-- <div class="flex flex-col">
-                      <span class="font-medium text-sm text-[#1e1b18] group-hover:text-black">Illuminated
-                        Manuscripts</span>
-                      <div class="flex items-center space-x-1.5 mt-0.5">
-                        <span class="text-[11px] text-[#7d746b]">CAT-09201</span>
-                        <span class="text-[#998f86] text-[8px]">•</span>
-                        <span class="text-[11px] text-[#8c8278]">42 volumes</span>
-                      </div>
-                    </div> -->
                     <div class="flex flex-col">
                             <span class="font-medium text-sm text-[#1e1b18]">
                                 <%= category.name %>
@@ -652,16 +643,20 @@
           categoryDescriptionError.textContent = ''
         }
 
-
         if(categoryNameError.textContent !== '' || categoryDescriptionError.textContent !== ''){
           return
         }
 
 
+        const categoryId = categoryIdInput.value
+        const url = categoryId 
+          ? `/admin/categories/${categoryId}`
+          : `/admin/categories/addCategory`
+        const method = categoryId ? 'PATCH' : 'POST'
 
         try {
-          const response = await fetch('/admin/categories/addCategory',{
-            method:'POST',
+          const response = await fetch(url,{
+            method:method,
             headers:{
               'Content-Type':'application/json'
             },
@@ -673,9 +668,6 @@
 
           const result = await response.json()
 
-          // if(!response.ok){
-          //   throw new Error(result.message || 'Failed to add category')
-          // }
 
           if(result.success){
             await Swal.fire({
@@ -716,25 +708,6 @@
       categoryDescriptionInput.addEventListener('input',()=>{
         categoryDescriptionError.textContent = ''
       })
-
-
-
-
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -843,10 +816,6 @@
           })
         })
       })
-
-
-
-
 
     </script>
 

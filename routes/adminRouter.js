@@ -13,5 +13,6 @@ router.patch('/users/:id/blockUser',customerController.blockUser) // will do blo
 
 router.get('/categories',categoryController.loadCategories)
 router.post('/categories/addCategory',categoryController.addCategory)
+router.patch('/categories/:id',categoryController.updateCategory)
 
 module.exports = router
