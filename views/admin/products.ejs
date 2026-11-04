@@ -330,8 +330,15 @@
                         <td class="py-4 px-6 text-center">
                           <button aria-label="Edit product"
                             class="edit-product-btn inline-flex items-center justify-center p-1.5 rounded hover:bg-[#eae4dc] text-[#6d645c] hover:text-[#1e1b18] transition"
-                            data-product-id="<%= product._id %>" data-product-name="<%= product.name %>"
-                            data-product-description="<%= product.description %>" title="Edit Product" type="button">
+                            data-product-id='<%= product._id %>'
+                            data-product-name='<%= product.productName %>'
+                            data-product-description='<%= product.description %>'
+                            data-product-category='<%= product.category._id%>'
+                            data-product-author='<%= product.author%>'
+                            data-product-price='<%= product.price%>'
+                            data-product-quantity='<%= product.quantity%>'
+                            data-product-images='<%- JSON.stringify(product.productImage) %>'
+                            title="Edit Product" type="button">
 
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
                               <path
@@ -430,7 +437,7 @@
 
         <!-- Modal Header -->
         <div class="mb-6 flex items-center justify-between">
-        <h2 class="font-serif text-2xl font-semibold text-[#1e1b19]">
+        <h2 id="productModalTitle" class="font-serif text-2xl font-semibold text-[#1e1b19]">
             Add New Product
         </h2>
 
@@ -441,6 +448,7 @@
         </div>
 
         <form id="addProductForm" action="/admin/addProduct" method="POST" enctype="multipart/form-data" novalidate>
+          <input type="hidden" id="productId" name="productId">
 
         <!-- Product Name -->
         <div class="mb-4">
@@ -606,7 +614,7 @@
             Cancel
             </button>
 
-            <button type="submit"
+            <button type="submit" id="productModalSubmit"
             class="rounded-lg bg-[#1e1b19] px-5 py-2.5 text-sm font-semibold text-white hover:bg-black">
             Save Product
             </button>
@@ -638,22 +646,114 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+
 // Modal open or close
 const addProductBtn = document.getElementById('addProductBtn')
 const addProductModal = document.getElementById('addProductModal')
 const closeProductModal = document.getElementById('closeProductModal')
 const cancelProductModal = document.getElementById('cancelProductModal')
 
+const productModalTitle = document.getElementById('productModalTitle')
+const productModalSubmit = document.getElementById('productModalSubmit')
+const productIdInput = document.getElementById('productId')
+const productImagePreview = document.getElementById('productImagePreview');
+
+const addProductForm = document.getElementById('addProductForm')
+const productNameInput = document.getElementById('productName')
+const authorInput = document.getElementById('author')
+const descriptionInput = document.getElementById('productDescription')
+const categoryInput = document.getElementById('category')
+const priceInput = document.getElementById('price')
+const quantityInput = document.getElementById('quantity')
+
+
+let selectedImages = [];
+let existingProductImages = []
+
 // Open modal
 addProductBtn.addEventListener('click',()=>{
-    addProductModal.classList.remove('hidden')
-    addProductModal.classList.add('flex')
+  addProductForm.reset()
+
+  productImagePreview.innerHTML = ''
+  productNameError.textContent = ''
+  authorError.textContent = ''
+  descriptionError.textContent = ''
+  categoryError.textContent = ''
+  priceError.textContent = ''
+  quantityError.textContent = ''
+  imagesError.textContent = ''
+
+  productIdInput.value = ''
+
+  productModalTitle.textContent = 'Add New Product'
+  productModalSubmit.textContent = 'Save Product'
+  
+  selectedImages = []
+  existingProductImages = []
+
+  addProductModal.classList.remove('hidden')
+  addProductModal.classList.add('flex')
 })
+
+
+function openEditProductModal(product){
+  addProductForm.reset()
+  productNameError.textContent = ''
+  authorError.textContent = ''
+  descriptionError.textContent = ''
+  categoryError.textContent = ''
+  priceError.textContent = ''
+  quantityError.textContent = ''
+  imagesError.textContent = ''
+  
+  productIdInput.value = product.id
+
+  productModalTitle.textContent = 'Edit Product'
+  productModalSubmit.textContent = 'Update Product'
+
+  productNameInput.value = product.name
+  authorInput.value = product.author;
+  descriptionInput.value = product.description;
+  categoryInput.value = product.category;
+  priceInput.value = product.price;
+  quantityInput.value = product.quantity;
+
+  existingProductImages = [...product.images]
+  productImagePreview.innerHTML = ''
+
+  addProductModal.classList.remove('hidden');
+  addProductModal.classList.add('flex');
+  updateExistingImagePreview()
+}
+
+document.querySelectorAll('.edit-product-btn').forEach(button=>{
+  button.addEventListener('click',()=>{
+    console.log('Raw image data:', button.dataset.productImages);
+    const product = {
+      id:button.dataset.productId,
+      name:button.dataset.productName,
+      description:button.dataset.productDescription,
+      author:button.dataset.productAuthor,
+      category:button.dataset.productCategory,
+      price:button.dataset.productPrice,
+      quantity:button.dataset.productQuantity,
+      images:JSON.parse(button.dataset.productImages)
+    }
+    openEditProductModal(product)
+  })
+})
+
+
+
+
+
+
 
 // Close modal
 function closeProductModalWindow(){
   addProductForm.reset()
   selectedImages = []
+  existingProductImages = []
   productImagePreview.innerHTML = ''
   productNameError.textContent = ''
   authorError.textContent = ''
@@ -674,16 +774,8 @@ cancelProductModal.addEventListener('click',closeProductModalWindow)
 
 
 // Form validation
-const addProductForm = document.getElementById('addProductForm')
 
-const productNameInput = document.getElementById('productName')
-const authorInput = document.getElementById('author')
-const descriptionInput = document.getElementById('productDescription')
-const categoryInput = document.getElementById('category')
-const priceInput = document.getElementById('price')
-const quantityInput = document.getElementById('quantity')
 const productImagesInput = document.getElementById('productImages') 
-const productImagePreview = document.getElementById('productImagePreview');
 
 const imageCropContainer = document.getElementById('imageCropContainer') // The crop interface container.
 const imageToCrop = document.getElementById('imageToCrop') // The image that Cropper.js will work on.
@@ -715,8 +807,8 @@ addProductForm.addEventListener('submit',(event)=>{
     productNameError.textContent = 'Product name is required';
   }else if(productName.length<2){
     productNameError.textContent = 'Product name must be at least 2 characters'
-  }else if(productName.length>100){
-    productNameError.textContent = 'Product name cannot exceed 100 characters'
+  }else if(productName.length>50){
+    productNameError.textContent = 'Product name cannot exceed 50 characters'
   }else if(/\d/.test(productName)){
     productNameError.textContent = 'Product name cannot contain numbers'
   }else{
@@ -776,11 +868,12 @@ addProductForm.addEventListener('submit',(event)=>{
     'image/webp'
   ]
   const maxFileSize = 5 * 1024 * 1024
+  const totalImageCount = existingProductImages.length + productImages.length
 
-  if(productImages.length<3){
-    imagesError.textContent = 'Please select at least 3 product images'
-  }else if(productImages.length>10){
-    imagesError.textContent = 'You can select a maximum 10 of images'
+  if(totalImageCount<3){
+    imagesError.textContent = 'At least 3 product images are required'
+  }else if(totalImageCount.length>10){
+    imagesError.textContent = 'You can have a maximum of 10 product images'
   }else if(
     Array.from(productImages).some(
       image => !allowedImageTypes.includes(image.type)
@@ -810,15 +903,27 @@ addProductForm.addEventListener('submit',(event)=>{
   }
 
   const formData = new FormData(addProductForm)
-  fetch(addProductForm.action,{
-    method:'POST',
+  formData.append('existingProductImages',JSON.stringify(existingProductImages))
+  const productId = productIdInput.value
+  const url = productId
+    ? `/admin/products/${productId}`
+    : addProductForm.action
+  const method = productId
+    ?'PATCH' : 'POST'
+
+  fetch(url,{
+    method:method,
     body:formData
   })
   .then(async(response)=>{
 
     const result = await response.json()
     if(!response.ok || !result.success){
-      let errorMessage = result.message || 'Unable to add product'
+      let errorMessage = result.message || (
+        productId
+        ? 'Unable to update product.'
+        : 'Unable to add product.'
+      )
       if(result.errors){
         errorMessage = Object.values(result.errors).join('\n')
       }
@@ -880,15 +985,39 @@ productImagesInput.addEventListener('change',()=>{
 
 
 
-
+function updateExistingImagePreview(){
+  existingProductImages.forEach((image,index)=>{
+    const imageContainer = document.createElement('div')
+    imageContainer.className = 'relative'
+    imageContainer.dataset.existingIndex = index
+    imageContainer.innerHTML = `
+      <img
+        src="${image}"
+        class="w-full h-40 object-cover rounded-lg border"
+        alt="Existing product image ${index + 1}"
+      >
+      <button
+        type="button"
+        data-existing-index="${index}"
+        class="absolute top-2 right-2 z-10
+        w-8 h-8 rounded-full
+        bg-white text-black
+        text-xl font-bold
+        flex items-center justify-center
+        shadow-lg cursor-pointer">&times;
+      </button>
+    `;
+    productImagePreview.appendChild(imageContainer)
+  })
+}
 
 
 
 // Image preview and individual removal
-let selectedImages = [];
-
 function updateImagePreview() {
-    productImagePreview.innerHTML = '';
+    productImagePreview.querySelectorAll('[data-new-image]').forEach(container=>{
+      container.remove()
+    })
 
     selectedImages.forEach((image, index) => {
         const reader = new FileReader();
@@ -898,6 +1027,7 @@ function updateImagePreview() {
 
             imageContainer.className = 'relative cursor-pointer';
             imageContainer.dataset.index = index
+            imageContainer.dataset.newImage = true
 
             imageContainer.innerHTML = `
               <img
@@ -929,16 +1059,6 @@ function updateImagePreview() {
 
 
 
-
-
-
-
-
-
-
-
-
-
 // Select images
 productImagesInput.addEventListener('change', () => {
     selectedImages = Array.from(productImagesInput.files);
@@ -949,13 +1069,20 @@ productImagesInput.addEventListener('change', () => {
 
 
 
-
-
-
-
-
 // Remove an individual image and click image
 productImagePreview.addEventListener('click', (event) => {
+
+  const existingRemoveButton = event.target.closest('button[data-existing-index]')
+  if(existingRemoveButton){
+    const index = Number(existingRemoveButton.dataset.existingIndex)
+    existingProductImages.splice(index,1)
+    productImagePreview.innerHTML = ''
+    updateExistingImagePreview()
+    updateImagePreview()
+    return;
+  }
+
+
 
   // Check if the remove button was clicked
   if (event.target.closest('button[data-index]')) {
@@ -1017,14 +1144,6 @@ productImagePreview.addEventListener('click', (event) => {
 
 
 
-
-
-
-
-
-
-
-
 confirmCropBtn.addEventListener('click', () => {
 
     if (!cropper || currentCropIndex === null) {
@@ -1074,13 +1193,6 @@ confirmCropBtn.addEventListener('click', () => {
     }, 'image/jpeg', 0.9);
 
 });
-
-
-
-
-
-
-
 
 
 

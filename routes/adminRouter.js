@@ -27,5 +27,11 @@ router.post(
     productUploadError,
     productController.addProduct
 )
+router.patch(
+    '/products/:id',
+    upload.array('productImages',10),
+    productUploadError,
+    productController.updateProduct
+)
 
 module.exports = router
