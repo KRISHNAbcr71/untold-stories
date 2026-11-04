@@ -379,8 +379,61 @@ const updateProduct = async(req,res)=>{
     }
 }
 
+
+
+const updateProductListingStatus = async(req,res)=>{
+    try {
+        const {id} = req.params
+        const {isListed} = req.body
+
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            return res.status(400).json({
+                success:false,
+                message:'Invalid Product ID'
+            })
+        }
+
+        if(typeof isListed !== 'boolean'){
+            return res.status(400).json({
+                success:false,
+                message:'Listing status must be true or false.'
+            })
+        }
+
+        const product = await Product.findOne({
+            _id:id,
+            isDeleted:false
+        })
+        if(!product){
+            return res.status(404).json({
+                success:false,
+                message:'Product not found'
+            })
+        }
+
+        product.isListed = isListed
+        await product.save()
+
+        return res.status(200).json({
+            success:true,
+            message: isListed ? 'Product listed successfully' : 'Product unlisted successfully'
+        })
+
+
+    } catch (error) {
+        console.error('Error updating product listing status:', error);
+        return res.status(500).json({
+            success: false,
+            message: 'Something went wrong. Please try again.'
+        });
+    }
+}
+
+
+
 module.exports = {
     loadProducts,
     addProduct,
-    updateProduct
+    updateProduct,
+    updateProductListingStatus
 }

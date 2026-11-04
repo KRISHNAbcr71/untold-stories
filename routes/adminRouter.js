@@ -33,5 +33,6 @@ router.patch(
     productUploadError,
     productController.updateProduct
 )
+router.patch('/products/:id/listing-status',productController.updateProductListingStatus)
 
 module.exports = router

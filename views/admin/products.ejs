@@ -321,7 +321,7 @@
 
                         <td class="py-4 px-6 text-center">
                           <button aria-label="<%= product.isListed ? 'Unlist' : 'List' %> Product"
-                            class="action-toggle-btn px-3 py-1 text-[11px] font-semibold tracking-wider rounded border border-[#cac2b6] text-[#332c25] hover:bg-white hover:border-[#1e1b18] transition uppercase"
+                            class="product-action-toggle-btn px-3 py-1 text-[11px] font-semibold tracking-wider rounded border border-[#cac2b6] text-[#332c25] hover:bg-white hover:border-[#1e1b18] transition uppercase"
                             data-product-id="<%= product._id %>" data-is-listed="<%= product.isListed %>" type="button">
                             <%= product.isListed ? 'Unlist' : 'List' %>
                           </button>
@@ -695,7 +695,7 @@ addProductBtn.addEventListener('click',()=>{
   addProductModal.classList.add('flex')
 })
 
-
+// edit modal
 function openEditProductModal(product){
   addProductForm.reset()
   productNameError.textContent = ''
@@ -744,11 +744,6 @@ document.querySelectorAll('.edit-product-btn').forEach(button=>{
 })
 
 
-
-
-
-
-
 // Close modal
 function closeProductModalWindow(){
   addProductForm.reset()
@@ -774,14 +769,12 @@ cancelProductModal.addEventListener('click',closeProductModalWindow)
 
 
 // Form validation
-
 const productImagesInput = document.getElementById('productImages') 
-
 const imageCropContainer = document.getElementById('imageCropContainer') // The crop interface container.
 const imageToCrop = document.getElementById('imageToCrop') // The image that Cropper.js will work on.
 const cancelCropBtn = document.getElementById('cancelCrop') // The Cancel Crop button.
 const confirmCropBtn = document.getElementById('confirmCrop') // The Confirm Crop button.
-let cropper = null // cropper stores the active Cropper.js instance. We'll use it to crop the selected image.
+let cropper = null // cropper stores the active Cropper.js instance
 let currentCropIndex = null // currentCropIndex remembers which image in selectedImages is currently being cropped.
 
 const productNameError = document.getElementById('productNameError')
@@ -949,9 +942,6 @@ addProductForm.addEventListener('submit',(event)=>{
       text: 'Please try again.'
     });
   })
-
-
-
 })
 
 productNameInput.addEventListener('input',()=>{
@@ -981,7 +971,6 @@ quantityInput.addEventListener('input',()=>{
 productImagesInput.addEventListener('change',()=>{
   imagesError.textContent = ''
 })
-
 
 
 
@@ -1062,7 +1051,6 @@ function updateImagePreview() {
 // Select images
 productImagesInput.addEventListener('change', () => {
     selectedImages = Array.from(productImagesInput.files);
-
     updateImagePreview();
 });
 
@@ -1213,6 +1201,147 @@ cancelCropBtn.addEventListener('click', () => {
     imageToCrop.src = '';
 
 });
+
+
+
+
+
+
+// list or unlist products
+const productToggleButtons = document.querySelectorAll('.product-action-toggle-btn')
+productToggleButtons.forEach(button=>{
+  button.addEventListener('click',()=>{
+    const row = button.closest('tr')
+    const statusBadge = row.querySelector('.product-status')
+    const statusDot = statusBadge.querySelector('.status-dot')
+    const statusText = statusBadge.querySelector('.status-text')
+
+    
+
+    const productId = button.dataset.productId
+    const isListed = button.dataset.isListed === 'true'
+    const newIsListed = !isListed
+
+    const action = isListed ? 'Unlist' : 'List'
+    const newStatus = newIsListed ? 'Listed' : 'Unlisted'
+
+    Swal.fire({
+      title: `${action} Product?`,
+      text: `Are you sure you want to ${action.toLowerCase()} this product?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${action}`,
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#1e1b19',
+      cancelButtonColor: '#8c8278',
+      reverseButtons: true
+    }).then(async(result)=>{
+      if(result.isConfirmed){
+        try {
+          const response = await fetch(
+            `/admin/products/${productId}/listing-status`,
+            {
+              method:'PATCH',
+              headers:{
+                'Content-Type':'application/json'
+              },
+              body: JSON.stringify({
+              isListed:newIsListed
+              })
+            }
+          )
+
+          const data = await response.json()
+          if(!data.success){
+            Swal.fire({
+              title: 'Error!',
+              text: data.message,
+              icon: 'error',
+              confirmButtonColor: '#1e1b19'
+            })
+            return
+          }
+
+          if(newIsListed){
+            statusBadge.classList.remove(
+              'bg-[#fce8e6]',
+              'text-[#b33324]',
+              'border-[#f5d0cc]'
+            )
+            statusBadge.classList.add(
+              'bg-[#e6f4ea]',
+              'text-[#1e683b]',
+              'border-[#d2ead7]'
+            )
+
+            statusDot.classList.remove('bg-[#b33324]')
+            statusDot.classList.add('bg-[#1e683b]')
+
+            button.textContent = 'Unlist'
+            button.setAttribute('aria-label', 'Unlist Product')
+
+          }else{
+            statusBadge.classList.remove(
+              'bg-[#e6f4ea]',
+              'text-[#1e683b]',
+              'border-[#d2ead7]'
+            )
+            statusBadge.classList.add(
+              'bg-[#fce8e6]',
+              'text-[#b33324]',
+              'border-[#f5d0cc]'
+            )
+            statusDot.classList.remove('bg-[#1e683b]');
+            statusDot.classList.add('bg-[#b33324]');
+
+            button.textContent = 'List';
+            button.setAttribute('aria-label', 'List Product');
+          }
+
+          statusText.textContent = newStatus
+
+          const listedProductsCount = document.getElementById('listedProductsCount')
+          const unlistedProductsCount = document.getElementById('unlistedProductsCount')
+          let listedCount = Number(listedProductsCount.textContent)
+          let unlistedCount = Number(unlistedProductsCount.textContent)
+          if(newIsListed){
+            listedCount++
+            unlistedCount--
+          }else{
+            listedCount--
+            unlistedCount++
+          }
+
+          listedProductsCount.textContent = listedCount;
+          unlistedProductsCount.textContent = unlistedCount;
+
+
+          button.dataset.isListed = String(newIsListed)
+
+          await Swal.fire({
+            title: 'Success!',
+            text: data.message,
+            icon: 'success',
+            confirmButtonColor: '#1e1b19'
+          })
+
+        } catch (error) {
+          console.error('Error updating product status:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Something went wrong. Please try again.',
+            icon: 'error',
+            confirmButtonColor: '#1e1b19'
+          });
+
+        }
+      }
+    })
+
+
+  })
+})
+
 
 
 
