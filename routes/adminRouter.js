@@ -34,5 +34,6 @@ router.patch(
     productController.updateProduct
 )
 router.patch('/products/:id/listing-status',productController.updateProductListingStatus)
+router.patch('/products/:id/delete',productController.deleteProduct)
 
 module.exports = router

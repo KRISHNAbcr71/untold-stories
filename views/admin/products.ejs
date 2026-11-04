@@ -555,10 +555,6 @@
             accept="image/jpeg,image/png,image/webp" multiple
             class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm">
 
-            <!-- <p class="mt-2 text-xs text-[#8e8170]">
-            Select at least 3 images. Each image will be cropped individually before uploading.
-            </p> -->
-
             <p id="imagesError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
 
             <!-- Image preview area will be added next -->
@@ -1338,10 +1334,65 @@ productToggleButtons.forEach(button=>{
       }
     })
 
-
   })
 })
 
+
+
+// delete product
+document.querySelectorAll('.delete-product-btn').forEach(button=>{
+  button.addEventListener('click',async()=>{
+    const productId = button.dataset.productId
+
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This product will be deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#b33324',
+      cancelButtonColor: '#8c8278',
+      confirmButtonText: 'Yes, delete it!'
+    })
+    if(!result.isConfirmed){
+      return
+    }
+
+
+    try {
+      const response = await fetch(`/admin/products/${productId}/delete`,{
+        method:'PATCH'
+      })
+
+      const data = await response.json()
+      if(!data.success){
+        await Swal.fire({
+          title: 'Error!',
+          text: data.message,
+          icon: 'error'
+        })
+        return
+      }
+
+      await Swal.fire({
+        title: 'Deleted!',
+        text: data.message,
+        icon: 'success'
+      })
+
+      window.location.reload()
+
+
+
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Something went wrong. Please try again.',
+        icon: 'error'
+      });
+    }
+  })
+})
 
 
 
