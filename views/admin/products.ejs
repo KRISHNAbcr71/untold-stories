@@ -1,0 +1,1401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Product Management | The Untold Stories</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"/>
+  <!-- Tailwind CSS CDN with forms plugin -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            parchment: {
+              50: '#fbf9f6',
+              100: '#f6f3ee',
+              200: '#eee8df',
+              300: '#dfd7c9',
+              400: '#c8bcab',
+              800: '#3a342d',
+              900: '#221e1a',
+            },
+            archive: {
+              charcoal: '#1d1917',
+              border: '#e7e2dc',
+              muted: '#7e756c',
+              badgeGreen: '#e6f3eb',
+              badgeGreenText: '#1e683b',
+              badgeRed: '#fcebe9',
+              badgeRedText: '#a43425',
+              tagBg: '#f7f1e6',
+              tagText: '#7b5329',
+            }
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Inter"', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Google Fonts: Playfair Display & Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap"
+    rel="stylesheet">
+  <style data-purpose="custom-typography">
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #fbf9f6;
+      color: #1d1917;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-archive-serif {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+  </style>
+  <style data-purpose="table-layout">
+    /* Subtle custom borders and interactive transitions matching the reference design */
+    .table-row-hover {
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+    }
+
+    .table-row-hover:hover {
+      background-color: #ffffff;
+    }
+
+    /* Custom scrollbar styling for high density tables */
+    ::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #dfd7c9;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+
+<body class="min-h-screen flex flex-col bg-[#fbf9f6] text-[#221e1a]">
+  <%- include('../partials/admin/header')%>
+    <!-- BEGIN: MainContent -->
+    <main class="flex-1 max-w-[1520px] w-full mx-auto px-6 py-10" data-purpose="category-management-view">
+      <!-- Page Title & Overview Copy -->
+      <section class="mb-8" data-purpose="header-section">
+        <h2 class="text-3xl lg:text-4xl font-normal font-archive-serif text-[#1c1b1a] tracking-tight">
+          Product Management
+        </h2>
+        <p class="text-xs lg:text-[13px] text-[#736d64] mt-1.5 font-normal tracking-wide">
+          Manage all books in The Untold Stories. Add new products, edit product details, search products, and manage their visibility.
+        </p>
+      </section>
+      <!-- BEGIN: MetricCards (Top KPI Cards Layout) -->
+      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" data-purpose="kpi-overview">
+        <!-- Card 1: Total products -->
+        <article
+          class="bg-[#f7f4ee]/80 border border-[#e5dfd7] rounded-lg p-6 flex flex-col justify-between shadow-2xs hover:border-[#d9d0c5] transition">
+
+          <div>
+            <div class="flex items-center justify-between text-[#7d746b]">
+              <span class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">
+                Total Products
+              </span>
+
+              <svg class="w-4 h-4 text-[#8a8177]" fill="none" stroke="currentColor" stroke-width="1.8"
+                viewBox="0 0 24 24">
+                <path
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  stroke-linecap="round" stroke-linejoin="round">
+                </path>
+              </svg>
+            </div>
+
+            <div class="mt-4 flex items-baseline">
+              <span class="text-4xl font-archive-serif font-medium tracking-tight text-[#1c1815]">
+                <%= productCount %>
+              </span>
+              <span class="ml-2.5 text-xs text-[#8c8278]">
+                registered products
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-[#eae4dc] flex items-center justify-between text-xs text-[#81776d]">
+            <span class="text-[11px] text-[#938b82]">
+              Active products
+            </span>
+            <span class="font-medium text-[#1e683b]">
+              <%= productCount %> total
+            </span>
+          </div>
+        </article>
+        <!-- Card 2: Listed Classifications -->
+        <article
+          class="bg-[#f7f4ee]/80 border border-[#e5dfd7] rounded-lg p-6 flex flex-col justify-between shadow-2xs hover:border-[#d9d0c5] transition">
+
+          <div>
+            <div class="flex items-center justify-between text-[#7d746b]">
+              <span class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">
+                Listed products
+              </span>
+
+              <svg class="w-4 h-4 text-[#8a8177]" fill="none" stroke="currentColor" stroke-width="1.8"
+                viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round">
+                </path>
+              </svg>
+            </div>
+
+            <div class="mt-4 flex items-baseline space-x-2.5">
+              <span class="text-4xl font-archive-serif font-medium tracking-tight text-[#1c1815]"
+                id="listedProductsCount">
+                <%= listedProducts %>
+              </span>
+
+              <span
+                class="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]">
+                Listed
+              </span>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-[#eae4dc] flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 text-[#686058]">
+              <span class="w-2 h-2 rounded-full bg-[#2a854d]"></span>
+              <span>Currently listed</span>
+            </div>
+          </div>
+        </article>
+        <!-- Card 3: Unlisted / Archived -->
+        <article
+          class="bg-[#f7f4ee]/80 border border-[#e5dfd7] rounded-lg p-6 flex flex-col justify-between shadow-2xs hover:border-[#d9d0c5] transition">
+          <div>
+            <div class="flex items-center justify-between text-[#7d746b]">
+              <span class="text-[9.5px] uppercase tracking-[0.18em] text-[#736d64] font-medium leading-relaxed">
+                Unlisted products
+              </span>
+
+              <svg class="w-4 h-4 text-[#8a8177]" fill="none" stroke="currentColor" stroke-width="1.8"
+                viewBox="0 0 24 24">
+                <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+
+            <div class="mt-4 flex items-baseline space-x-2">
+              <span id="unlistedProductsCount"
+                class="text-4xl font-archive-serif font-medium tracking-tight text-[#1c1815]">
+                <%= unlistedProducts %>
+              </span>
+              <span class="text-xs text-[#8c8278]">on hold</span>
+            </div>
+          </div>
+
+          <div class="mt-6 pt-4 border-t border-[#eae4dc] flex items-center justify-between text-xs">
+            <div class="flex items-center space-x-2 text-[#a43425]">
+              <span class="w-2 h-2 rounded-full bg-[#b33324]"></span>
+              <span>Currently unlisted</span>
+            </div>
+          </div>
+        </article>
+      </section>
+      <!-- END: MetricCards -->
+      <!-- BEGIN: SearchFilterBar -->
+      <section class="space-y-3 mb-6" data-purpose="filters-and-search">
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+          <!-- Search Input Bar with Clear Button -->
+
+
+          <form action="/admin/products" method="GET"
+            class="relative flex-1 bg-white border border-[#ded7ce] rounded-lg shadow-2xs focus-within:border-[#7d746b] focus-within:ring-1 focus-within:ring-[#7d746b] transition">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-[#8e857b]">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round">
+                </path>
+              </svg>
+            </div>
+            <input
+              class="w-full pl-10 pr-10 py-2.5 bg-transparent border-0 text-xs sm:text-[13px] text-[#221e1a] placeholder-[#9f968c] focus:ring-0 focus:outline-none"
+              id="searchInput" placeholder="Search product by name and author" name="search" value="<% search || '' %>"
+              type="text">
+            <button aria-label="Clear Search Input"
+              class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-[#b3aaa0] hover:text-[#221e1a] transition"
+              id="clearSearchBtn" type="button">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+          </form>
+
+
+          <!-- Add product Primary Action Button -->
+          <button
+            class="h-[42px] px-4 bg-[#1e1b19] hover:bg-black text-white rounded-lg flex items-center justify-center space-x-2 text-xs font-semibold uppercase tracking-wider shadow-xs transition"
+            id="addProductBtn" type="button">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span class="">Add product</span>
+          </button>
+        </div>
+        <!-- Result Counter Sub-text -->
+        <div class="flex justify-end pr-1">
+          <span class="text-[10px] tracking-[0.16em] uppercase font-semibold text-[#8a8176]">
+            SHOWING <%= products.length %> OF <%= totalProducts %> REGISTERED RECORDS
+          </span>
+        </div>
+      </section>
+
+      <!-- END: SearchFilterBar -->
+      <!-- BEGIN: CategoryTableContainer -->
+      <div class="border border-[#e7e2dc] bg-[#fbf9f6] rounded-t-lg overflow-hidden shadow-2xs"
+        data-purpose="category-table-wrapper">
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse" id="productsTable">
+            <!-- Table Header matching exact aesthetic -->
+            <thead>
+              <tr
+                class="border-b border-[#e7e2dc] bg-[#f8f5ef] text-[10px] font-semibold text-[#837970] uppercase tracking-[0.16em]">
+                <th class="py-3.5 px-6 w-[28%] font-medium" scope="col">Image</th>
+                <th class="py-3.5 px-6 w-[34%] font-medium" scope="col">Product Name</th>
+                <th class="py-3.5 px-6 w-[34%] font-medium" scope="col">Description</th>
+                <th class="py-3.5 px-6 w-[12%] font-medium" scope="col">Category</th>
+                <th class="py-3.5 px-6 w-[12%] font-medium" scope="col">Author</th>
+                <th class="py-3.5 px-6 w-[12%] font-medium" scope="col">Price</th>
+                <th class="py-3.5 px-6 w-[7%] font-medium" scope="col">Stock</th>
+                <th class="py-3.5 px-6 w-[7%] font-medium" scope="col">Status</th>
+                <th class="py-3.5 px-6 w-[7%] font-medium text-center" scope="col">Actions</th>
+                <th class="py-3.5 px-6 w-[7%] font-medium text-center" scope="col">Edit</th>
+                <th class="py-3.5 px-6 w-[7%] font-medium text-center" scope="col">Delete</th>
+              </tr>
+            </thead>
+            <!-- Table Body Rows -->
+            <tbody class="divide-y divide-[#ebe6e0] text-xs">
+              <%if(products.length>0){%>
+                <%products.forEach((product)=>{%>
+                    <tr>
+                        <td class="py-4 px-6">
+                            <%if(product.productImage && product.productImage.length > 0){%>
+                            <img src="<%= product.productImage[0] %>" alt="<%= product.productName %>"
+                            class="w-16 h-20 object-cover rounded-md">
+                            <%}else{%>
+                            <div class="w-16 h-20 bg-[#f5f1e8] rounded-md flex items-center justify-center">
+                                <span class="text-[10px] text-[#837970]">No image</span>
+                            </div>
+                            <%}%>
+                        </td>
+
+                        <td class="py-4 px-6"><%= product.productName%></td>
+
+                        <td class="py-4 px-6"><%= product.description %></td>
+
+                        <td class="py-4 px-6"><%= product.category ? product.category.name : 'N/A' %></td>
+
+                        <td class="py-4 px-6"><%= product.author %></td>
+
+                        <td class="py-4 px-6"><%= product.price %></td>
+
+                        <td class="py-4 px-6"><%= product.quantity %></td>
+
+                        <td class="py-4 px-6">
+                          <span
+                            class="product-status inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]
+                            <%= product.isListed ? 'bg-[#e6f4ea] text-[#1e683b] border border-[#d2ead7]' : 'bg-[#fce8e6] text-[#b33324] border border-[#f5d0cc]' %>">
+                            <span class="status-dot w-1.5 h-1.5 rounded-full bg-[#1e683b] mr-1.5
+                              <%= product.isListed ? 'bg-[#1e683b]' : 'bg-[#b33324]' %>"></span>
+                            <span class="status-text">
+                              <%= product.isListed ? 'Listed' : 'Unlisted' %>
+                            </span>
+                          </span>
+                        </td>
+
+
+                        <td class="py-4 px-6 text-center">
+                          <button aria-label="<%= product.isListed ? 'Unlist' : 'List' %> Product"
+                            class="product-action-toggle-btn px-3 py-1 text-[11px] font-semibold tracking-wider rounded border border-[#cac2b6] text-[#332c25] hover:bg-white hover:border-[#1e1b18] transition uppercase"
+                            data-product-id="<%= product._id %>" data-is-listed="<%= product.isListed %>" type="button">
+                            <%= product.isListed ? 'Unlist' : 'List' %>
+                          </button>
+                        </td>
+
+                        <td class="py-4 px-6 text-center">
+                          <button aria-label="Edit product"
+                            class="edit-product-btn inline-flex items-center justify-center p-1.5 rounded hover:bg-[#eae4dc] text-[#6d645c] hover:text-[#1e1b18] transition"
+                            data-product-id='<%= product._id %>'
+                            data-product-name='<%= product.productName %>'
+                            data-product-description='<%= product.description %>'
+                            data-product-category='<%= product.category._id%>'
+                            data-product-author='<%= product.author%>'
+                            data-product-price='<%= product.price%>'
+                            data-product-quantity='<%= product.quantity%>'
+                            data-product-images='<%- JSON.stringify(product.productImage) %>'
+                            title="Edit Product" type="button">
+
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                              <path
+                                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                                stroke-linecap="round" stroke-linejoin="round">
+                              </path>
+                            </svg>
+                          </button>
+                        </td>
+
+                        <td class="py-4 px-6 text-center">
+                          <button aria-label="Delete Product"
+                            class="delete-product-btn inline-flex items-center justify-center p-1.5 rounded hover:bg-[#fdeeed] text-[#8c8278] hover:text-[#b33324] transition"
+                            data-product-id="<%= product._id %>" title="Delete Product" type="button">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                              <path
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                                stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                          </button>
+                        </td>
+
+                    </tr>
+                <%})%>
+              <%}else{%>
+                <tr>
+                  <td colspan="11" class="py-10 text-center text-sm text-[#8c8278]">
+                    No products found.
+                  </td>
+                </tr>
+              <%}%>
+            </tbody>
+          </table>
+        </div>
+        <!-- BEGIN: Dynamic PaginationFooter -->
+        <footer
+          class="border-t border-[#e7e2dc] bg-[#f8f5ef] py-3 px-6 flex items-center justify-between text-xs text-[#6e655c]">
+
+          <!-- Previous Page Button -->
+          <% if (currentPage> 1) { %>
+            <a href="/admin/products?page=<%= currentPage - 1 %>&search=<%= encodeURIComponent(search) %>"
+              class="flex items-center space-x-1 font-semibold uppercase tracking-wider text-[11px] text-[#5e554d] hover:text-black transition">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Prev</span>
+            </a>
+            <% } else { %>
+              <span class="flex items-center space-x-1 text-[11px] text-[#b3aaa0] cursor-not-allowed">
+                <span>Prev</span>
+              </span>
+              <% } %>
+
+                <!-- Page Numbers List -->
+                <div class="flex items-center space-x-1.5">
+                  <% for (let page=1; page <=totalPages; page++) { %>
+                    <a href="/admin/products?page=<%= page %>&search=<%= encodeURIComponent(search) %>" class="w-7 h-7 rounded font-medium text-xs flex items-center justify-center transition
+                <%= currentPage === page
+                    ? 'bg-[#1e1b18] text-white shadow-xs'
+                    : 'hover:bg-[#eae4dc] text-[#5e554d]' %>">
+                      <%= page %>
+                    </a>
+                    <% } %>
+                </div>
+
+                <!-- Next Page Button -->
+                <% if (currentPage < totalPages) { %>
+                  <a href="/admin/products?page=<%= currentPage + 1 %>&search=<%= encodeURIComponent(search) %>"
+                    class="flex items-center space-x-1 font-semibold uppercase tracking-wider text-[11px] text-[#5e554d] hover:text-black transition">
+                    <span>Next</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                  </a>
+                  <% } else { %>
+                    <span class="flex items-center space-x-1 text-[11px] text-[#b3aaa0] cursor-not-allowed">
+                      <span>Next</span>
+                    </span>
+                    <% } %>
+
+        </footer>
+        <!-- END: Dynamic PaginationFooter -->
+      </div>
+      <!-- END: CategoryTableContainer -->
+    </main>
+    <!-- END: MainContent -->
+
+
+
+    
+    <!-- Add Product Modal -->
+    <div id="addProductModal"
+    class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+
+    <div class="w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-xl bg-[#fbf9f5] p-6 shadow-xl">
+
+        <!-- Modal Header -->
+        <div class="mb-6 flex items-center justify-between">
+        <h2 id="productModalTitle" class="font-serif text-2xl font-semibold text-[#1e1b19]">
+            Add New Product
+        </h2>
+
+        <button type="button" id="closeProductModal"
+            class="text-2xl text-[#8e8170] hover:text-black">
+            &times;
+        </button>
+        </div>
+
+        <form id="addProductForm" action="/admin/addProduct" method="POST" enctype="multipart/form-data" novalidate>
+          <input type="hidden" id="productId" name="productId">
+
+        <!-- Product Name -->
+        <div class="mb-4">
+            <label for="productName"
+            class="mb-2 block text-sm font-medium text-[#1e1b19]">
+            Product Name
+            </label>
+
+            <input type="text" id="productName" name="productName"
+            placeholder="Enter product name"
+            class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]">
+
+            <p id="productNameError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
+        </div>
+
+        <!-- Author -->
+        <div class="mb-4">
+            <label for="author"
+            class="mb-2 block text-sm font-medium text-[#1e1b19]">
+            Author
+            </label>
+
+            <input type="text" id="author" name="author"
+            placeholder="Enter author name"
+            class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]">
+
+            <p id="authorError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-4">
+            <label for="productDescription"
+            class="mb-2 block text-sm font-medium text-[#1e1b19]">
+            Description
+            </label>
+
+            <textarea id="productDescription" name="description" rows="4"
+            placeholder="Enter product description"
+            class="w-full resize-none rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]"></textarea>
+
+            <p id="descriptionError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
+        </div>
+
+        <!-- Category -->
+        <div class="mb-4">
+            <label for="category"
+            class="mb-2 block text-sm font-medium text-[#1e1b19]">
+            Category
+            </label>
+
+            <select id="category" name="category"
+            class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]">
+            <option value="">Select category</option>
+
+            <% categories.forEach((category)=>{ %>
+                <option value="<%= category._id %>">
+                    <%= category.name %>
+                </option>
+            <%})%>
+            </select>
+
+            <p id="categoryError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
+        </div>
+
+        <!-- Price and Stock -->
+        <div class="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+
+            <div>
+            <label for="price"
+                class="mb-2 block text-sm font-medium text-[#1e1b19]">
+                Price (₹)
+            </label>
+
+            <input type="number" id="price" name="price" min="0"
+                step="1" placeholder="Enter price"
+                class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]">
+
+            <p id="priceError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
+            </div>
+
+            <div>
+            <label for="quantity"
+                class="mb-2 block text-sm font-medium text-[#1e1b19]">
+                Stock Quantity
+            </label>
+
+            <input type="number" id="quantity" name="quantity" min="0"
+                step="1" placeholder="Enter quantity"
+                class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm outline-none focus:border-[#d4a373]">
+
+            <p id="quantityError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
+            </div>
+
+        </div>
+
+        <!-- Product Images -->
+        <div class="mb-6">
+            <label for="productImages"
+            class="mb-2 block text-sm font-medium text-[#1e1b19]">
+            Product Images
+            </label>
+
+            <input type="file" id="productImages" name="productImages"
+            accept="image/jpeg,image/png,image/webp" multiple
+            class="w-full rounded-lg border border-[#e5dfd2] bg-white px-4 py-3 text-sm">
+
+            <p id="imagesError" class="mt-1 min-h-[16px] text-xs text-red-500"></p>
+
+            <!-- Image preview area will be added next -->
+            <div id="productImagePreview" class="mt-4 grid grid-cols-2 gap-4 sm:grid-cols-3">
+
+            </div>
+
+            <!-- Image Crop Area -->
+              <div id="imageCropContainer" class="hidden mt-6">
+
+                  <h3 class="mb-3 text-sm font-semibold text-[#1e1b19]">
+                      Crop Product Image
+                  </h3>
+
+                  <div class="w-full max-h-[400px] overflow-hidden rounded-lg bg-white">
+                      <img
+                          id="imageToCrop"
+                          src=""
+                          alt="Image to crop"
+                          class="block max-w-full"
+                      >
+                  </div>
+
+                  <div class="mt-4 flex justify-end gap-3">
+
+                      <button
+                          type="button"
+                          id="cancelCrop"
+                          class="rounded-lg border border-[#e5dfd2] px-4 py-2 text-sm"
+                      >
+                          Cancel Crop
+                      </button>
+
+                      <button
+                          type="button"
+                          id="confirmCrop"
+                          class="rounded-lg bg-[#1e1b19] px-4 py-2 text-sm text-white"
+                      >
+                          Confirm Crop
+                      </button>
+
+                  </div>
+
+              </div>
+
+
+        </div>
+
+        <!-- Buttons -->
+        <div class="flex justify-end gap-3">
+            <button type="button" id="cancelProductModal"
+            class="rounded-lg border border-[#e5dfd2] px-5 py-2.5 text-sm font-semibold text-[#1e1b19] hover:bg-[#f5f1e8]">
+            Cancel
+            </button>
+
+            <button type="submit" id="productModalSubmit"
+            class="rounded-lg bg-[#1e1b19] px-5 py-2.5 text-sm font-semibold text-white hover:bg-black">
+            Save Product
+            </button>
+        </div>
+
+        </form>
+    </div>
+    </div>
+
+
+
+
+    <%- include('../partials/admin/footer')%>
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+
+// Search and clear
+document.addEventListener('DOMContentLoaded', () => {
+    const clearSearchBtn = document.getElementById('clearSearchBtn');
+
+    // Clear search button listener
+    if(clearSearchBtn){
+        clearSearchBtn.addEventListener('click', () => {
+            window.location.href = '/admin/products';
+        });
+    }
+});
+
+
+// Modal open or close
+const addProductBtn = document.getElementById('addProductBtn')
+const addProductModal = document.getElementById('addProductModal')
+const closeProductModal = document.getElementById('closeProductModal')
+const cancelProductModal = document.getElementById('cancelProductModal')
+
+const productModalTitle = document.getElementById('productModalTitle')
+const productModalSubmit = document.getElementById('productModalSubmit')
+const productIdInput = document.getElementById('productId')
+const productImagePreview = document.getElementById('productImagePreview');
+
+const addProductForm = document.getElementById('addProductForm')
+const productNameInput = document.getElementById('productName')
+const authorInput = document.getElementById('author')
+const descriptionInput = document.getElementById('productDescription')
+const categoryInput = document.getElementById('category')
+const priceInput = document.getElementById('price')
+const quantityInput = document.getElementById('quantity')
+
+
+let selectedImages = [];
+let existingProductImages = []
+
+// Open modal
+addProductBtn.addEventListener('click',()=>{
+  addProductForm.reset()
+
+  productImagePreview.innerHTML = ''
+  productNameError.textContent = ''
+  authorError.textContent = ''
+  descriptionError.textContent = ''
+  categoryError.textContent = ''
+  priceError.textContent = ''
+  quantityError.textContent = ''
+  imagesError.textContent = ''
+
+  productIdInput.value = ''
+
+  productModalTitle.textContent = 'Add New Product'
+  productModalSubmit.textContent = 'Save Product'
+  
+  selectedImages = []
+  existingProductImages = []
+
+  addProductModal.classList.remove('hidden')
+  addProductModal.classList.add('flex')
+})
+
+// edit modal
+function openEditProductModal(product){
+  addProductForm.reset()
+  productNameError.textContent = ''
+  authorError.textContent = ''
+  descriptionError.textContent = ''
+  categoryError.textContent = ''
+  priceError.textContent = ''
+  quantityError.textContent = ''
+  imagesError.textContent = ''
+  
+  productIdInput.value = product.id
+
+  productModalTitle.textContent = 'Edit Product'
+  productModalSubmit.textContent = 'Update Product'
+
+  productNameInput.value = product.name
+  authorInput.value = product.author;
+  descriptionInput.value = product.description;
+  categoryInput.value = product.category;
+  priceInput.value = product.price;
+  quantityInput.value = product.quantity;
+
+  existingProductImages = [...product.images]
+  productImagePreview.innerHTML = ''
+
+  addProductModal.classList.remove('hidden');
+  addProductModal.classList.add('flex');
+  updateExistingImagePreview()
+}
+
+document.querySelectorAll('.edit-product-btn').forEach(button=>{
+  button.addEventListener('click',()=>{
+    console.log('Raw image data:', button.dataset.productImages);
+    const product = {
+      id:button.dataset.productId,
+      name:button.dataset.productName,
+      description:button.dataset.productDescription,
+      author:button.dataset.productAuthor,
+      category:button.dataset.productCategory,
+      price:button.dataset.productPrice,
+      quantity:button.dataset.productQuantity,
+      images:JSON.parse(button.dataset.productImages)
+    }
+    openEditProductModal(product)
+  })
+})
+
+
+// Close modal
+function closeProductModalWindow(){
+  addProductForm.reset()
+  selectedImages = []
+  existingProductImages = []
+  productImagePreview.innerHTML = ''
+  productNameError.textContent = ''
+  authorError.textContent = ''
+  descriptionError.textContent = ''
+  categoryError.textContent = ''
+  priceError.textContent = ''
+  quantityError.textContent = ''
+  imagesError.textContent = ''
+  document.getElementById('productImagePreview').innerHTML = '';
+
+  addProductModal.classList.remove('flex')
+  addProductModal.classList.add('hidden')
+}
+
+closeProductModal.addEventListener('click',closeProductModalWindow)
+cancelProductModal.addEventListener('click',closeProductModalWindow)
+
+
+
+// Form validation
+const productImagesInput = document.getElementById('productImages') 
+const imageCropContainer = document.getElementById('imageCropContainer') // The crop interface container.
+const imageToCrop = document.getElementById('imageToCrop') // The image that Cropper.js will work on.
+const cancelCropBtn = document.getElementById('cancelCrop') // The Cancel Crop button.
+const confirmCropBtn = document.getElementById('confirmCrop') // The Confirm Crop button.
+let cropper = null // cropper stores the active Cropper.js instance
+let currentCropIndex = null // currentCropIndex remembers which image in selectedImages is currently being cropped.
+
+const productNameError = document.getElementById('productNameError')
+const authorError = document.getElementById('authorError')
+const descriptionError = document.getElementById('descriptionError')
+const categoryError = document.getElementById('categoryError')
+const priceError = document.getElementById('priceError')
+const quantityError = document.getElementById('quantityError')
+const imagesError = document.getElementById('imagesError')
+
+addProductForm.addEventListener('submit',(event)=>{
+  event.preventDefault()
+
+  const productName = productNameInput.value.trim()
+  const author = authorInput.value.trim()
+  const description = descriptionInput.value.trim()
+  const category = categoryInput.value.trim()
+  const price = priceInput.value.trim()
+  const quantity = quantityInput.value.trim()
+  const productImages = productImagesInput.files
+
+  if(productName === ''){
+    productNameError.textContent = 'Product name is required';
+  }else if(productName.length<2){
+    productNameError.textContent = 'Product name must be at least 2 characters'
+  }else if(productName.length>50){
+    productNameError.textContent = 'Product name cannot exceed 50 characters'
+  }else if(/\d/.test(productName)){
+    productNameError.textContent = 'Product name cannot contain numbers'
+  }else{
+    productNameError.textContent = ''
+  }
+
+  if(author === ''){
+    authorError.textContent = 'Author name is required'
+  }else if(author.length<2){
+    authorError.textContent = 'Author name must be at least 2 characters'
+  }else if(author.length>50){
+    authorError.textContent = 'Author name cannot exceed 50 characters'
+  }else if(!/^[a-zA-Z ]+$/.test(author)){
+    authorError.textContent = 'Author name can contain only letters and spaces'
+  }else{
+    authorError.textContent = ""
+  }
+
+  if(description === ''){
+    descriptionError.textContent = 'Description is required'
+  }else if(description.length<10){
+    descriptionError.textContent = 'Description must be at least 10 characters'
+  }else if(description.length>300){
+    descriptionError.textContent = 'Description cannot exceed 300 characters'
+  }else if(/\d/.test(description)){
+    descriptionError.textContent = 'Description cannot contain numbers';
+  }else{
+    descriptionError.textContent = ""
+  }
+
+  if(category === ''){
+    categoryError.textContent = 'Please select a category'
+  }else{
+    categoryError.textContent = ""
+  }
+
+  if(price === ''){
+    priceError.textContent = 'Price is required'
+  }else if(!Number.isFinite(Number(price)) || Number(price)<=0 ){
+    priceError.textContent = 'Please enter a valid price'
+  }else{
+    priceError.textContent = ""
+  }
+
+  if(quantity === ''){
+    quantityError.textContent = 'Stock quantity is required'
+  }else if(!Number.isInteger(Number(quantity)) || Number(quantity)<0 ){
+    quantityError.textContent = 'Please enter a valid whole number'
+  }else{
+    quantityError.textContent = ""
+  }
+
+
+  const allowedImageTypes = [
+    'image/jpeg',
+    'image/png',
+    'image/webp'
+  ]
+  const maxFileSize = 5 * 1024 * 1024
+  const totalImageCount = existingProductImages.length + productImages.length
+
+  if(totalImageCount<3){
+    imagesError.textContent = 'At least 3 product images are required'
+  }else if(totalImageCount.length>10){
+    imagesError.textContent = 'You can have a maximum of 10 product images'
+  }else if(
+    Array.from(productImages).some(
+      image => !allowedImageTypes.includes(image.type)
+    )
+  ){
+    imagesError.textContent = 'Only JPG, PNG and WebP images are allowed';
+  }else if(
+    Array.from(productImages).some(
+      image => image.size > maxFileSize
+    )
+  ){
+    imagesError.textContent = 'Each image must be 5 MB or smaller';
+  }else{
+    imagesError.textContent = ""
+  }
+
+  if(
+    productNameError.textContent !== '' ||
+    authorError.textContent !== '' ||
+    descriptionError.textContent !== '' ||
+    categoryError.textContent !== '' ||
+    priceError.textContent !== '' ||
+    quantityError.textContent !== '' ||
+    imagesError.textContent !== ''
+  ){
+    return;
+  }
+
+  const formData = new FormData(addProductForm)
+  formData.append('existingProductImages',JSON.stringify(existingProductImages))
+  const productId = productIdInput.value
+  const url = productId
+    ? `/admin/products/${productId}`
+    : addProductForm.action
+  const method = productId
+    ?'PATCH' : 'POST'
+
+  fetch(url,{
+    method:method,
+    body:formData
+  })
+  .then(async(response)=>{
+
+    const result = await response.json()
+    if(!response.ok || !result.success){
+      let errorMessage = result.message || (
+        productId
+        ? 'Unable to update product.'
+        : 'Unable to add product.'
+      )
+      if(result.errors){
+        errorMessage = Object.values(result.errors).join('\n')
+      }
+      return Swal.fire({
+        icon: 'error',
+        title: 'Failed!',
+        text: errorMessage
+      })
+    }
+
+    await Swal.fire({
+      icon: 'success',
+      title: 'Success!',
+      text: result.message
+    })
+    window.location.reload()
+  })
+  .catch((error)=>{
+    console.error('Error adding product:', error);
+    Swal.fire({
+      icon: 'error',
+      title: 'Something went wrong!',
+      text: 'Please try again.'
+    });
+  })
+})
+
+productNameInput.addEventListener('input',()=>{
+  productNameError.textContent = ''
+})
+
+authorInput.addEventListener('input',()=>{
+  authorError.textContent = ''
+})
+
+descriptionInput.addEventListener('input',()=>{
+  descriptionError.textContent = ''
+})
+
+categoryInput.addEventListener('change',()=>{
+  categoryError.textContent = ''
+})
+
+priceInput.addEventListener('input',()=>{
+  priceError.textContent = ''
+})
+
+quantityInput.addEventListener('input',()=>{
+  quantityError.textContent = ''
+})
+
+productImagesInput.addEventListener('change',()=>{
+  imagesError.textContent = ''
+})
+
+
+
+function updateExistingImagePreview(){
+  existingProductImages.forEach((image,index)=>{
+    const imageContainer = document.createElement('div')
+    imageContainer.className = 'relative'
+    imageContainer.dataset.existingIndex = index
+    imageContainer.innerHTML = `
+      <img
+        src="${image}"
+        class="w-full h-40 object-cover rounded-lg border"
+        alt="Existing product image ${index + 1}"
+      >
+      <button
+        type="button"
+        data-existing-index="${index}"
+        class="absolute top-2 right-2 z-10
+        w-8 h-8 rounded-full
+        bg-white text-black
+        text-xl font-bold
+        flex items-center justify-center
+        shadow-lg cursor-pointer">&times;
+      </button>
+    `;
+    productImagePreview.appendChild(imageContainer)
+  })
+}
+
+
+
+// Image preview and individual removal
+function updateImagePreview() {
+    productImagePreview.querySelectorAll('[data-new-image]').forEach(container=>{
+      container.remove()
+    })
+
+    selectedImages.forEach((image, index) => {
+        const reader = new FileReader();
+
+        reader.onload = (event) => {
+            const imageContainer = document.createElement('div');
+
+            imageContainer.className = 'relative cursor-pointer';
+            imageContainer.dataset.index = index
+            imageContainer.dataset.newImage = true
+
+            imageContainer.innerHTML = `
+              <img
+                src="${event.target.result}"
+                class="w-full h-40 object-cover rounded-lg border hover:opacity-80 transition"
+                alt="Product image ${index + 1}"
+              >
+
+              <button
+                type="button"
+                data-index="${index}"
+                class="absolute top-2 right-2 z-10
+                w-8 h-8 rounded-full
+                bg-white text-black
+                text-xl font-bold
+                flex items-center justify-center
+                shadow-lg cursor-pointer"
+              >
+              &times;
+              </button>
+            `;
+
+            productImagePreview.appendChild(imageContainer);
+        };
+
+        reader.readAsDataURL(image);
+    });
+}
+
+
+
+// Select images
+productImagesInput.addEventListener('change', () => {
+    selectedImages = Array.from(productImagesInput.files);
+    updateImagePreview();
+});
+
+
+
+
+// Remove an individual image and click image
+productImagePreview.addEventListener('click', (event) => {
+
+  const existingRemoveButton = event.target.closest('button[data-existing-index]')
+  if(existingRemoveButton){
+    const index = Number(existingRemoveButton.dataset.existingIndex)
+    existingProductImages.splice(index,1)
+    productImagePreview.innerHTML = ''
+    updateExistingImagePreview()
+    updateImagePreview()
+    return;
+  }
+
+
+
+  // Check if the remove button was clicked
+  if (event.target.closest('button[data-index]')) {
+    const index = Number(event.target.closest('button[data-index]').dataset.index);
+
+    selectedImages.splice(index, 1);
+
+    // Update the actual file input
+    const dataTransfer = new DataTransfer();
+
+    selectedImages.forEach((image) => {
+      dataTransfer.items.add(image);
+    });
+
+    productImagesInput.files = dataTransfer.files;
+
+    updateImagePreview();
+
+    return;
+  }
+
+  // Check if an image preview was clicked
+  const imageContainer = event.target.closest('[data-index]');
+
+  if (!imageContainer) {
+    return;
+  }
+
+  const index = Number(imageContainer.dataset.index);
+
+  currentCropIndex = index;
+
+  const selectedImage = selectedImages[index];
+
+  const imageUrl = URL.createObjectURL(selectedImage);
+
+  // Destroy the previous cropper instance, if one exists
+  if (cropper) {
+    cropper.destroy();
+    cropper = null;
+  }
+
+  // Show the crop area
+  imageCropContainer.classList.remove('hidden');
+
+  // Initialize Cropper after the image loads
+  imageToCrop.onload = () => {
+    cropper = new Cropper(imageToCrop, {
+        aspectRatio: 3 / 4,
+        viewMode: 1,
+        autoCropArea: 0.8,
+        responsive: true
+    });
+  };
+
+  imageToCrop.src = imageUrl;
+
+});
+
+
+
+confirmCropBtn.addEventListener('click', () => {
+
+    if (!cropper || currentCropIndex === null) {
+        return;
+    }
+
+    const canvas = cropper.getCroppedCanvas();
+
+    canvas.toBlob((blob) => {
+
+        if (!blob) {
+            return;
+        }
+
+        const croppedImage = new File(
+            [blob],
+            selectedImages[currentCropIndex].name,
+            {
+                type: 'image/jpeg',
+                lastModified: Date.now()
+            }
+        );
+
+        selectedImages[currentCropIndex] = croppedImage;
+
+        // Update the actual file input
+        const dataTransfer = new DataTransfer();
+
+        selectedImages.forEach((image) => {
+            dataTransfer.items.add(image);
+        });
+
+        productImagesInput.files = dataTransfer.files;
+
+        // Destroy cropper
+        cropper.destroy();
+        cropper = null;
+
+        currentCropIndex = null;
+
+        // Hide crop interface
+        imageCropContainer.classList.add('hidden');
+
+        // Update previews
+        updateImagePreview();
+
+    }, 'image/jpeg', 0.9);
+
+});
+
+
+
+cancelCropBtn.addEventListener('click', () => {
+
+    // Destroy the current cropper instance
+    if (cropper) {
+        cropper.destroy();
+        cropper = null;
+    }
+
+    currentCropIndex = null;
+
+    // Hide the crop interface
+    imageCropContainer.classList.add('hidden');
+
+    // Clear the crop image
+    imageToCrop.src = '';
+
+});
+
+
+
+
+
+
+// list or unlist products
+const productToggleButtons = document.querySelectorAll('.product-action-toggle-btn')
+productToggleButtons.forEach(button=>{
+  button.addEventListener('click',()=>{
+    const row = button.closest('tr')
+    const statusBadge = row.querySelector('.product-status')
+    const statusDot = statusBadge.querySelector('.status-dot')
+    const statusText = statusBadge.querySelector('.status-text')
+
+    
+
+    const productId = button.dataset.productId
+    const isListed = button.dataset.isListed === 'true'
+    const newIsListed = !isListed
+
+    const action = isListed ? 'Unlist' : 'List'
+    const newStatus = newIsListed ? 'Listed' : 'Unlisted'
+
+    Swal.fire({
+      title: `${action} Product?`,
+      text: `Are you sure you want to ${action.toLowerCase()} this product?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: `Yes, ${action}`,
+      cancelButtonText: 'Cancel',
+      confirmButtonColor: '#1e1b19',
+      cancelButtonColor: '#8c8278',
+      reverseButtons: true
+    }).then(async(result)=>{
+      if(result.isConfirmed){
+        try {
+          const response = await fetch(
+            `/admin/products/${productId}/listing-status`,
+            {
+              method:'PATCH',
+              headers:{
+                'Content-Type':'application/json'
+              },
+              body: JSON.stringify({
+              isListed:newIsListed
+              })
+            }
+          )
+
+          const data = await response.json()
+          if(!data.success){
+            Swal.fire({
+              title: 'Error!',
+              text: data.message,
+              icon: 'error',
+              confirmButtonColor: '#1e1b19'
+            })
+            return
+          }
+
+          if(newIsListed){
+            statusBadge.classList.remove(
+              'bg-[#fce8e6]',
+              'text-[#b33324]',
+              'border-[#f5d0cc]'
+            )
+            statusBadge.classList.add(
+              'bg-[#e6f4ea]',
+              'text-[#1e683b]',
+              'border-[#d2ead7]'
+            )
+
+            statusDot.classList.remove('bg-[#b33324]')
+            statusDot.classList.add('bg-[#1e683b]')
+
+            button.textContent = 'Unlist'
+            button.setAttribute('aria-label', 'Unlist Product')
+
+          }else{
+            statusBadge.classList.remove(
+              'bg-[#e6f4ea]',
+              'text-[#1e683b]',
+              'border-[#d2ead7]'
+            )
+            statusBadge.classList.add(
+              'bg-[#fce8e6]',
+              'text-[#b33324]',
+              'border-[#f5d0cc]'
+            )
+            statusDot.classList.remove('bg-[#1e683b]');
+            statusDot.classList.add('bg-[#b33324]');
+
+            button.textContent = 'List';
+            button.setAttribute('aria-label', 'List Product');
+          }
+
+          statusText.textContent = newStatus
+
+          const listedProductsCount = document.getElementById('listedProductsCount')
+          const unlistedProductsCount = document.getElementById('unlistedProductsCount')
+          let listedCount = Number(listedProductsCount.textContent)
+          let unlistedCount = Number(unlistedProductsCount.textContent)
+          if(newIsListed){
+            listedCount++
+            unlistedCount--
+          }else{
+            listedCount--
+            unlistedCount++
+          }
+
+          listedProductsCount.textContent = listedCount;
+          unlistedProductsCount.textContent = unlistedCount;
+
+
+          button.dataset.isListed = String(newIsListed)
+
+          await Swal.fire({
+            title: 'Success!',
+            text: data.message,
+            icon: 'success',
+            confirmButtonColor: '#1e1b19'
+          })
+
+        } catch (error) {
+          console.error('Error updating product status:', error);
+          Swal.fire({
+            title: 'Error!',
+            text: 'Something went wrong. Please try again.',
+            icon: 'error',
+            confirmButtonColor: '#1e1b19'
+          });
+
+        }
+      }
+    })
+
+  })
+})
+
+
+
+// delete product
+document.querySelectorAll('.delete-product-btn').forEach(button=>{
+  button.addEventListener('click',async()=>{
+    const productId = button.dataset.productId
+
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'This product will be deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#b33324',
+      cancelButtonColor: '#8c8278',
+      confirmButtonText: 'Yes, delete it!'
+    })
+    if(!result.isConfirmed){
+      return
+    }
+
+
+    try {
+      const response = await fetch(`/admin/products/${productId}/delete`,{
+        method:'PATCH'
+      })
+
+      const data = await response.json()
+      if(!data.success){
+        await Swal.fire({
+          title: 'Error!',
+          text: data.message,
+          icon: 'error'
+        })
+        return
+      }
+
+      await Swal.fire({
+        title: 'Deleted!',
+        text: data.message,
+        icon: 'success'
+      })
+
+      window.location.reload()
+
+
+
+    } catch (error) {
+      console.error('Error deleting product:', error);
+      Swal.fire({
+        title: 'Error!',
+        text: 'Something went wrong. Please try again.',
+        icon: 'error'
+      });
+    }
+  })
+})
+
+
+
+</script>
+
+</html>
