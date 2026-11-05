@@ -5,16 +5,46 @@ const loadShop = async(req,res)=>{
     try {
         const search = req.query.search || ''
         const sort = req.query.sort || ''
+        const selectedCategory = (req.query.category || '').trim()
+        const selectedAuthor = req.query.author || ''
+        const selectedPriceRange = req.query.priceRange || ''
         const requestedPage = parseInt(req.query.page) || 1
         const page = Math.max(requestedPage,1)
         const limit = 6
         const skip = (page - 1) * limit
         const searchFilter = {}
+        const categoryFilter = {}
+        const authorFilter = {}
+        const priceFilter = {}
 
         if(search){
             searchFilter.productName={
                 $regex:search,
                 $options:'i'
+            }
+        }
+
+        if(selectedCategory){
+            categoryFilter.category = selectedCategory
+        }
+
+        if(selectedAuthor){
+            authorFilter.author = selectedAuthor
+        }
+
+        if(selectedPriceRange === '100-500'){
+            priceFilter.price = {
+                $gte:100,
+                $lte:500
+            }
+        }else if(selectedPriceRange === '500-1000'){
+            priceFilter.price = {
+                $gt:500,
+                $lte:1000
+            }
+        }else if(selectedPriceRange === '1000-plus'){
+            priceFilter.price = {
+                $gt:1000
             }
         }
 
@@ -34,11 +64,20 @@ const loadShop = async(req,res)=>{
             isDeleted:false
         }).distinct('_id')
 
+        // for filtering categories
+        const categories = await Category.find({
+            isListed:true,
+            isDeleted:false
+        }).sort({createdAt:-1})
+
         const products = await Product.find({
             isListed:true,
             isDeleted:false,
             category:{$in:categoryIds},
-            ...searchFilter
+            ...searchFilter,
+            ...categoryFilter,
+            ...authorFilter,
+            ...priceFilter
         })
             .populate('category','name')
             .sort(sortOptions)
@@ -49,8 +88,18 @@ const loadShop = async(req,res)=>{
             isListed:true,
             isDeleted:false,
             category:{$in:categoryIds},
-            ...searchFilter
+            ...searchFilter,
+            ...categoryFilter,
+            ...authorFilter,
+            ...priceFilter
         })
+
+        const authors = await Product.distinct('author',{
+            isListed:true,
+            isDeleted:false,
+            category:{$in:categoryIds}
+        })
+        authors.sort()
 
         const totalPages = Math.ceil(totalProducts/limit)
         if(totalPages>0 && page>totalPages){
@@ -63,7 +112,12 @@ const loadShop = async(req,res)=>{
             totalPages,
             totalProducts,
             search,
-            sort
+            sort,
+            categories,
+            authors,
+            selectedCategory,
+            selectedAuthor,
+            selectedPriceRange
         })
         
     } catch (error) {

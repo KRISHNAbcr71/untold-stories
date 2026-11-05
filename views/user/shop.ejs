@@ -79,6 +79,12 @@
         <!-- Live Search Query Box -->
         <form id="shopSearchForm" action="/shop" method="GET" class="md:col-span-5 relative">
 
+          <input type="hidden" name="category" value="<%= selectedCategory || '' %>">
+
+          <input type="hidden" name="author" value="<%= selectedAuthor || '' %>">
+
+          <input type="hidden" name="priceRange" value="<%= selectedPriceRange || '' %>">
+
           <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-archive-400">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
               <path d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
@@ -96,7 +102,7 @@
 
           <button
             type="button"
-            onclick="window.location.href='/shop'"
+            onclick="window.location.href='/shop?sort=<%= encodeURIComponent(sort || '') %>&category=<%= encodeURIComponent(selectedCategory || '') %>&author=<%= encodeURIComponent(selectedAuthor || '') %>&priceRange=<%= encodeURIComponent(selectedPriceRange || '') %>'"
             class="absolute inset-y-0 right-0 pr-3 flex items-center text-archive-400 hover:text-archive-700"
             title="Clear Search">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -161,206 +167,136 @@
       <!-- BEGIN: TwoColumnCatalogLayout -->
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-stretch">
         <!-- BEGIN: CuratorialFilterSidebar -->
-        <aside
-          class="lg:col-span-1 bg-[#FDFBF7] border border-[#E3DC CE] rounded-lg p-5 space-y-6 shadow-sm h-full flex flex-col justify-between">
-          <!-- Sidebar Top -->
-          <div class="flex items-center justify-between border-b border-[#EFE9DD] pb-3.5">
-            <div class="flex items-center space-x-2">
-              <svg class="w-4 h-4 text-archive-amber" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="3"></circle>
-                <path
-                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
-                </path>
-              </svg>
-              <h2 class="font-serif font-bold text-lg text-archive-900 leading-tight">Curatorial Filters</h2>
-            </div>
-            <button
-              class="text-[10px] tracking-wider font-semibold text-archive-500 hover:text-archive-amber uppercase transition-colors">CLEAR
-              ALL</button>
-          </div>
-          <!-- Selected Tags -->
+        <form action='/shop' method='GET'>
+          <input type="hidden" name="sort" value="<%= sort || '' %>">
 
-          <!-- Filter Section 1: Literary Category -->
-          <div class="space-y-3">
-            <div
-              class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
-              <span class="">Literary Category</span>
-              <span class="text-[10px] text-archive-400 lowercase font-normal">7 subjects</span>
+          <input type="hidden" name="search" value="<%= search || '' %>">
+          <aside
+            class="lg:col-span-1 bg-[#FDFBF7] border border-[#E3DC CE] rounded-lg p-5 space-y-6 shadow-sm self-start flex flex-col">
+            <!-- Sidebar Top -->
+            <div class="flex items-center justify-between border-b border-[#EFE9DD] pb-3.5">
+              <div class="flex items-center space-x-2">
+                <svg class="w-4 h-4 text-archive-amber" fill="none" stroke="currentColor" stroke-width="2"
+                  viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="3"></circle>
+                  <path
+                    d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                  </path>
+                </svg>
+                <h2 class="font-serif font-bold text-lg text-archive-900 leading-tight">Curatorial Filters</h2>
+              </div>
+              <button
+                class="text-[10px] tracking-wider font-semibold text-archive-500 hover:text-archive-amber uppercase transition-colors"
+                type="button"
+                onclick="window.location.href='/shop'">CLEAR
+                ALL</button>
             </div>
-            <div class="space-y-2 text-xs text-archive-700">
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input checked=""
-                    class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="font-medium text-archive-900">Fiction &amp; Novellas</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">68</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Poetry &amp; Anthologies</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">32</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Continental Philosophy</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">24</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Essays &amp; Memoir</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">19</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Art, Typography &amp; Design</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">17</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Restored Antiquarian Classics</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">15</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Translated European Works</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">11</span>
-              </label>
-            </div>
-          </div>
-          <!-- Filter Section 2: Valuation Window (Dual Slider) -->
+            <!-- Selected Tags -->
 
-          <!-- Filter Section 3: Price Range (INR) -->
-          <div class="space-y-3 pt-3 border-t border-[#EFE9DD]">
-            <div
-              class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
-              <span class="">Price Range</span>
-              <span class="text-[10px] text-archive-400 lowercase">3 ranges</span>
+            <!-- Filter Section 1: Literary Category -->
+            <div class="space-y-3">
+              <div
+                class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
+                <span class="">Literary Category</span>
+              </div>
+              <div class="space-y-2 text-xs text-archive-700">
+                <% categories.forEach(category=>{ %>
+                <label class="flex items-center justify-between cursor-pointer group">
+                  <span class="flex items-center space-x-2">
+                    <input 
+                      class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] focus:ring-0 focus:ring-offset-0"
+                      type="radio"
+                      name="category"
+                      value="<%= category._id %>"
+                      <%= selectedCategory === category._id.toString() ? 'checked' : '' %>>
+                    <span class="font-medium text-archive-900"><%= category.name %></span>
+                  </span>
+                </label>
+                <%})%>
+              </div>
             </div>
-            <div class="space-y-2 text-xs text-archive-700">
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input checked=""
-                    class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="font-medium text-archive-900">₹100 – ₹500</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">82</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">₹500 – ₹1,000</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">64</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Above ₹1,000</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">40</span>
-              </label>
+
+            <!-- Filter Section 2: Price Range (INR) -->
+            <div class="space-y-3 pt-3 border-t border-[#EFE9DD]">
+                <div
+                    class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
+                    <span>Price Range</span>
+                </div>
+                <div class="space-y-2 text-xs text-archive-700">
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="priceRange"
+                                value="100-500"
+                                <%= selectedPriceRange === '100-500' ? 'checked' : '' %>
+                                class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] focus:ring-0 focus:ring-offset-0">
+                            <span class="font-medium text-archive-900">₹100 – ₹500</span>
+                        </span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="priceRange"
+                                value="500-1000"
+                                <%= selectedPriceRange === '500-1000' ? 'checked' : '' %>
+                                class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] focus:ring-0 focus:ring-offset-0">
+                            <span>₹500 – ₹1,000</span>
+                        </span>
+                    </label>
+                    <label class="flex items-center justify-between cursor-pointer group">
+                        <span class="flex items-center space-x-2">
+                            <input
+                                type="radio"
+                                name="priceRange"
+                                value="1000-plus"
+                                <%= selectedPriceRange === '1000-plus' ? 'checked' : '' %>
+                                class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] focus:ring-0 focus:ring-offset-0">
+                            <span>Above ₹1,000</span>
+                        </span>
+                    </label>
+                </div>
             </div>
-          </div>
-          <!-- Filter Section 4: Authors & Curators -->
-          <div class="space-y-3 pt-3 border-t border-[#EFE9DD]">
-            <div
-              class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
-              <span class="">Authors &amp; Curators</span>
-              <span class="text-[10px] text-archive-400 font-normal">6 curated</span>
+            <!-- Filter Section 3: Authors & Curators -->
+            <div class="space-y-3 pt-3 border-t border-[#EFE9DD]">
+              <div
+                class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
+                <span class="">Authors &amp; Curators</span>
+              </div>
+              <div class="space-y-2 text-xs text-archive-700">
+                <%authors.forEach(author=>{%>
+                <label class="flex items-center justify-between cursor-pointer group">
+                  <span class="flex items-center space-x-2">
+                    <input 
+                      class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] focus:ring-0 focus:ring-offset-0"
+                      type="radio"
+                      name="author"
+                      value="<%= author %>"
+                      <%= selectedAuthor === author ? 'checked' : '' %>>
+                    <span class="font-medium text-archive-900"><%= author %></span>
+                  </span>
+                </label>
+                <%})%>
+              </div>
             </div>
-            <div class="space-y-2 text-xs text-archive-700">
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input checked=""
-                    class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="font-medium text-archive-900">Virginia Woolf</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">48</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Jorge Luis Borges</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">34</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Rainer Maria Rilke</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">26</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Fernando Pessoa</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">22</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Walter Benjamin</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">19</span>
-              </label>
-              <label class="flex items-center justify-between cursor-pointer group">
-                <span class="flex items-center space-x-2">
-                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
-                    type="checkbox">
-                  <span class="">Italo Calvino</span>
-                </span>
-                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">15</span>
-              </label>
+            <!-- Sidebar Buttons -->
+            <div class="space-y-2 pt-2 border-t border-[#EFE9DD]">
+              <button
+                type="submit"
+                class="w-full bg-[#1C1A17] hover:bg-black text-[#F4EFE6] font-medium text-xs py-2.5 rounded tracking-wider uppercase transition shadow-sm">
+                APPLY FILTERS
+              </button>
             </div>
-          </div>
-          <!-- Sidebar Buttons -->
-          <div class="space-y-2 pt-2 border-t border-[#EFE9DD]">
-            <button
-              class="w-full bg-[#1C1A17] hover:bg-black text-[#F4EFE6] font-medium text-xs py-2.5 rounded tracking-wider uppercase transition shadow-sm">
-              APPLY FILTERS (186 BOOKS)
-            </button>
-            <button
-              class="w-full text-xs font-medium text-archive-600 hover:text-archive-900 py-1.5 tracking-wider uppercase transition">
-              RESET ALL FILTERS
-            </button>
-          </div>
-        </aside>
+          </aside>
+        </form>
         <!-- END: CuratorialFilterSidebar -->
         <!-- BEGIN: BookGridSection -->
         <section class="lg:col-span-3">
-          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+          
             <!-- BOOK CARD 1: The Waves -->
+             <%if(products.length>0){%>
+              <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
              <% products.forEach((product)=>{ %>
             <article
               class="bg-[#FDFBF7] border border-[#E3DC CE] rounded p-4 flex flex-col justify-between hover:shadow-md transition-shadow group relative">
@@ -399,7 +335,26 @@
               </div>
             </article>
             <%})%>
-          </div>
+            </div>
+            <%}else{%>
+                <div class="col-span-1 md:col-span-2 xl:col-span-3 bg-[#FDFBF7] border border-[#E3DCCE] rounded-lg p-10 text-center">
+                  <div class="flex flex-col items-center gap-3">
+                      <i class="text-4xl">📚</i>
+                      <h3 class="font-serif text-xl font-bold text-archive-900">
+                          No Books Found
+                      </h3>
+                      <p class="text-sm text-archive-500 max-w-md">
+                          We couldn't find any books matching your search or selected filters.
+                          Try a different search term or adjust your filters.
+                      </p>
+                      <a href="/shop"
+                          class="mt-2 px-5 py-2 bg-[#1C1A17] text-white text-xs rounded hover:bg-black transition">
+                          EXPLORE ALL BOOKS
+                      </a>
+                  </div>
+                </div>
+            <%}%>
+
           <!-- BEGIN: PaginationBar -->
           <div
             class="mt-8 bg-[#FAF7F2] border border-[#DDD5C5] rounded p-3 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
@@ -424,7 +379,7 @@
               <!-- Previous button -->
               <% if (currentPage > 1) { %>
               <a
-                href="/shop?page=<%= currentPage - 1 %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %> "
+                href="/shop?page=<%= currentPage - 1 %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %>&category=<%= encodeURIComponent(selectedCategory || '') %>&author=<%= encodeURIComponent(selectedAuthor || '') %>&priceRange=<%= encodeURIComponent(selectedPriceRange || '') %> "
                 class="px-2.5 py-1 text-archive-500 hover:text-archive-900 transition flex items-center">
                 ‹ PREVIOUS
               </a>
@@ -437,7 +392,7 @@
               <!-- Page numbers -->
               <% for (let i = 1; i <= totalPages; i++) { %>
               <a
-                href="/shop?page=<%= i %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %>"
+                href="/shop?page=<%= i %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %>&category=<%= encodeURIComponent(selectedCategory || '') %>&author=<%= encodeURIComponent(selectedAuthor || '') %>&priceRange=<%= encodeURIComponent(selectedPriceRange || '') %>"
                 class="w-7 h-7 rounded text-xs flex items-center justify-center transition
                 <%= currentPage === i
                 ? 'bg-[#1C1A17] text-white font-semibold'
@@ -449,7 +404,7 @@
               <!-- Next button -->
               <% if (currentPage < totalPages) { %>
               <a
-                href="/shop?page=<%= currentPage + 1 %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %>"
+                href="/shop?page=<%= currentPage + 1 %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %>&category=<%= encodeURIComponent(selectedCategory || '') %>&author=<%= encodeURIComponent(selectedAuthor || '') %>&priceRange=<%= encodeURIComponent(selectedPriceRange || '') %>"
                 class="px-2.5 py-1 text-archive-800 hover:text-archive-amber transition flex items-center">
                 NEXT ›
               </a>
