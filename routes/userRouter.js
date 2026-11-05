@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const userController = require('../controllers/user/userController')
+const productController = require('../controllers/user/productController')
 const passport = require('../config/passport')
 const {loginLimiter, otpLimiter, forgotPasswordLimiter, resendOtpLimiter} = require('../middlewares/rateLimiter')
 
@@ -34,5 +35,7 @@ router.post('/resend-forgot-password-otp',resendOtpLimiter,userController.resend
 router.get('/reset-password',userController.loadResetPassword)
 router.post('/reset-password',userController.resetPassword)
 router.post('/logout',userController.logout)
+
+router.get('/shop',productController.loadShop)
 
 module.exports = router
