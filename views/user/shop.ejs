@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>The Untold Stories — Rare Editions &amp; Literary Archive</title>
+  <!-- Google Fonts: Cormorant Garamond & Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet">
+  <!-- Tailwind CSS CDN with plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            parchment: {
+              50: '#FDFBF7',
+              100: '#F8F5EE',
+              200: '#EFE9DE',
+              300: '#E2DACB',
+              400: '#CFC3AE',
+            },
+            archive: {
+              900: '#1C1A17',
+              800: '#2A2622',
+              700: '#3D3833',
+              600: '#5A534C',
+              500: '#7E766D',
+              400: '#A49B8F',
+              300: '#C8C1B5',
+              200: '#E4DFD5',
+              100: '#F2EFEB',
+              amber: '#9E5B32',
+              tan: '#8C5E3C'
+            }
+          },
+          fontFamily: {
+            serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style data-purpose="custom-decorations">
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #D1C7B7;
+      border-radius: 4px;
+    }
+
+    /* Book spine depth simulation */
+    .book-shadow {
+      box-shadow: -8px 0 15px -4px rgba(0, 0, 0, 0.25), 0 10px 25px -5px rgba(0, 0, 0, 0.18);
+    }
+
+    .book-spine-left {
+      background: linear-gradient(90deg, rgba(0, 0, 0, 0.28) 0%, rgba(255, 255, 255, 0.08) 3%, rgba(0, 0, 0, 0.18) 7%, rgba(0, 0, 0, 0.02) 15%, transparent 100%);
+    }
+  </style>
+</head>
+
+<body
+  class="bg-[#F9F7F2] text-archive-800 font-sans antialiased selection:bg-[#E2DACB] selection:text-archive-900 min-h-screen flex flex-col justify-between">
+  <%- include('../partials/user/header')%>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-8 py-8 w-full">
+      <!-- BEGIN: SearchAndSortBar -->
+      <section class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center mb-8 pb-4">
+
+        <!-- Live Search Query Box -->
+        <form id="shopSearchForm" action="/shop" method="GET" class="md:col-span-5 relative">
+
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-archive-400">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M21 21l-4.35-4.35M17 11a6 6 0 11-12 0 6 6 0 0112 0z"
+                stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </div>
+          <input
+            aria-label="Filter current catalog"
+            name="search"
+            value="<%= search || '' %>"
+            placeholder="Search books..."
+            class="w-full pl-10 pr-9 py-2.5 bg-[#FAF7F2] border border-[#DDD5C5] rounded text-sm text-archive-900 font-medium focus:border-archive-amber focus:ring-1 focus:ring-archive-amber outline-none transition"
+            type="text"
+          >
+
+          <button
+            type="button"
+            onclick="window.location.href='/shop'"
+            class="absolute inset-y-0 right-0 pr-3 flex items-center text-archive-400 hover:text-archive-700"
+            title="Clear Search">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M6 18L18 6M6 6l12 12"
+                stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+          </button>
+
+        </form>
+
+
+        <!-- Result Count Banner -->
+        <div
+          class="md:col-span-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-archive-600 bg-[#F4EFE6]/60 border border-[#E5DECF] py-2 px-3.5 rounded">
+          <svg class="w-4 h-4 text-archive-amber" fill="none" stroke="currentColor" stroke-width="1.8"
+            viewBox="0 0 24 24">
+            <path
+              d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+              stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          <span class="">SHOWING <%= products.length %> OF <%= totalProducts %> CURATED TITLES</span>
+        </div>
+        <!-- Sorting Select -->
+        <div class="md:col-span-3 flex justify-end">
+          <div class="relative w-full">
+            <select
+              name="sort"
+              onchange="this.form.submit()"
+              form="shopSearchForm"
+              class="w-full text-xs font-medium bg-[#FAF7F2] text-archive-800 border border-[#DDD5C5] rounded py-2.5 pl-3.5 pr-8 appearance-none focus:outline-none focus:border-archive-amber focus:ring-1 focus:ring-archive-amber cursor-pointer">
+
+              <option value="newest" <%= sort === 'newest' ? 'selected' : '' %>>
+                New Arrivals
+              </option>
+
+              <option value="price-low" <%= sort === 'price-low' ? 'selected' : '' %>>
+                Price: Low to High
+              </option>
+
+              <option value="price-high" <%= sort === 'price-high' ? 'selected' : '' %>>
+                Price: High to Low
+              </option>
+
+              <option value="name-asc" <%= sort === 'name-asc' ? 'selected' : '' %>>
+                A–Z
+              </option>
+
+              <option value="name-desc" <%= sort === 'name-desc' ? 'selected' : '' %>>
+                Z–A
+              </option>
+            </select>
+
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5 text-archive-500">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M19 9l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END: SearchAndSortBar -->
+      <!-- BEGIN: TwoColumnCatalogLayout -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-8 items-stretch">
+        <!-- BEGIN: CuratorialFilterSidebar -->
+        <aside
+          class="lg:col-span-1 bg-[#FDFBF7] border border-[#E3DC CE] rounded-lg p-5 space-y-6 shadow-sm h-full flex flex-col justify-between">
+          <!-- Sidebar Top -->
+          <div class="flex items-center justify-between border-b border-[#EFE9DD] pb-3.5">
+            <div class="flex items-center space-x-2">
+              <svg class="w-4 h-4 text-archive-amber" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path
+                  d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
+                </path>
+              </svg>
+              <h2 class="font-serif font-bold text-lg text-archive-900 leading-tight">Curatorial Filters</h2>
+            </div>
+            <button
+              class="text-[10px] tracking-wider font-semibold text-archive-500 hover:text-archive-amber uppercase transition-colors">CLEAR
+              ALL</button>
+          </div>
+          <!-- Selected Tags -->
+
+          <!-- Filter Section 1: Literary Category -->
+          <div class="space-y-3">
+            <div
+              class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
+              <span class="">Literary Category</span>
+              <span class="text-[10px] text-archive-400 lowercase font-normal">7 subjects</span>
+            </div>
+            <div class="space-y-2 text-xs text-archive-700">
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input checked=""
+                    class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="font-medium text-archive-900">Fiction &amp; Novellas</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">68</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Poetry &amp; Anthologies</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">32</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Continental Philosophy</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">24</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Essays &amp; Memoir</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">19</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Art, Typography &amp; Design</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">17</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Restored Antiquarian Classics</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">15</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Translated European Works</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">11</span>
+              </label>
+            </div>
+          </div>
+          <!-- Filter Section 2: Valuation Window (Dual Slider) -->
+
+          <!-- Filter Section 3: Price Range (INR) -->
+          <div class="space-y-3 pt-3 border-t border-[#EFE9DD]">
+            <div
+              class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
+              <span class="">Price Range</span>
+              <span class="text-[10px] text-archive-400 lowercase">3 ranges</span>
+            </div>
+            <div class="space-y-2 text-xs text-archive-700">
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input checked=""
+                    class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="font-medium text-archive-900">₹100 – ₹500</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">82</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">₹500 – ₹1,000</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">64</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Above ₹1,000</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">40</span>
+              </label>
+            </div>
+          </div>
+          <!-- Filter Section 4: Authors & Curators -->
+          <div class="space-y-3 pt-3 border-t border-[#EFE9DD]">
+            <div
+              class="flex items-center justify-between text-xs font-semibold uppercase tracking-wider text-archive-600">
+              <span class="">Authors &amp; Curators</span>
+              <span class="text-[10px] text-archive-400 font-normal">6 curated</span>
+            </div>
+            <div class="space-y-2 text-xs text-archive-700">
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input checked=""
+                    class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="font-medium text-archive-900">Virginia Woolf</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">48</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Jorge Luis Borges</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">34</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Rainer Maria Rilke</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">26</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Fernando Pessoa</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">22</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Walter Benjamin</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">19</span>
+              </label>
+              <label class="flex items-center justify-between cursor-pointer group">
+                <span class="flex items-center space-x-2">
+                  <input class="w-3.5 h-3.5 text-archive-900 border-[#C5BBA9] rounded focus:ring-0 focus:ring-offset-0"
+                    type="checkbox">
+                  <span class="">Italo Calvino</span>
+                </span>
+                <span class="text-[11px] text-archive-400 group-hover:text-archive-600">15</span>
+              </label>
+            </div>
+          </div>
+          <!-- Sidebar Buttons -->
+          <div class="space-y-2 pt-2 border-t border-[#EFE9DD]">
+            <button
+              class="w-full bg-[#1C1A17] hover:bg-black text-[#F4EFE6] font-medium text-xs py-2.5 rounded tracking-wider uppercase transition shadow-sm">
+              APPLY FILTERS (186 BOOKS)
+            </button>
+            <button
+              class="w-full text-xs font-medium text-archive-600 hover:text-archive-900 py-1.5 tracking-wider uppercase transition">
+              RESET ALL FILTERS
+            </button>
+          </div>
+        </aside>
+        <!-- END: CuratorialFilterSidebar -->
+        <!-- BEGIN: BookGridSection -->
+        <section class="lg:col-span-3">
+          <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+            <!-- BOOK CARD 1: The Waves -->
+             <% products.forEach((product)=>{ %>
+            <article
+              class="bg-[#FDFBF7] border border-[#E3DC CE] rounded p-4 flex flex-col justify-between hover:shadow-md transition-shadow group relative">
+              <div class="relative w-full aspect-[4/5] mb-4 bg-[#F2EFE8] rounded flex items-center justify-center p-4 overflow-hidden book-shadow">
+                <div class="absolute inset-y-0 left-0 w-8 book-spine-left pointer-events-none"></div>
+                <img 
+                  src="<%= product.productImage[0] %>" 
+                  alt="<%= product.productName %>"
+                  class="w-full h-full object-contain rounded"
+                  >
+              </div>
+              <!-- Meta details -->
+              <div>
+                <div class="text-[10px] uppercase font-bold tracking-wider text-[#9E5B32] mb-1">
+                  <%= product.category ? product.category.name : 'Uncategorized' %>
+                </div>
+                <h3
+                  class="font-serif font-bold text-lg text-archive-900 group-hover:text-archive-amber transition-colors leading-snug">
+                  <%= product.productName %>
+                </h3>
+                <p class="text-xs text-archive-500 mb-4"><%= product.author %></p>
+              </div>
+              <div class="flex items-center justify-between pt-3 border-t border-[#EFE9DD]">
+                <div class="flex items-baseline space-x-2">
+                  <span class="font-medium text-base text-archive-900 font-sans">
+                    ₹<%= product.price.toLocaleString('en-IN') %>
+                  </span>
+                  <!-- <span class="text-xs text-archive-400 line-through">₹2,890</span> -->
+                </div>
+                <button class="bg-[#1C1A17] hover:bg-black text-white p-2.5 rounded transition" title="Add to Bag">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round">
+                    </path>
+                  </svg>
+                </button>
+              </div>
+            </article>
+            <%})%>
+          </div>
+          <!-- BEGIN: PaginationBar -->
+          <div
+            class="mt-8 bg-[#FAF7F2] border border-[#DDD5C5] rounded p-3 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+            <div class="flex items-center space-x-2 text-archive-600">
+              <svg class="w-4 h-4 text-archive-amber" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <path
+                  d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span class="">
+                <%
+                const startProduct = totalProducts === 0 ? 0 : (currentPage-1)*6+1
+                const endProduct = Math.min(currentPage*6, totalProducts)
+                %>
+                Showing <strong><%= startProduct %>–<%= endProduct %></strong>
+                of <strong><%= totalProducts %></strong> curated titles
+              </span>
+            </div>
+
+            <div class="flex items-center space-x-1 font-medium">
+              <!-- Previous button -->
+              <% if (currentPage > 1) { %>
+              <a
+                href="/shop?page=<%= currentPage - 1 %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %> "
+                class="px-2.5 py-1 text-archive-500 hover:text-archive-900 transition flex items-center">
+                ‹ PREVIOUS
+              </a>
+              <% } else { %>
+              <span class="px-2.5 py-1 text-archive-400 flex items-center cursor-not-allowed">
+                ‹ PREVIOUS
+              </span>
+              <% } %>
+
+              <!-- Page numbers -->
+              <% for (let i = 1; i <= totalPages; i++) { %>
+              <a
+                href="/shop?page=<%= i %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %>"
+                class="w-7 h-7 rounded text-xs flex items-center justify-center transition
+                <%= currentPage === i
+                ? 'bg-[#1C1A17] text-white font-semibold'
+                : 'hover:bg-[#EAE3D2] text-archive-800' %>">
+                <%= i %>
+              </a>
+              <% } %>
+
+              <!-- Next button -->
+              <% if (currentPage < totalPages) { %>
+              <a
+                href="/shop?page=<%= currentPage + 1 %>&search=<%= encodeURIComponent(search || '') %>&sort=<%= encodeURIComponent(sort) %>"
+                class="px-2.5 py-1 text-archive-800 hover:text-archive-amber transition flex items-center">
+                NEXT ›
+              </a>
+              <% } else { %>
+              <span class="px-2.5 py-1 text-archive-400 flex items-center cursor-not-allowed">
+                NEXT ›
+              </span>
+              <% } %>
+
+            </div>
+
+          </div>
+          <!-- END: PaginationBar -->
+        </section>
+        <!-- END: BookGridSection -->
+      </div>
+      <!-- END: TwoColumnCatalogLayout -->
+    </main>
+
+
+    <%- include('../partials/user/footer')%>
+
+</body>
+
+</html>
