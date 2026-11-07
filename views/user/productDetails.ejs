@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>The Untold Stories | The Architecture of Solitude</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Google Fonts: Playfair Display & Inter / Newsreader style serif -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet">
+  <!-- Tailwind Configuration -->
+  <script data-purpose="tailwind-config">
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            parchment: '#FAF8F5',
+            'parchment-light': '#FDFCFB',
+            'parchment-deep': '#F3EFEA',
+            antique: {
+              50: '#FDFCF7',
+              100: '#F7F4EB',
+              200: '#EEE7D7',
+              300: '#E1D5BD',
+              800: '#4A3E31',
+              900: '#2A241E'
+            },
+            cognac: {
+              600: '#9E5B32',
+              700: '#8A4A24',
+              800: '#733C1B'
+            },
+            sage: {
+              700: '#2F6146',
+              800: '#234934'
+            }
+          },
+          fontFamily: {
+            serif: ['Playfair Display', 'Newsreader', 'Georgia', 'serif'],
+            display: ['Cinzel', 'Playfair Display', 'serif'],
+            sans: ['Plus Jakarta Sans', 'Inter', 'sans-serif'],
+            reader: ['Newsreader', 'Georgia', 'serif']
+          }
+        }
+      }
+    };
+  </script>
+  <!-- Custom CSS for specific archival styling -->
+  <style data-purpose="base-styling">
+    body {
+      background-color: #FAF8F5;
+      color: #26211E;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .font-serif-book {
+      font-family: 'Playfair Display', Georgia, serif;
+    }
+
+    .tracking-widest-sub {
+      letter-spacing: 0.18em;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-[#FAF8F5] text-[#24201D] flex flex-col">
+  <%- include('../partials/user/header')%>
+    <!-- BEGIN: BreadcrumbNavigation -->
+    <nav aria-label="Breadcrumb" class="max-w-[1440px] mx-auto w-full px-6 lg:px-12 pt-6 pb-2">
+      <ol class="flex items-center space-x-2 text-[12.5px] text-[#7E746A]">
+        <li><a class="hover:text-black transition-colors" href="/">Home</a></li>
+        <li class="text-[#B9B0A5]">/</li>
+
+        <li><a class="hover:text-black transition-colors" href="/shop">Catalog</a></li>
+        <li class="text-[#B9B0A5]">/</li>
+
+        <li><a class="hover:text-black transition-colors" href="/shop?category=<%= product.category._id %> ">
+            <%= product.category.name %>
+          </a></li>
+        <li class="text-[#B9B0A5]">/</li>
+
+        <li aria-current="page" class="text-[#201D1A] font-medium">
+          <%= product.productName %>
+        </li>
+      </ol>
+    </nav>
+    <!-- END: BreadcrumbNavigation -->
+    <!-- BEGIN: ProductDetailMainSection -->
+    <main class="max-w-[1440px] mx-auto w-full px-6 lg:px-12 pt-4 pb-16 flex-1">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14">
+
+        <!-- LEFT COLUMN: Folio Visual Inspection & Plates Gallery -->
+        <section class="lg:col-span-6 flex flex-col space-y-4" data-purpose="product-gallery">
+          <!-- Primary Inspection Viewer -->
+          <div
+            class="relative w-[500px] aspect-[4/4.3] bg-[#EAE5DE] border border-[#DDD6CC] rounded-[3px] overflow-hidden group shadow-sm">
+            <!-- Top Right Overlay Controls -->
+            <div class="absolute top-4 right-4 z-20 flex items-center space-x-2">
+              <button
+                class="w-8 h-8 rounded-full bg-white/90 hover:bg-white text-[#332D28] flex items-center justify-center backdrop-blur shadow-sm transition-transform active:scale-95"
+                title="Add to Wishlist">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+              <button
+                id="zoomProductImage"
+                class="w-8 h-8 rounded-full bg-white/90 hover:bg-white text-[#332D28] flex items-center justify-center backdrop-blur shadow-sm transition-transform active:scale-95"
+                title="Zoom In">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607zM10.5 7.5v6m3-3h-6"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Folio Plate Art Canvas -->
+            <div
+              class="w-full h-full relative overflow-hidden bg-[#EAE5DE] flex items-center justify-center p-6 md:p-8">
+              <img id="mainProductImage" src="<%= product.productImage[0] %>" alt="<%= product.productName %>"
+                class="w-full h-full object-contain">
+            </div>
+          </div>
+
+          <!-- Featured Plates Strip Header -->
+          <div
+            class="flex items-center justify-between text-[11px] pt-1 text-[#786E64] font-medium tracking-wider uppercase">
+            <span class="text-[10px] text-[#9A9085]">SELECT VIEW TO INSPECT</span>
+          </div>
+
+          <!-- Thumbnail Plates Grid -->
+          <div class="grid grid-cols-5 gap-2.5">
+            <!-- Thumb 1 (Active) -->
+            <% product.productImage.forEach((image,index)=>{ %>
+              <button type="button" data-image="<%= image %>"
+                class="aspect-[4/3] <%= index === 0 ? 'border-2 border-[#1E1A17]' : 'border border-[#DDD6CC] hover:border-[#1E1A17]' %> rounded-[2px] overflow-hidden bg-[#ECE8E1] p-1 flex items-center justify-center">
+                <img src="<%= image %>" alt="<%= product.productName %> - image <%= index + 1 %>"
+                  class="w-full h-full object-contain">
+              </button>
+              <%})%>
+          </div>
+        </section>
+
+        <!-- Product Image Zoom Modal -->
+        <div
+            id="productZoomModal"
+            class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+
+            <!-- Close Button -->
+            <button
+                type="button"
+                id="closeProductZoom"
+                class="absolute top-5 right-5 text-white hover:text-gray-300 text-3xl"
+                aria-label="Close zoom">
+                &times;
+            </button>
+
+            <!-- Zoomed Product Image -->
+            <img
+                id="zoomedProductImage"
+                src=""
+                alt="Zoomed product image"
+                draggable="false"
+                class="max-w-full max-h-[90vh] object-contain cursor-zoom-in transition-transform duration-300">
+        </div>
+
+        <!-- RIGHT COLUMN: Product Identity, Pricing, Checkout & Guarantees -->
+        <section class="lg:col-span-6 flex flex-col pt-1" data-purpose="product-meta-actions">
+          <!-- Product Stock Status Badge -->
+          <div class="flex items-center space-x-2">
+            <span
+              class="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-[#2F6146]">
+              <span
+                class="w-2 h-2 rounded-full <%= product.quantity > 5 ? 'bg-[#3B7A57] animate-pulse' : 'bg-red-600' %>"></span>
+              <%if(product.quantity>0){%>
+                IN STOCK (<%= product.quantity %> COPIES AVAILABLE)
+                  <%}else{%>
+                    <span class="text-red-600">
+                      OUT OF STOCK
+                    </span>
+                    
+                    <%}%>
+            </span>
+          </div>
+          <!-- Main Product Title -->
+          <h1 class="font-serif-book text-3xl sm:text-4xl lg:text-[42px] leading-[1.18] font-bold text-[#181512] mt-3">
+            <%= product.productName %>
+          </h1>
+          <!-- Author, Translation & Introduction Credits -->
+          <p class="font-serif text-[#685D52] italic text-base mt-3 leading-snug">
+            By <%= product.author %>
+          </p>
+          <!-- Bibliophile Rating Row -->
+          <div class="flex items-center space-x-2 mt-4 text-sm">
+            <div class="flex text-[#C48C38]">
+              <span class="">★</span><span class="">★</span><span class="">★</span><span class="">★</span><span
+                class="">★</span>
+            </div>
+            <span class="font-semibold text-[#1C1815]">4.9</span>
+            <span class="text-[#786D61] text-[13px]">(28 verified bibliophiles)</span>
+          </div>
+          <!-- Archival Pricing Block with Concession Badge -->
+          <div class="mt-5 p-4 rounded-[3px] bg-[#F2EDE5] border border-[#E3DBD0] flex items-center flex-wrap gap-3">
+            <span class="font-serif-book text-3xl font-bold text-[#1C1713]">₹<%= product.price.toLocaleString('en-IN')
+                %></span>
+          </div>
+          <!-- Order Quantity Selector -->
+          <div class="flex items-center space-x-4 mt-6">
+            <span class="text-xs font-semibold text-[#443C34] tracking-wider uppercase">QUANTITY:</span>
+            <div class="flex items-center border border-[#D1C7BA] rounded-[2px] bg-[#FAF8F5]">
+              <button
+                class="w-8 h-8 flex items-center justify-center text-[#554B41] hover:bg-[#EFE9DF] text-sm transition-colors">−</button>
+              <span class="w-8 h-8 flex items-center justify-center text-xs font-semibold text-[#201B17]">1</span>
+              <button
+                class="w-8 h-8 flex items-center justify-center text-[#554B41] hover:bg-[#EFE9DF] text-sm transition-colors">+</button>
+            </div>
+          </div>
+          <!-- Action Call to Actions -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-6">
+            <!-- Add to Cart (Black) -->
+            <button
+              class="h-12 bg-[#1B1815] hover:bg-[#2C2723] text-white px-5 rounded-[2px] text-xs font-semibold tracking-wider uppercase flex items-center justify-center space-x-2.5 transition-all shadow-sm">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round">
+                </path>
+              </svg>
+              <span class="">ADD TO CART</span>
+            </button>
+            <!-- Acquire Now (Cognac Brown) -->
+            <button
+              class="h-12 bg-[#8C4F27] hover:bg-[#784220] text-white px-5 rounded-[2px] text-xs font-semibold tracking-wider uppercase flex items-center justify-center space-x-2.5 transition-all shadow-sm">
+              <svg class="w-4 h-4 text-amber-200" fill="none" stroke="currentColor" stroke-width="2"
+                viewBox="0 0 24 24">
+                <path
+                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span class="">ACQUIRE NOW — ₹4,200</span>
+            </button>
+          </div>
+          <!-- Archival Custody & Delivery Assurances -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mt-8 pt-6 border-t border-[#E5DDD2]">
+            <!-- Assurance 1 -->
+            <div class="bg-[#F5EFE7] p-3.5 rounded-[2px] border border-[#E6DDD0] flex flex-col justify-start">
+              <div class="text-[#8C4F27] mb-1.5">
+                <!-- Delivery Trunk / Courier Icon -->
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path
+                    d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V3.75A1.125 1.125 0 0013.125 2.625H3.375A1.125 1.125 0 002.25 3.75v10.5h12"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <h4 class="text-[11px] font-bold tracking-wider uppercase text-[#29221C]">FREE SHIPPING</h4>
+              <p class="text-[11px] text-[#6E6357] leading-relaxed mt-1">Complimentary vault-insured transit across
+                India on all archival folios.</p>
+            </div>
+            <!-- Assurance 2 -->
+            <div class="bg-[#F5EFE7] p-3.5 rounded-[2px] border border-[#E6DDD0] flex flex-col justify-start">
+              <div class="text-[#8C4F27] mb-1.5">
+                <!-- Cash / Vault Inspection Icon -->
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path
+                    d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0v8.25m0 0a60.074 60.074 0 0015.797 2.101c.727.198 1.453-.342 1.453-1.096V14.25m-17.25 0h1.5m15.75-9.75v-.75A.75.75 0 0019.5 3h-1.5m0 0v8.25m0 0a60.074 60.074 0 01-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V9.75"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <h4 class="text-[11px] font-bold tracking-wider uppercase text-[#29221C]">CASH ON DELIVERY</h4>
+              <p class="text-[11px] text-[#6E6357] leading-relaxed mt-1">Pay conveniently at your doorstep upon vaulted
+                inspection and receipt.</p>
+            </div>
+            <!-- Assurance 3 -->
+            <div class="bg-[#F5EFE7] p-3.5 rounded-[2px] border border-[#E6DDD0] flex flex-col justify-start">
+              <div class="text-[#8C4F27] mb-1.5">
+                <!-- Reversible Return Seal -->
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </div>
+              <h4 class="text-[11px] font-bold tracking-wider uppercase text-[#29221C]">14-DAYS RETURNS</h4>
+              <p class="text-[11px] text-[#6E6357] leading-relaxed mt-1">Unconditional safe returns in original climate
+                parcel.</p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <!-- BEGIN: ProductEditorialTabsSection -->
+      <section class="mt-14 pt-8" data-purpose="product-tabs">
+        <div class="bg-[#F8F4EE] border border-[#E5DED4] p-8 lg:p-10 rounded-[3px]">
+          <!-- Navigation Tab Headers -->
+          <div class="flex items-center space-x-8 border-b border-[#DFD7CC] pb-4 mb-8">
+            <button
+              class="font-serif-book text-lg font-semibold text-[#1C1815] relative pb-4 -mb-4 after:content-[''] after:absolute after:bottom-0 after:left-0 after:w-full after:h-[2px] after:bg-[#1C1815]">
+              Product Description
+            </button>
+            <button class="font-serif-book text-lg text-[#7C7267] hover:text-[#1C1815] transition-colors pb-4 -mb-4">
+              Reviews
+            </button>
+          </div>
+          <!-- Curatorial Copy -->
+          <article class="w-full space-y-5 text-[15px] leading-[1.8] text-[#3F3933] font-reader">
+            <p class="">
+              <%= product.description %>
+            </p>
+          </article>
+        </div>
+      </section>
+      <!-- END: ProductEditorialTabsSection -->
+      <!-- BEGIN: RelatedProductsSection -->
+       <% if(relatedProducts.length>0){ %>
+      <section class="mt-20" data-purpose="related-products">
+        <!-- Section Header -->
+        <div class="flex items-center justify-between mb-8 pb-3 border-b border-[#E8E1D7]">
+          <h3 class="font-serif-book text-2xl lg:text-3xl font-bold text-[#1F1A16]">Related Products</h3>
+          <% if (relatedProducts.length > 4) { %>
+          <a class="text-xs font-semibold tracking-wider uppercase text-[#884C25] hover:text-[#6A3918] flex items-center space-x-1"
+            href="/shop?category=<%= product.category._id %>">
+            <span class="">EXPLORE MORE COLLECTION</span>
+            <span class="">→</span>
+          </a>
+          <%}%>
+        </div>
+        <!-- 4-Book Card Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <% relatedProducts.forEach((relatedProduct) => { %>
+          <!-- Book Card 1: Notes from the Salt Marsh -->
+          <article
+            class="bg-[#FAF8F5] border border-[#DDD5C9] rounded-[2px] flex flex-col justify-between overflow-hidden group shadow-sm hover:shadow-md transition-shadow">
+            <div class="relative w-full aspect-[3/3.8] bg-[#D7DDD9] overflow-hidden">
+              <a href="/product/<%= relatedProduct._id %>">
+                <img 
+                  src="<%= relatedProduct.productImage[0] %>" 
+                  alt="<%= relatedProduct.productName %>"
+                  class="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300">
+              </a>
+              <button
+                class="absolute top-3 right-3 z-10 w-7 h-7 rounded-full bg-white/90 text-[#3C352E] flex items-center justify-center hover:bg-white transition-colors"
+                title="Wishlist">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24">
+                  <path
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+              </button>
+            </div>
+            <div class="p-4 flex flex-col flex-1 justify-between">
+              <div>
+                <span class="text-[10px] font-semibold tracking-wider text-[#A55928] uppercase">
+                  <%= product.category.name %></span>
+                <h4 class="font-serif-book text-base font-bold text-[#201C18] mt-1 leading-snug">
+                  <%= relatedProduct.productName %></h4>
+                <p class="text-xs text-[#70665B] mt-0.5"><%= relatedProduct.author %></p>
+                <div class="flex items-center text-xs text-[#C48C38] mt-2">
+                  <span class="">★</span>
+                  <span class="text-[#201C18] font-semibold ml-1 text-[11px]">4.8</span>
+                </div>
+              </div>
+              <div class="flex items-center justify-between mt-4 pt-3 border-t border-[#EDE6DC]">
+                <span class="font-serif-book font-bold text-base text-[#1E1916]">₹<%= relatedProduct.price.toLocaleString('en-IN') %></span>
+                <button
+                  class="bg-[#1C1815] text-white hover:bg-stone-800 text-[11px] font-medium px-3 py-1.5 rounded-[2px] flex items-center space-x-1">
+                  <span class="">+</span>
+                  <span class="">ADD</span>
+                </button>
+              </div>
+            </div>
+          </article>
+          <%})%>
+        </div>
+      </section>
+      <%}%>
+      <!-- END: RelatedProductsSection -->
+    </main>
+    <!-- END: ProductDetailMainSection -->
+    <%- include('../partials/user/footer') %>
+</body>
+
+
+<script>
+  // select thumbnail images
+  const mainProductImage = document.getElementById('mainProductImage')
+  const thumbnailButtons = document.querySelectorAll('[data-image]')
+  thumbnailButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const selectedImage = button.dataset.image
+      mainProductImage.src = selectedImage
+
+      thumbnailButtons.forEach(thumbnail => {
+        thumbnail.classList.remove('border-2', 'border-[#1E1A17]')
+        thumbnail.classList.add('border', 'border-[#DDD6CC]')
+      })
+
+      button.classList.remove('border', 'border-[#DDD6CC]')
+      button.classList.add('border-2', 'border-[#1E1A17]')
+
+    })
+  })
+
+
+
+
+  let isDragging = false
+  let hasDragged = false
+
+  let startX = 0
+  let startY = 0
+
+  let imageX = 0
+  let imageY = 0
+
+
+
+
+  // Zoom modal opening
+  const zoomProductImage = document.getElementById('zoomProductImage')
+  const productZoomModal = document.getElementById('productZoomModal')
+  const zoomedProductImage = document.getElementById('zoomedProductImage')
+  zoomProductImage.addEventListener('click',()=>{
+    zoomedProductImage.src = mainProductImage.src
+
+    zoomedProductImage.classList.remove('scale-150')
+    zoomedProductImage.classList.add('cursor-zoom-in')
+
+    imageX = 0
+    imageY = 0
+    zoomedProductImage.style.translate = '0px 0px'
+
+    isDragging = false
+    hasDragged = false
+
+    productZoomModal.classList.remove('hidden')
+  })
+
+
+
+  // zoom in and out
+  zoomedProductImage.addEventListener('click',()=>{
+    if(hasDragged){
+      hasDragged = false
+      return
+    }
+    const isZoomed = zoomedProductImage.classList.contains('scale-150')
+    if(isZoomed){
+      zoomedProductImage.classList.remove('scale-150')
+      zoomedProductImage.classList.add('cursor-zoom-in')
+
+      imageX = 0
+      imageY = 0
+      zoomedProductImage.style.translate = '0px 0px'
+    }else{
+      zoomedProductImage.classList.add('scale-150')
+      zoomedProductImage.classList.remove('cursor-zoom-in')
+    }
+  })
+
+  // start dragging
+  zoomedProductImage.addEventListener('pointerdown',(event)=>{
+    if(!zoomedProductImage.classList.contains('scale-150')){
+      return
+    }
+    isDragging = true 
+    hasDragged = false
+
+    startX = event.clientX - imageX
+    startY = event.clientY - imageY
+
+    zoomedProductImage.setPointerCapture(event.pointerId)
+  })
+
+  // move image
+  zoomedProductImage.addEventListener('pointermove',(event)=>{
+    if(!isDragging){
+      return
+    }
+
+    imageX = event.clientX - startX
+    imageY = event.clientY - startY
+
+    zoomedProductImage.style.translate = `${imageX}px ${imageY}px`
+    hasDragged = true
+  })
+
+  // stop dragging
+  zoomedProductImage.addEventListener('pointerup',()=>{
+    isDragging = false
+  })
+
+  zoomedProductImage.addEventListener('pointercancel',()=>{
+    isDragging = false
+  })
+
+
+
+
+
+
+
+
+
+
+  // Close the modal when clicking x button
+  const closeProductZoom = document.getElementById('closeProductZoom')
+  closeProductZoom.addEventListener('click',()=>{
+    productZoomModal.classList.add('hidden')
+  })
+
+  // Close the modal when clicking the dark background
+  productZoomModal.addEventListener('click',(event)=>{
+    if(event.target === productZoomModal){
+      productZoomModal.classList.add('hidden')
+    }
+  })
+
+
+
+
+</script>
+
+
+</html>

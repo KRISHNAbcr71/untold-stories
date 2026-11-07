@@ -1,5 +1,6 @@
 const Product = require('../../models/Product');
-const Category = require('../../models/Category')
+const Category = require('../../models/Category');
+const { default: mongoose } = require('mongoose');
 
 const loadShop = async(req,res)=>{
     try {
@@ -126,6 +127,58 @@ const loadShop = async(req,res)=>{
     }
 }
 
+
+
+const loadProductDetails = async(req,res)=>{
+    try {
+        const productId =req.params.id
+
+        if(!mongoose.Types.ObjectId.isValid(productId)){
+            return res.redirect('/shop')
+        }
+
+        const product = await Product.findOne({
+            _id:productId,
+            isListed:true,
+            isDeleted:false
+        }).populate({
+            path:'category',
+            match:{
+                isListed:true,
+                isDeleted:false
+            },
+            select:'name'
+        })
+
+        if(!product || !product.category){
+            return res.redirect('/shop')
+        }
+
+        const relatedProducts = await Product.find({
+            _id:{$ne:product._id},
+            category:product.category._id,
+            isListed:true,
+            isDeleted:false
+        })
+            .sort({createdAt:-1})
+            .limit(4)
+
+        return res.render('productDetails',{
+            product,
+            relatedProducts
+        })
+
+
+
+    } catch (error) {
+        console.error('Error loading product details:', error);
+        return res.status(500).render('500');
+    }
+}
+
+
+
 module.exports = {
-    loadShop
+    loadShop,
+    loadProductDetails
 }
