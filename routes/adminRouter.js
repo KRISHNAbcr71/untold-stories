@@ -6,9 +6,13 @@ const categoryController = require('../controllers/admin/categoryController')
 const productController = require('../controllers/admin/productController')
 const upload = require('../middlewares/multer')
 const productUploadError = require('../middlewares/productUploadError')
+const {isAdmin} = require('../middlewares/auth')
 
 router.get('/login',adminController.loadLogin)
 router.post('/login',adminController.login)
+
+router.use(isAdmin)
+
 router.get('/dashboard',adminController.loadDashboard)
 
 router.get('/users',customerController.loadCustomers)
