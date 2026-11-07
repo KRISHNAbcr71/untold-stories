@@ -37,5 +37,6 @@ router.post('/reset-password',userController.resetPassword)
 router.post('/logout',userController.logout)
 
 router.get('/shop',productController.loadShop)
+router.get('/product/:id',productController.loadProductDetails)
 
 module.exports = router

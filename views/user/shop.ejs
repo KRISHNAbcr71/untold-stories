@@ -298,6 +298,7 @@
              <%if(products.length>0){%>
               <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
              <% products.forEach((product)=>{ %>
+              <a href="/product/<%= product._id %>">
             <article
               class="bg-[#FDFBF7] border border-[#E3DC CE] rounded p-4 flex flex-col justify-between hover:shadow-md transition-shadow group relative">
               <div class="relative w-full aspect-[4/5] mb-4 bg-[#F2EFE8] rounded flex items-center justify-center p-4 overflow-hidden book-shadow">
@@ -334,6 +335,7 @@
                 </button>
               </div>
             </article>
+            </a>
             <%})%>
             </div>
             <%}else{%>
