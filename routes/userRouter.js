@@ -2,8 +2,10 @@ const express = require('express')
 const router = express.Router()
 const userController = require('../controllers/user/userController')
 const productController = require('../controllers/user/productController')
+const cartController = require('../controllers/user/cartController')
 const passport = require('../config/passport')
 const {loginLimiter, otpLimiter, forgotPasswordLimiter, resendOtpLimiter} = require('../middlewares/rateLimiter')
+const {isAuthenticated} = require('../middlewares/auth')
 
 router.get('/',userController.loadHome)
 router.get('/signup',userController.loadSignup)
@@ -38,5 +40,10 @@ router.post('/logout',userController.logout)
 
 router.get('/shop',productController.loadShop)
 router.get('/product/:id',productController.loadProductDetails)
+
+router.get('/cart',isAuthenticated,cartController.loadCart)
+router.post('/cart/add/:id',isAuthenticated,cartController.addToCart)
+router.delete('/cart/remove/:id',isAuthenticated,cartController.removeFromCart)
+router.patch('/cart/update/:id',isAuthenticated,cartController.updateCartQuantity)
 
 module.exports = router

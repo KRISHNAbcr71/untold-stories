@@ -37,16 +37,20 @@
         </svg>
       </button>
       <!-- Cart Bag with Badge -->
-      <button aria-label="Shopping Bag" class="text-stone-700 hover:text-ink-900 p-1.5 relative transition-colors"
-        type="button">
+      <a href="/cart"
+        aria-label="Shopping Bag" 
+        class="text-stone-700 hover:text-ink-900 p-1.5 relative transition-colors">
         <svg class="w-5 h-5 stroke-[1.6]" fill="none" stroke="currentColor" viewbox="0 0 24 24">
           <path
             d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.67 0-1.19-.578-1.12-1.243l1.264-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
             stroke-linecap="round" stroke-linejoin="round"></path>
         </svg>
         <span
-          class="absolute -top-1 -right-1 text-[10px] w-4 h-4 rounded-full bg-stone-100 border border-stone-300 text-stone-800 font-semibold flex items-center justify-center">0</span>
-      </button>
+          id="headerCartCount"
+          class="absolute -top-1 -right-1 text-[10px] w-4 h-4 rounded-full bg-stone-100 border border-stone-300 text-stone-800 font-semibold flex items-center justify-center">
+          <%= cartCount %>
+        </span>
+      </a>
       <div class="h-4 w-[1px] bg-stone-300 hidden sm:block"></div>
       <!-- Auth Buttons -->
       <% if(currentUser) {%>

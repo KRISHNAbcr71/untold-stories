@@ -298,9 +298,10 @@
              <%if(products.length>0){%>
               <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
              <% products.forEach((product)=>{ %>
-              <a href="/product/<%= product._id %>">
+              
             <article
               class="bg-[#FDFBF7] border border-[#E3DC CE] rounded p-4 flex flex-col justify-between hover:shadow-md transition-shadow group relative">
+              <a href="/product/<%= product._id %>">
               <div class="relative w-full aspect-[4/5] mb-4 bg-[#F2EFE8] rounded flex items-center justify-center p-4 overflow-hidden book-shadow">
                 <div class="absolute inset-y-0 left-0 w-8 book-spine-left pointer-events-none"></div>
                 <img 
@@ -309,6 +310,7 @@
                   class="w-full h-full object-contain rounded"
                   >
               </div>
+              </a>
               <!-- Meta details -->
               <div>
                 <div class="text-[10px] uppercase font-bold tracking-wider text-[#9E5B32] mb-1">
@@ -327,7 +329,11 @@
                   </span>
                   <!-- <span class="text-xs text-archive-400 line-through">₹2,890</span> -->
                 </div>
-                <button class="bg-[#1C1A17] hover:bg-black text-white p-2.5 rounded transition" title="Add to Bag">
+                <button 
+                  type="button" 
+                  class="add-to-cart-btn bg-[#1C1A17] hover:bg-black text-white p-2.5 rounded transition" 
+                  title="Add to Bag"
+                  data-product-id="<%= product._id%>">
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round">
                     </path>
@@ -335,7 +341,8 @@
                 </button>
               </div>
             </article>
-            </a>
+            
+
             <%})%>
             </div>
             <%}else{%>
@@ -430,5 +437,60 @@
     <%- include('../partials/user/footer')%>
 
 </body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('click',async(event)=>{
+    const button = event.target.closest('.add-to-cart-btn')
+    if(!button){
+      return
+    }
+
+    const productId = button.dataset.productId
+
+    try {
+      button.disabled = true
+
+      const response = await fetch(`/cart/add/${productId}`,{
+        method:'POST',
+        headers:{
+          'Accept':'application/json'
+        }
+      })
+
+      const result = await response.json()
+
+      if(!response.ok || !result.success){
+        Swal.fire({
+          icon: 'error',
+          title: 'Unable to Add',
+          text: result.message
+        })
+        return
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Added to Cart!',
+        text: result.message,
+        timer: 1500,
+        showConfirmButton: false
+      })
+
+    } catch (error) {
+      console.error('Add to cart error:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Something went wrong',
+        text: 'Please try again.'
+      });
+    }finally{
+      button.disabled = false
+    }
+  })
+
+
+</script>
 
 </html>
