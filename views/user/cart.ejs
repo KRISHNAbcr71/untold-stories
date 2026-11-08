@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Your Archival Bag — The Untold Stories</title>
+    <!-- Google Fonts: Cormorant Garamond & Inter -->
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet" />
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        linen: '#FAF7F5',
+                        cream: '#F4EFEB',
+                        parchment: '#FDFBF9',
+                        ink: '#1C1917',
+                        inkmuted: '#78716C',
+                        archiveborder: '#E7E1DC',
+                        terracotta: '#A85A3B',
+                        terracottadark: '#8D4327',
+                        terracottasoft: '#F9EDE7'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Inter"', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Custom Typography & Layout Adjustments -->
+    <style data-purpose="custom-styling">
+        body {
+            background-color: #FAF7F5;
+            color: #1C1917;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .font-cormorant {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+        }
+
+        .subtle-border {
+            border-color: #EBE5E0;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col justify-between selection:bg-[#EAE0D7] selection:text-ink">
+    <%- include('../partials/user/header')%>
+        <!-- BEGIN: MainContent -->
+        <main class="max-w-7xl mx-auto px-6 lg:px-12 py-12 flex-grow w-full">
+            <!-- Header Titles -->
+            <section class="mb-10">
+                <h1 class="font-cormorant text-4xl sm:text-5xl font-normal tracking-tight text-[#1C1917]">
+                    Shopping Cart
+                </h1>
+                <p class="text-[14px] text-[#78716C] mt-2 font-normal">
+                    3 rare volumes reserved for custody under archival inventory hold.
+                </p>
+            </section>
+            <!-- Main Grid Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                <!-- Cart Items Section (Left Column) -->
+                <section class="lg:col-span-8">
+                    <!-- Table Column Headers -->
+                    <div
+                        class="grid grid-cols-12 text-[11px] font-semibold tracking-wider uppercase text-[#78716C] border-b border-[#E7E1DC] pb-3 mb-5 px-3">
+                        <div class="col-span-2">ITEM IMAGE</div>
+                        <div class="col-span-6">DETAILS &amp; QUANTITY</div>
+                        <div class="col-span-2 text-right">PRICE</div>
+                        <div class="col-span-2 text-right">ACTIONS</div>
+                    </div>
+                    <!-- Archival Items Stack -->
+                    <div class="space-y-4">
+                        <% if(cart && cart.items.length>0) {%>
+                            <% cart.items.forEach(item=>{ %>
+                                <%if(item.product){%>
+                                    <% const product = item.product %>
+                                    <%
+                                    const category = product.category
+                                    const isAvailable = 
+                                        product.isListed &&
+                                        !product.isDeleted &&
+                                        category &&
+                                        category.isListed &&
+                                        !category.isDeleted &&
+                                        product.quantity > 0
+                                    %>
+                            
+                            <div
+                                class="cart-item bg-white/70 border border-[#EBE5E0] rounded-sm p-5 hover:border-[#D6CEC7] transition-all"
+                                data-product-id="<%= product._id %>"
+                                data-item-total="<%= product.price * item.quantity %>"
+                                data-item-quantity="<%= item.quantity %>"
+                                data-stock="<%= product.quantity %>">
+                                <div class="grid grid-cols-12 gap-5 items-start">
+                                    <!-- Book Cover Thumbnail -->
+                                    <div class="col-span-3 sm:col-span-2">
+                                        <div
+                                            class="w-20 h-28 bg-[#172535] rounded shadow-sm border border-[#0d1620] relative overflow-hidden flex flex-col justify-between p-2">
+                                            <img 
+                                                src="<%= product.productImage[0] %>" 
+                                                alt="<%= product.productName %>"
+                                                class="w-full h-full object-contain">
+                                        </div>
+                                    </div>
+                                    <!-- Details & Controls -->
+                                    <div class="col-span-9 sm:col-span-6 space-y-1.5">
+                                        <h2 class="font-cormorant text-xl font-bold text-[#1C1917] leading-snug">
+                                            <%= product.productName %></h2>
+                                        <p class="text-xs text-[#57534E]">by <%= product.author %></p>
+                                        <p class="text-[11px] text-[#78716C]">Category: <%= product.category ? product.category.name : 'Unavailable' %>
+                                        </p>
+                                        <p class="text-[11px] text-[#A85A3B] font-medium pt-0.5">
+                                            <%if(isAvailable){%>
+                                                <span class="text-[#78716C] text-emerald-800">
+                                                    <%= product.quantity %> copies remaining in vault custody
+                                                </span>
+                                            <%}else{%>
+                                                <span class="text-red-600 font-medium">
+                                                    Currently unavailable
+                                                </span>
+                                            <%}%>
+                                        </p>
+                                        <!-- Quantity Stepper -->
+                                        <div class="pt-3">
+                                            <div
+                                                class="inline-flex items-center border border-[#D6D0CA] rounded bg-[#FAF7F5] px-3 py-1 text-xs">
+                                                <button
+                                                    class="decrease-quantity-btn text-[#78716C] hover:text-black font-semibold text-sm leading-none px-1"
+                                                    title="Decrease"
+                                                    type="button"
+                                                    data-product-id="<%= product._id %>"
+                                                    <%= !isAvailable ? 'disabled' : '' %>>−</button>
+                                                <span class="cart-item-quantity mx-3.5 font-medium text-xs text-[#1C1917]"><%= item.quantity %></span>
+                                                <button
+                                                    class="increase-quantity-btn text-[#78716C] hover:text-black font-semibold text-sm leading-none px-1"
+                                                    title="Increase"
+                                                    type="button"
+                                                    data-product-id="<%= product._id %>"
+                                                    <%= !isAvailable ? 'disabled' : '' %>>+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Price Column -->
+                                    <div class="col-span-6 sm:col-span-2 text-left sm:text-right pt-2 sm:pt-0">
+                                        <div class="text-lg font-bold text-[#1C1917] tracking-tight">₹<%= product.price.toLocaleString('en-IN') %></div>
+                                        <p class="cart-item-total text-[11px] text-[#78716C] mt-1">
+                                            Item total:
+                                            ₹<%= (product.price * item.quantity).toLocaleString('en-IN') %>
+                                        </p>
+                                        <!-- <div class="text-xs text-[#A8A29E] line-through">₹3,400</div> -->
+                                    </div>
+                                    <!-- Action Icons -->
+                                    <div
+                                        class="col-span-6 sm:col-span-2 flex items-center justify-end gap-3 pt-2 sm:pt-0 text-[#78716C]">
+                                        <button 
+                                            class="remove-from-cart-btn hover:text-red-700 transition-colors" 
+                                            type="button"
+                                            title="Remove from Cart"
+                                            data-product-id="<%= product._id %>">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="1.7"
+                                                viewbox="0 0 24 24">
+                                                <path
+                                                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                                    stroke-linecap="round" stroke-linejoin="round"></path>
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <%}%>
+                            <%})%>
+                            <%}else{%>
+                                <div class="bg-white/70 border border-[#EBE5E0] rounded-sm p-10 text-center">
+
+                                    <div class="text-4xl mb-3">📚</div>
+
+                                    <h2 class="font-cormorant text-2xl font-bold text-[#1C1917]">
+                                        Your Shopping Cart is Empty
+                                    </h2>
+
+                                    <p class="text-sm text-[#78716C] mt-2">
+                                        Discover your next favourite book and add it to your cart.
+                                    </p>
+
+                                    <a href="/shop"
+                                        class="inline-block mt-5 bg-[#1C1917] text-white px-6 py-3 text-xs font-semibold tracking-widest uppercase hover:bg-black transition-colors">
+                                        Explore more
+                                    </a>
+
+                                </div>
+                            <%}%>   
+                    </div>
+                    <!-- Catalog / Clear Navigation Bar -->
+                    <div class="flex items-center justify-between pt-8 pb-4 text-xs font-semibold tracking-wider">
+                        <a class="inline-flex items-center text-[#1C1917] hover:text-[#8D4327] transition-colors gap-2"
+                            href="/shop">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+                                <path d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" stroke-linecap="round"
+                                    stroke-linejoin="round"></path>
+                            </svg>
+                            Continue Exploring 
+                        </a>
+                        <button
+                            class="text-[#78716C] hover:text-black uppercase tracking-widest text-[11px] font-semibold transition-colors">
+                            CLEAR CART
+                        </button>
+                    </div>
+                </section>
+                <!-- Right Summary Sidebar ("Acquisition Summary") -->
+                <section class="lg:col-span-4" data-purpose="acquisition-summary">
+                    <div
+                        class="bg-white/80 border border-[#E7E1DC] rounded-sm p-6 sm:p-7 shadow-[0_2px_15px_-3px_rgba(0,0,0,0.03)]">
+                        <!-- Summary Header -->
+                        <div class="flex items-center justify-between pb-5 border-b border-[#EBE5E0]">
+                            <h2 class="font-cormorant text-2xl font-bold text-[#1C1917]">Cart Summary</h2>
+                            <div class="text-[#8D4327]" title="Archival Custody Ledger">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.6"
+                                    viewbox="0 0 24 24">
+                                    <path
+                                        d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <!-- Breakdown Figures -->
+                        <div class="py-5 space-y-3.5 text-xs text-[#57534E]">
+                            <div class="flex justify-between items-center">
+                                <span id="cartItemCount">Subtotal (<%= itemCount %> Items)</span>
+                                <span id="cartSubtotal" class="font-medium text-[#1C1917] text-[13px]">₹<%= subtotal.toLocaleString('en-IN') %></span>
+                            </div>
+
+                            <div class="flex justify-between items-center">
+                                <span class="inline-flex items-center gap-1.5">
+                                    Delivery Charge
+                                    <svg class="w-3.5 h-3.5 inline text-[#78716C]" fill="none" stroke="currentColor"
+                                        stroke-width="1.8" viewbox="0 0 24 24">
+                                        <path
+                                            d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </span>
+                                <span class="font-semibold text-emerald-800 text-[11px] tracking-wide">FREE</span>
+                            </div>
+
+                        </div>
+                        <!-- Total Custodial Obligation -->
+                        <div class="pt-4 pb-6 border-t border-[#EBE5E0]">
+                            <div class="flex justify-between items-baseline">
+                                <span class="text-[10px] tracking-widest uppercase font-semibold text-[#78716C]">TOTAL
+                                    CUSTODIAL OBLIGATION</span>
+                                <span id="cartTotal" class="font-serif text-3xl font-bold text-[#1C1917] tracking-tight">₹<%= subtotal.toLocaleString('en-IN') %></span>
+                            </div>
+                        </div>
+                        <!-- Coupon / Privilege Code Input -->
+                        <div class="space-y-2 pb-6 border-b border-[#EBE5E0]">
+                            <label class="text-[10px] tracking-widest font-semibold uppercase text-[#78716C] block"
+                                for="privilege-code">CURATORIAL PRIVILEGE CODE</label>
+                            <div class="flex">
+                                <input
+                                    class="w-full text-xs uppercase px-3 py-2 bg-[#FAF7F5] border border-[#DDD6CE] rounded-l-sm focus:outline-none focus:border-[#1C1917] placeholder:text-[#A8A29E] tracking-wider font-mono"
+                                    id="privilege-code" placeholder="E.G. UNTOLD15" type="text" />
+                                <button
+                                    class="bg-[#EFECE8] hover:bg-[#E5E0DA] text-[#1C1917] text-xs font-semibold px-4 py-2 rounded-r-sm uppercase tracking-wider transition-colors border border-l-0 border-[#DDD6CE]">
+                                    APPLY
+                                </button>
+                            </div>
+                            <p class="text-[11px] text-[#8D4327] flex items-center gap-1 pt-1 font-medium">
+                                <svg class="w-3.5 h-3.5 inline flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
+                                    <path clip-rule="evenodd"
+                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                        fill-rule="evenodd"></path>
+                                </svg>
+                                <span>Hint: Use UNTOLD15 for 15% solstice discount</span>
+                            </p>
+                        </div>
+                        <!-- CTA Buttons -->
+                        <div class="pt-6 space-y-3">
+                            <!-- Primary Checkout Button -->
+                            <button
+                                class="w-full bg-[#1C1917] hover:bg-black text-[#FAF7F5] py-3.5 px-4 text-xs font-semibold uppercase tracking-widest rounded-sm transition-all flex items-center justify-center gap-2 shadow-sm">
+                                <svg class="w-4 h-4 text-[#FAF7F5]" fill="none" stroke="currentColor" stroke-width="2"
+                                    viewbox="0 0 24 24">
+                                    <path
+                                        d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <span>PROCEED TO VAULT CHECKOUT</span>
+                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewbox="0 0 24 24">
+                                    <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                            </button>
+                            <!-- Secondary Alternative Payment Method -->
+                            <button
+                                class="w-full bg-[#FAF7F5] hover:bg-[#F2ECE6] text-[#44403C] py-2.5 px-4 text-[10px] font-semibold tracking-wider uppercase rounded-sm border border-[#E0D9D2] transition-colors flex items-center justify-center gap-2">
+                                <svg class="w-3.5 h-3.5 text-[#57534E]" fill="none" stroke="currentColor"
+                                    stroke-width="1.8" viewbox="0 0 24 24">
+                                    <path
+                                        d="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.5m-15 10.5V10.5m0 0a3 3 0 01-3-3V6a3 3 0 013-3h18a3 3 0 013 3v1.5a3 3 0 01-3 3"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <span>PAY VIA UPI / NETBANKING / RAZORPAY</span>
+                            </button>
+                        </div>
+                        <!-- Curatorial Guarantees / Badges -->
+                        <div
+                            class="grid grid-cols-3 gap-2 text-center pt-8 border-t border-[#EBE5E0] mt-6 text-[#57534E]">
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="w-7 h-7 rounded-full bg-[#FAF7F5] flex items-center justify-center mb-1 text-[#8D4327]">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                                        <path
+                                            d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V3.75A1.125 1.125 0 0013.125 2.625H3.375A1.125 1.125 0 002.25 3.75v10.5h12"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                        </path>
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-medium leading-tight">FREE SHIPPING</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="w-7 h-7 rounded-full bg-[#FAF7F5] flex items-center justify-center mb-1 text-[#8D4327]">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                                        <path
+                                            d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0v8.25m0 0a60.074 60.074 0 0015.797 2.101c.727.198 1.453-.342 1.453-1.096V14.25m-17.25 0h1.5m15.75-9.75v-.75A.75.75 0 0019.5 3h-1.5m0 0v8.25m0 0a60.074 60.074 0 01-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V9.75"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-medium leading-tight">CASH ON DELIVERY</span>
+                            </div>
+                            <div class="flex flex-col items-center">
+                                <div
+                                    class="w-7 h-7 rounded-full bg-[#FAF7F5] flex items-center justify-center mb-1 text-[#8D4327]">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                                        <path
+                                            d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                                <span class="text-[10px] font-medium leading-tight">14-DAYS RETURN</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+        </main>
+        <!-- END: MainContent -->
+        <%- include('../partials/user/footer')%>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    // product removal
+    document.addEventListener('click',async(event)=>{
+        const button = event.target.closest('.remove-from-cart-btn')
+        if(!button){
+            return 
+        }
+
+        const productId = button.dataset.productId
+        console.log('Product ID: ',productId)
+
+        const confirmation = await Swal.fire({
+            icon: 'warning',
+            title: 'Remove this book?',
+            text: 'This book will be removed from your cart.',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, remove it',
+            cancelButtonText: 'Keep it'
+        })
+
+        if(!confirmation.isConfirmed){
+            return
+        }
+
+        try {
+            button.disabled = true
+
+            const response = await fetch(`/cart/remove/${productId}`,{
+                method:'DELETE',
+                headers:{
+                    'Accept':'application/json'
+                }
+            })
+
+            const result = await response.json()
+
+            if(!response.ok || !result.success){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Unable to Remove',
+                    text: result.message
+                })
+                return
+            }
+            
+            const cartItem = button.closest('.cart-item')
+            cartItem.remove()
+
+            const subtotalElement = document.getElementById('cartSubtotal')
+            const itemCountElement = document.getElementById('cartItemCount')
+            const totalElement = document.getElementById('cartTotal')
+
+            subtotalElement.textContent = `₹${result.subtotal.toLocaleString('en-IN')}`;
+            itemCountElement.textContent = `Subtotal (${result.itemCount} Items)`;
+            totalElement.textContent = `₹${result.subtotal.toLocaleString('en-IN')}`;
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Removed!',
+                text: result.message,
+                timer: 1500,
+                showConfirmButton: false
+            })
+
+
+        } catch (error) {
+            console.error('Remove from cart error:', error);
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went wrong',
+                text: 'Please try again.'
+            });
+        } finally {
+            button.disabled = false
+        }
+
+    })
+
+
+
+    // update quantity
+    document.addEventListener('click',async(event)=>{
+        const increaseButton = event.target.closest('.increase-quantity-btn')
+        const decreaseButton = event.target.closest('.decrease-quantity-btn')
+
+        if(!increaseButton && !decreaseButton){
+            return
+        }
+
+        const button = increaseButton || decreaseButton
+        const productId = button.dataset.productId
+
+        const cartItem = button.closest('.cart-item')
+
+        const quantityElement = cartItem.querySelector('.cart-item-quantity')
+        const currentQuantity = Number(quantityElement.textContent.trim())
+
+        let newQuantity;
+
+        if(increaseButton){
+            newQuantity = currentQuantity + 1
+        }else{
+            newQuantity = currentQuantity - 1
+        }
+
+        if(newQuantity<1){
+            return
+        }
+
+        try {
+            button.disabled = true
+            const response = await fetch(`/cart/update/${productId}`,{
+                method:'PATCH',
+                headers:{
+                    'Content-Type':'application/json',
+                    'Accept':'application/json'
+                },
+                body: JSON.stringify({
+                    quantity:newQuantity
+                })
+            })
+
+            const result = await response.json()
+
+            if(!response.ok || !result.success){
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Unable to Update',
+                    text: result.message
+                })
+                return
+            }
+            quantityElement.textContent = result.quantity
+
+            const itemTotalElement = cartItem.querySelector('.cart-item-total')
+            itemTotalElement.textContent = `Item total: ₹${result.itemTotal.toLocaleString('en-IN')}`
+            document.getElementById('cartSubtotal').textContent = `₹${result.subtotal.toLocaleString('en-IN')}`;
+            document.getElementById('cartItemCount').textContent = `Subtotal (${result.itemCount} Items)`;
+            document.getElementById('cartTotal').textContent = `₹${result.subtotal.toLocaleString('en-IN')}`;
+
+        } catch (error) {
+            console.error('Cart quantity update error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went wrong',
+                text: 'Please try again.'
+            });
+        } finally {
+            button.disabled = false
+        }
+
+
+    })
+
+
+
+</script>
+
+</html>
