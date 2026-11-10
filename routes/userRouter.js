@@ -3,6 +3,7 @@ const router = express.Router()
 const userController = require('../controllers/user/userController')
 const productController = require('../controllers/user/productController')
 const cartController = require('../controllers/user/cartController')
+const wishlistController = require('../controllers/user/wishlistController')
 const passport = require('../config/passport')
 const {loginLimiter, otpLimiter, forgotPasswordLimiter, resendOtpLimiter} = require('../middlewares/rateLimiter')
 const {isAuthenticated} = require('../middlewares/auth')
@@ -45,5 +46,9 @@ router.get('/cart',isAuthenticated,cartController.loadCart)
 router.post('/cart/add/:id',isAuthenticated,cartController.addToCart)
 router.delete('/cart/remove/:id',isAuthenticated,cartController.removeFromCart)
 router.patch('/cart/update/:id',isAuthenticated,cartController.updateCartQuantity)
+
+router.get('/wishlist',isAuthenticated,wishlistController.loadWishlist)
+router.post('/wishlist/add/:id',isAuthenticated,wishlistController.addToWishlist)
+router.delete('/wishlist/remove/:id',isAuthenticated,wishlistController.removeFromWishlist)
 
 module.exports = router

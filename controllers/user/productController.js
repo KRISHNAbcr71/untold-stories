@@ -1,6 +1,6 @@
 const Product = require('../../models/Product');
 const Category = require('../../models/Category');
-const { default: mongoose } = require('mongoose');
+const mongoose = require('mongoose')
 
 const loadShop = async(req,res)=>{
     try {

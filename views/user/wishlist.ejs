@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Curatorial Folio Wishlist | The Untold Stories</title>
+  <!-- Tailwind CSS v3 with Forms & Container Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Google Fonts: Cormorant Garamond / Playfair Display & Inter -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;1,6..72,300;1,6..72,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600&amp;display=swap"
+    rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Newsreader"', 'Georgia', 'serif'],
+            display: ['"Cinzel"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            paper: '#faf7f5',
+            'paper-warm': '#f5f0ec',
+            'paper-card': '#fdfbf9',
+            terracotta: '#9e4624',
+            'terracotta-light': '#fdf2ec',
+            'leather-dark': '#1e1c1a',
+            'charcoal-muted': '#58534e',
+            'border-subtle': '#eae4df',
+            'border-strong': '#d8d0c9',
+          }
+        }
+      }
+    }
+  </script>
+  <style data-purpose="custom-typography">
+    body {
+      background-color: #f7f4f0;
+      color: #262320;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .font-serif-soft {
+      font-feature-settings: "liga" 1, "kern" 1;
+    }
+  </style>
+</head>
+
+<body
+  class="min-h-screen flex flex-col font-sans antialiased text-[#262320] selection:bg-[#9e4624] selection:text-white">
+  <%- include('../partials/user/header')%>
+    <!-- BEGIN: MainContent -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-6 lg:px-12 py-10 md:py-12">
+      <!-- Page Header Title & Primary Action -->
+      <div
+        class="flex flex-col sm:flex-row sm:items-center justify-between pb-8 gap-5 border-b border-border-subtle/80">
+        <div>
+          <h1 class="font-serif text-3xl md:text-5xl font-normal text-[#1e1c1a] tracking-tight">
+            My Wishlist
+          </h1>
+        </div>
+      </div>
+      <!-- BEGIN: WishlistItemsList (Uniform Card 1 Design across all entries) -->
+      <div class="space-y-6 mt-8" data-purpose="wishlist-cards-collection">
+
+        <% if(products.length>0){ %>
+          <% products.forEach(product=>{ %>
+        <!-- ITEM 1 -->
+        <article
+          class="wishlist-item bg-[#fbf9f7] border border-border-subtle rounded-xl p-5 md:p-7 shadow-[0_2px_12px_rgba(0,0,0,0.02)] hover:border-border-strong transition-all duration-300 flex flex-col md:flex-row items-center justify-between gap-6">
+          <!-- Thumbnail & Badges -->
+          <div class="flex items-center space-x-6 w-full md:w-auto">
+            <div
+              class="relative w-28 h-36 md:w-32 md:h-40 flex-shrink-0 rounded-lg overflow-hidden border border-[#ded5cb] shadow-sm bg-[#ece5dc]">
+              <img alt="<%= product.productName %>" class="w-full h-full object-cover"
+                src="<%= product.productImage[0] %>"
+                loading="lazy">
+            </div>
+            <!-- Book Metadata -->
+            <div class="flex-grow space-y-1.5">
+              <span class="text-[10px] md:text-[11px] font-semibold tracking-widest uppercase text-terracotta block">
+                <%= product.category.name %>
+              </span>
+              <h2
+                class="font-serif text-xl md:text-2xl text-[#1e1c1a] font-normal leading-snug hover:text-terracotta transition cursor-pointer">
+                <%= product.productName %>
+              </h2>
+              <p class="text-xs md:text-sm text-charcoal-muted font-sans">
+                By <span class="text-[#262320] font-medium"><%= product.author %></span>
+              </p>
+              <div class="pt-2 flex flex-wrap items-center text-xs text-[#6e6862] gap-x-3 gap-y-1">
+                <% if(product.quantity>0){ %>
+                <span class="inline-flex items-center text-amber-800 font-medium">
+                  <span class="w-2 h-2 rounded-full bg-amber-600 mr-1.5 inline-block"></span>
+                  <%= product.quantity %> copies remaining
+                </span>
+                <%}else{%>
+                  <span class="inline-flex items-center text-red-700 font-medium">
+                    <span class="w-2 h-2 rounded-full bg-red-600 mr-1.5 inline-block"></span>
+                      Currently unavailable
+                  </span>
+                <%}%>
+              </div>
+            </div>
+          </div>
+          <!-- Pricing & Dual Action Stack -->
+          <div
+            class="flex flex-row md:flex-col items-center md:items-end justify-between w-full md:w-56 pt-4 md:pt-0 border-t md:border-t-0 border-border-subtle/80 gap-4">
+            <!-- Price Display -->
+            <div class="text-left md:text-right">
+              <div class="flex items-baseline space-x-2 md:justify-end">
+                <span class="font-serif text-2xl md:text-3xl font-normal text-[#1e1c1a]">₹<%= product.price.toLocaleString('en-IN') %></span>
+              </div>
+            </div>
+            <!-- Buttons Stack -->
+            <div class="flex flex-col space-y-2 w-44">
+              <button
+                class="add-to-cart-btn w-full bg-[#1e1c1a] hover:bg-[#34302c] text-white py-2.5 px-4 rounded text-xs font-semibold tracking-wider uppercase flex items-center justify-center space-x-2 transition shadow-sm"
+                type="button"
+                data-product-id="<%= product._id %>">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path
+                    d="M15.75 10.5V6a3.75 3.75 0 10-7.5 0v4.5m11.356-1.993l1.263 12c.07.665-.45 1.243-1.119 1.243H4.25c-.67 0-1.189-.578-1.119-1.243l1.263-12A1.125 1.125 0 015.513 7.5h12.974c.576 0 1.059.435 1.119 1.007zM8.625 10.5a.375.375 0 11-.75 0 .375.375 0 01.75 0zm7.5 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span class="">ADD TO CART</span>
+              </button>
+              <button
+                class="remove-from-wishlist-btn w-full bg-[#eee9e4] hover:bg-[#e4ded8] text-[#58534e] py-2 px-4 rounded text-xs font-medium tracking-wider uppercase flex items-center justify-center space-x-1.5 transition"
+                type="button"
+                data-product-id="<%= product._id %>">
+                <svg class="w-3.5 h-3.5 text-[#736c65]" fill="none" stroke="currentColor" stroke-width="1.8"
+                  viewBox="0 0 24 24">
+                  <path
+                    d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+                <span>DELETE</span>
+              </button>
+            </div>
+          </div>
+        </article>
+        <%})%>
+        <%}else{%>
+          <div class="text-center py-20">
+            <h2 class="font-serif text-2xl text-[#1e1c1a]">
+              Your Wishlist is Empty
+            </h2>
+
+            <p class="text-sm text-charcoal-muted mt-3">
+              You haven't saved any books yet.
+            </p>
+
+            <a href="/shop"
+              class="inline-block mt-6 bg-[#1e1c1a] text-white px-6 py-3 rounded text-xs font-semibold tracking-wider uppercase">
+              Explore Books
+            </a>
+          </div>
+        <%}%>
+
+      </div>
+      <!-- END: WishlistItemsList -->
+      <!-- BEGIN: ValuePropositionGuarantees -->
+      <section class="mt-14 pt-2" data-purpose="archival-guarantees">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+          <!-- Guarantee 1 -->
+          <div class="bg-[#fcfaf8] border border-border-subtle rounded-xl p-6 flex items-start space-x-4">
+            <div class="p-2.5 rounded-lg bg-paper-warm border border-border-subtle text-terracotta flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path
+                    d="M8.25 18.75a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 01-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 00-3.213-9.193 2.056 2.056 0 00-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V3.75A1.125 1.125 0 0013.125 2.625H3.375A1.125 1.125 0 002.25 3.75v10.5h12"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>
+              <h3 class="font-serif text-base font-normal text-[#1e1c1a]">FREE SHIPPING</h3>
+              <p class="text-xs text-charcoal-muted mt-1 leading-relaxed">
+                Complimentary vault-insured transit across
+                India on all archival folios.
+              </p>
+            </div>
+          </div>
+          <!-- Guarantee 2 -->
+          <div class="bg-[#fcfaf8] border border-border-subtle rounded-xl p-6 flex items-start space-x-4">
+            <div class="p-2.5 rounded-lg bg-paper-warm border border-border-subtle text-terracotta flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path
+                    d="M2.25 18.75a60.07 60.07 0 0115.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 013 6H2.25m0 0v8.25m0 0a60.074 60.074 0 0015.797 2.101c.727.198 1.453-.342 1.453-1.096V14.25m-17.25 0h1.5m15.75-9.75v-.75A.75.75 0 0019.5 3h-1.5m0 0v8.25m0 0a60.074 60.074 0 01-15.797 2.101c-.727.198-1.453-.342-1.453-1.096V9.75"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>
+              <h3 class="font-serif text-base font-normal text-[#1e1c1a]">CASH ON DELIVERY</h3>
+              <p class="text-xs text-charcoal-muted mt-1 leading-relaxed">
+                Pay conveniently at your doorstep upon vaulted
+                inspection and receipt.
+              </p>
+            </div>
+          </div>
+          <!-- Guarantee 3 -->
+          <div class="bg-[#fcfaf8] border border-border-subtle rounded-xl p-6 flex items-start space-x-4">
+            <div class="p-2.5 rounded-lg bg-paper-warm border border-border-subtle text-terracotta flex-shrink-0">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="1.7" viewBox="0 0 24 24">
+                  <path
+                    d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"
+                    stroke-linecap="round" stroke-linejoin="round"></path>
+                </svg>
+            </div>
+            <div>
+              <h3 class="font-serif text-base font-normal text-[#1e1c1a]">14-DAYS RETURNS</h3>
+              <p class="text-xs text-charcoal-muted mt-1 leading-relaxed">
+                Unconditional safe returns in original climate
+                parcel.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- END: ValuePropositionGuarantees -->
+
+    </main>
+    <!-- END: MainContent -->
+    <%- include('../partials/user/footer')%>
+
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  // product removal
+  document.addEventListener('click',async(event)=>{
+    const button = event.target.closest('.remove-from-wishlist-btn')
+
+    if(!button){
+      return
+    }
+
+    const productId = button.dataset.productId
+    const confirmation = await Swal.fire({
+      icon: 'warning',
+      title: 'Remove this book?',
+      text: 'This book will be removed from your wishlist.',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, remove it',
+      cancelButtonText: 'Keep it'
+    })
+
+    if(!confirmation.isConfirmed){
+      return
+    }
+
+    try {
+      button.disabled = true
+      const response = await fetch(`/wishlist/remove/${productId}`,{
+        method:'DELETE',
+        headers:{
+          'Accept':'application/json'
+        }
+      })
+
+      const result = await response.json()
+
+      if(!response.ok || !result.success){
+        Swal.fire({
+          icon: 'error',
+          title: 'Unable to Remove',
+          text: result.message
+        })
+        return
+      }
+
+      const wishlistItem = button.closest('.wishlist-item')
+      if(wishlistItem){
+        wishlistItem.remove()
+      }
+      
+
+      const remainingItems = document.querySelectorAll('.wishlist-item')
+
+      if(remainingItems.length === 0){
+        window.location.reload()
+        return
+      }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Removed!',
+        text: result.message,
+        timer: 1500,
+        showConfirmButton: false
+      })
+
+    } catch (error) {
+      console.error('Remove from wishlist error:', error)
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Something went wrong',
+        text: 'Please try again.'
+      })
+    } finally {
+      button.disabled = false
+    }
+
+  })
+
+
+
+
+  // product add to cart
+  document.addEventListener('click',async(event)=>{
+    const button = event.target.closest('.add-to-cart-btn')
+    if(!button){
+      return
+    }
+
+    const productId = button.dataset.productId
+
+    try {
+      button.disabled = true
+
+      const response = await fetch(`/cart/add/${productId}`,{
+        method:'POST',
+        headers:{
+          'Accept':'application/json'
+        }
+      })
+
+      const result = await response.json()
+
+      if(!response.ok || !result.success){
+        Swal.fire({
+          icon: 'error',
+          title: 'Unable to Add',
+          text: result.message
+        })
+        return
+      }
+
+      const wishlistItem = button.closest('.wishlist-item')
+
+      if (wishlistItem) {
+        const removeResponse = await fetch(`/wishlist/remove/${productId}`,{
+          method:'DELETE',
+          headers:{
+            'Accept':'application/json'
+          }
+        })
+        const removeResult = await removeResponse.json()
+        if(!removeResponse.ok || !removeResult.success){
+          Swal.fire({
+            icon: 'warning',
+            title: 'Added to Cart',
+            text: 'The book was added to your cart, but could not be removed from your wishlist.'
+          })
+          return
+        }
+        wishlistItem.remove()
+
+        const remainingItems = document.querySelectorAll('.wishlist-item')
+
+        if (remainingItems.length === 0) {
+          const wishlistContainer = document.querySelector(
+            '[data-purpose="wishlist-cards-collection"]'
+          )
+
+          wishlistContainer.innerHTML = `
+            <div class="text-center py-20">
+              <h2 class="font-serif text-2xl text-[#1e1c1a]">
+                  Your Wishlist is Empty
+              </h2>
+              <p class="text-sm text-charcoal-muted mt-3">
+                  You haven't saved any books yet.
+              </p>
+              <a href="/shop"
+                  class="inline-block mt-6 bg-[#1e1c1a] text-white px-6 py-3 rounded text-xs font-semibold tracking-wider uppercase">
+                  Explore Books
+              </a>
+          </div>
+          `
+          }
+        }
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Added to Cart!',
+        text: result.message,
+        timer: 1500,
+        showConfirmButton: false
+      })
+
+    } catch (error) {
+      console.error('Add to cart error:', error);
+
+      Swal.fire({
+        icon: 'error',
+        title: 'Something went wrong',
+        text: 'Please try again.'
+      });
+    }finally{
+      button.disabled = false
+    }
+  })
+
+
+
+</script>
+
+</html>
