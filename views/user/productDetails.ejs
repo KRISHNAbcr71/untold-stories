@@ -226,25 +226,23 @@
           <!-- Action Call to Actions -->
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 mt-6">
             <!-- Add to Cart (Black) -->
-            <button
+            <a href="/cart"
               class="h-12 bg-[#1B1815] hover:bg-[#2C2723] text-white px-5 rounded-[2px] text-xs font-semibold tracking-wider uppercase flex items-center justify-center space-x-2.5 transition-all shadow-sm">
               <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" stroke-linecap="round" stroke-linejoin="round">
                 </path>
               </svg>
-              <span class="">ADD TO CART</span>
-            </button>
-            <!-- Acquire Now (Cognac Brown) -->
-            <button
+              <span>ADD TO CART</span>
+            </a>
+            <!-- Wishlist -->
+            <a href="/wishlist"
               class="h-12 bg-[#8C4F27] hover:bg-[#784220] text-white px-5 rounded-[2px] text-xs font-semibold tracking-wider uppercase flex items-center justify-center space-x-2.5 transition-all shadow-sm">
-              <svg class="w-4 h-4 text-amber-200" fill="none" stroke="currentColor" stroke-width="2"
-                viewBox="0 0 24 24">
-                <path
-                  d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"
-                  stroke-linecap="round" stroke-linejoin="round"></path>
+              <svg class="w-5 h-5 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12z" stroke-linecap="round" stroke-linejoin="round">
+                </path>
               </svg>
-              <span class="">ACQUIRE NOW — ₹4,200</span>
-            </button>
+              <span>ADD TO WISHLIST</span>
+            </a>
           </div>
           <!-- Archival Custody & Delivery Assurances -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5 mt-8 pt-6 border-t border-[#E5DDD2]">
@@ -382,9 +380,10 @@
     </main>
     <!-- END: ProductDetailMainSection -->
     <%- include('../partials/user/footer') %>
+    <script src="/js/user.js"></script>
 </body>
 
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   // select thumbnail images
   const mainProductImage = document.getElementById('mainProductImage')
