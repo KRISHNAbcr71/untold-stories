@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>The Untold Stories - Edit Registered Email</title>
+    <!-- Tailwind CSS CDN with Forms & Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            cream: '#FDFBF9',
+                            light: '#F8F5F1',
+                            card: '#FFFFFF',
+                            input: '#FBF9F7',
+                            notice: '#F7F2EB',
+                            border: '#E8E2D9',
+                            terracotta: '#A2583E',
+                            charcoal: '#1A1816',
+                            muted: '#69645E',
+                            subtle: '#8C857E'
+                        }
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style data-purpose="custom-decorations">
+        /* Subtle decorative archive watermark in card */
+        .archive-watermark {
+            background: radial-gradient(circle at top right, rgba(235, 227, 217, 0.45) 0%, rgba(255, 255, 255, 0) 65%);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-[#FAF7F2] text-brand-charcoal font-sans antialiased min-h-screen flex flex-col justify-between selection:bg-[#EBE3D7] selection:text-brand-charcoal">
+    <%- include('../partials/user/header')%>
+    <!-- BEGIN: MainContent -->
+    <main class="flex-grow flex flex-col items-center justify-center px-4 py-12 md:py-16">
+        <div class="w-full max-w-[624px]">
+            <!-- Breadcrumb Navigation -->
+            <div class="flex items-center justify-between mb-5">
+                <div class="flex items-center gap-2 text-[11px] font-semibold tracking-wider uppercase text-[#78716A]">
+                    <a class="text-[#4A4641] hover:text-black cursor-pointer flex items-center gap-1.5 transition-colors"
+                        href="/profile">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2.5" viewBox="0 0 24 24">
+                            <path d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"></path>
+                        </svg>
+                        PROFILE
+                    </a>
+                        <span class="text-[#9C948B]">/</span>
+                        <span class="text-brand-terracotta font-bold"><%= pageTitle%></span>
+                </div>
+            </div>
+            <!-- Form Card Container -->
+            <section
+                class="bg-white rounded-xl shadow-[0_12px_36px_rgba(26,24,22,0.06)] border border-[#ECE7DF] p-8 sm:p-10 relative overflow-hidden archive-watermark"
+                data-purpose="edit-email-card">
+                <!-- Header Text -->
+                <header class="mb-8">
+                    <h1
+                        class="font-serif text-[38px] md:text-[40px] leading-tight font-normal text-[#1A1816] tracking-[-0.01em]">
+                        Edit Registered Email
+                    </h1>
+                    <p class="text-[14px] leading-relaxed text-[#6E6861] mt-2.5 max-w-[480px]">
+                        View your current registered email below and enter your new email to update your account
+                        credentials.
+                    </p>
+                </header>
+                <!-- Edit Form -->
+                <form id="edit-email-form" class="space-y-6" novalidate>
+                    <!-- Current Email (Read-Only) -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <label class="text-[10.5px] font-bold tracking-[0.12em] text-[#332E29] uppercase">
+                                Current Registered Email
+                            </label>
+                            <!-- Verified Badge -->
+                            <span
+                                class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-[#EDE9E3] text-[#59534B] text-[9.5px] font-semibold tracking-wide uppercase">
+                                <svg class="w-2.5 h-2.5 text-[#59534B]" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path
+                                        d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                                        stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                VERIFIED • READ-ONLY
+                            </span>
+                        </div>
+                        <!-- Disabled Field Box -->
+                        <div
+                            class="flex items-center w-full px-3.5 py-3 rounded-md bg-[#F8F5F1] border border-[#E9E4DC] text-[#3B3732] cursor-not-allowed select-none">
+                            <!-- Envelope Icon -->
+                            <svg class="w-4 h-4 text-[#8C857E] mr-3 shrink-0" fill="none" stroke="currentColor"
+                                stroke-width="1.8" viewBox="0 0 24 24">
+                                <path
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                    stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <span
+                                class="text-sm tracking-normal flex-grow text-[#3A3632]"><%= user.email %></span>
+                            <!-- Lock Icon -->
+                            <svg class="w-4 h-4 text-[#9C948B] shrink-0" fill="none" stroke="currentColor"
+                                stroke-width="1.8" viewBox="0 0 24 24">
+                                <rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+                                <path d="M7 11V7a5 5 0 0110 0v4" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                        <!-- Field Explanation Note -->
+                        <div class="flex items-start gap-1.5 mt-2 text-[12px] text-[#78716A] leading-normal">
+                            <svg class="w-3.5 h-3.5 text-[#8E867E] shrink-0 mt-0.5" fill="none" stroke="currentColor"
+                                stroke-width="2" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 16v-4m0-4h.01" stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                            <span>Your current email address cannot be edited directly because it is linked to your
+                                vault records, orders, and authentication security.</span>
+                        </div>
+                    </div>
+                    <!-- New Email Address Field -->
+                    <div>
+                        <label class="block text-[10.5px] font-bold tracking-[0.12em] text-[#332E29] uppercase mb-2"
+                            for="new-email">
+                            New Email Address <span class="text-brand-terracotta">*</span>
+                        </label>
+                        <div class="relative flex items-center">
+                            <span class="absolute left-3.5 text-[#736D66] font-medium text-base select-none">@</span>
+                            <input
+                                class="w-full pl-9 pr-4 py-3 rounded-md bg-[#FAF7F2] border border-[#E5DFD6] text-sm text-[#2C2824] placeholder-[#8F8880] focus:bg-white focus:outline-none focus:ring-1 focus:ring-neutral-800 focus:border-neutral-800 transition-colors"
+                                id="email" 
+                                name="email"
+                                placeholder="Enter your new email address" 
+                                required
+                                type="email">
+                        </div>
+                        <p id="emailError" class="text-red-600 text-xs mt-1"></p>
+                    </div>
+                    <!-- Archival Verification Notice Box -->
+                    <div class="bg-[#F8F4EE] border border-[#ECE5DB] rounded-md p-4 flex items-start gap-3.5">
+                        <div
+                            class="w-8 h-8 rounded bg-[#ECE5DB] text-[#6E665E] flex items-center justify-center shrink-0 mt-0.5">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path
+                                    d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                                    stroke-linecap="round" stroke-linejoin="round"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="text-[11px] font-bold tracking-[0.1em] text-[#3B3630] uppercase">
+                                Verification Notice
+                            </h4>
+                            <p class="text-[12.5px] text-[#635D56] leading-relaxed mt-1">
+                                We'll send a one-time password (OTP) to your new email address. Your email will only be
+                                changed after successful verification.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Card Form Actions -->
+                    <div class="pt-3 flex flex-wrap sm:flex-nowrap items-center justify-end gap-3">
+                        <button
+                            class="w-full sm:w-auto px-6 py-2.5 text-xs font-bold tracking-wider uppercase text-[#47423D] bg-[#ECE7DF] hover:bg-[#E2DDD5] rounded transition-colors"
+                            type="button"
+                            onclick="window.location.href='/profile'">
+                            Cancel &amp; Return
+                        </button>
+                        <button
+                            class="w-full sm:w-auto px-6 py-2.5 text-xs font-bold tracking-wider uppercase text-white bg-[#161412] hover:bg-[#2A2623] rounded flex items-center justify-center gap-2 transition-all shadow-sm group"
+                            type="submit">
+                            <span>Send OTP &amp; Verify</span>
+                            <svg class="w-4 h-4 transition-transform group-hover:translate-x-0.5" fill="none"
+                                stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                viewBox="0 0 24 24">
+                                <path d="M5 12h14m-6-6 6 6-6 6"></path>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </main>
+    <!-- END: MainContent -->
+    <%- include('../partials/user/footer')%>
+
+</body>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const editEmailForm = document.getElementById('edit-email-form')
+    const newEmailInput = document.getElementById('email')
+    const emailError = document.getElementById('emailError')
+    const currentEmail = '<%= user.email %>'
+
+    editEmailForm.addEventListener('submit',async(event)=>{
+        event.preventDefault()
+
+        const newEmail = newEmailInput.value.trim()
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+        if(newEmail === ''){
+            emailError.textContent = 'Email is required'
+            return
+        }else if(!emailPattern.test(newEmail)){
+            emailError.textContent = 'Please enter a valid email address'
+            return
+        }else if(newEmail.toLowerCase() === currentEmail.trim().toLowerCase()){
+            emailError.textContent = 'This is already your current email address'
+            return
+        }else{
+            emailError.textContent = ''
+        }
+
+
+
+        try {
+            const response = await fetch('/profile/validateEmail',{
+                method:'PATCH',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    newEmail
+                })
+            })
+
+            const result = await response.json()
+
+            if(!response.ok){
+                emailError.textContent = result.message
+                return
+            }
+
+            await Swal.fire({
+                icon: 'success',
+                title: 'OTP Sent Successfully!',
+                text: result.message,
+                confirmButtonText: 'Continue',
+                confirmButtonColor: '#9f4827'
+            })
+
+            window.location.href = '/profile/verifyEmailOtp'
+
+
+        } catch (error) {
+            console.error('Email validation error:', error)
+            Swal.fire({
+                icon: 'error',
+                title: 'Something Went Wrong!',
+                text: 'Unable to send verification OTP. Please try again.',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#9f4827'
+            })
+        }
+
+
+
+
+
+
+    })
+
+    newEmailInput.addEventListener('input',()=>{
+        emailError.textContent = ''
+    })
+
+
+</script>
+
+</html>

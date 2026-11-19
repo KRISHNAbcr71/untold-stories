@@ -1,10 +1,26 @@
 const User = require('../models/User')
 
-const isAuthenticated = (req,res,next)=>{
-    if(req.session.user){
+const isAuthenticated = async(req,res,next)=>{
+    try {
+        if(!req.session.user){
+            return res.redirect('/login')
+        }
+    
+        const user = await User.findById(req.session.user.id)
+
+        if(!user || user.isBlocked){
+            return req.session.destroy(()=>{
+                res.clearCookie('connect.sid')
+                return res.redirect('/login')
+            })
+        }
         return next()
+
+    } catch (error) {
+        console.error('User authentication error:', error)
+        return res.status(500).render('500')
     }
-    return res.redirect('/login')
+
 }
 
 
