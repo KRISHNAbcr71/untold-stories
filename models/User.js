@@ -5,6 +5,7 @@ const userSchema = new mongoose.Schema({
     email:{type:String, required:true, unique:true, trim:true},
     phone:{type:String, trim:true},
     password:{type:String},
+    profileImage:{type:String,default:''},
     googleId:{type:String},
     isBlocked:{type:Boolean, default:false},
     isAdmin:{type:Boolean, default:false}

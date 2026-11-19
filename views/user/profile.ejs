@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>The Untold Stories — Profile &amp; Identity</title>
+  <!-- Tailwind CSS v3 with Plugins -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <!-- Google Fonts: Playfair Display (Serif) & Plus Jakarta Sans (Sans) -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&amp;family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap"
+    rel="stylesheet">
+  <!-- Tailwind Configuration -->
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Playfair Display"', 'Georgia', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+          },
+          colors: {
+            parchment: {
+              50: '#fdfbf9',
+              100: '#f8f4f0',
+              200: '#f2ede8',
+              300: '#e5ded6',
+              400: '#ccbfb1',
+            },
+            archival: {
+              charcoal: '#181716',
+              terracotta: '#b86d4f',
+              sepia: '#7b6859',
+              sage: '#2e7d5a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <!-- Custom Styles for Typography & UI Nuances -->
+  <style data-purpose="custom-styling">
+    body {
+      background-color: #f7f3ee;
+      color: #1c1917;
+      font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background-color: #d7ccc4;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased min-h-screen flex flex-col text-stone-900 bg-[#f7f3ee]">
+  <%- include('../partials/user/header')%>
+  <!-- BEGIN: MainContent -->
+  <main class="flex-grow py-12 px-6 lg:px-12 max-w-[1440px] mx-auto w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+      <!-- BEGIN: LeftSidebar -->
+      <aside class="lg:col-span-4 bg-[#f3eeea]/80 border border-[#e8e2dc] rounded-2xl p-6 shadow-sm h-full">
+        <!-- User Summary Profile Card -->
+
+        <div class="flex items-center space-x-4 mb-6">
+          <div class="relative">
+
+            <div
+              class="w-14 h-14 rounded-full bg-[#1b1917] text-[#f7f3ee] flex items-center justify-center font-serif text-xl font-bold tracking-tight">
+              <% if(user.profileImage){ %>
+                <img 
+                  src="<%= user.profileImage %>" 
+                  alt="Profile picture"
+                  class="w-full h-full object-cover rounded-full">
+              <%}else{%>
+              <%= user.name
+                .split(' ')
+                .map(name=>name.charAt(0))
+                .slice(0,2)
+                .join('')
+                .toUpperCase()
+              %>
+              <%}%>
+            </div>
+
+            <!-- Edit Icon Badge -->
+            <button
+              class="absolute -bottom-1 -right-1 w-5 h-5 bg-[#b27250] rounded-full text-white flex items-center justify-center shadow"
+              title="Edit avatar"
+              type="button"
+              id="editProfileImage">
+              <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+            <input type="file" id="profileImageInput" accept="image/*" class="hidden">
+          </div>
+          <div class="overflow-hidden">
+            <h2 class="font-serif text-lg font-bold text-[#1f1b18] leading-tight"><%= user.name %></h2>
+            <p class="text-[12px] text-stone-500 truncate mt-0.5"><%= user.email %></p>
+          </div>
+        </div>
+
+        <!-- Sidebar Navigation List -->
+        <nav aria-label="Account Sections" class="space-y-1.5">
+          <!-- Active Nav Item: Profile & Identity -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl bg-[#eadecd]/70 text-[#1f1b18] font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-[#8a5d40] stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.169.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.337 0z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Profile &amp; Identity</span>
+            </div>
+            <span class="w-1.5 h-1.5 rounded-full bg-[#8c5a3d]"></span>
+          </a>
+          <!-- Nav Item: Order History & Custody -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-[#eae2d8]/60 text-stone-700 font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Order History &amp; Custody</span>
+            </div>
+            <span class="bg-[#f5d9cc] text-[#934f2d] font-semibold text-[11px] px-2 py-0.5 rounded-md">
+              3 active
+            </span>
+          </a>
+          <!-- Nav Item: Vault Addresses & Transit -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-[#eae2d8]/60 text-stone-700 font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Vault Addresses &amp; Transit</span>
+            </div>
+            <span class="text-stone-500 text-[12px] font-normal">
+              2 saved
+            </span>
+          </a>
+          <!-- Nav Item: Archival Wishlist -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-[#eae2d8]/60 text-stone-700 font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Archival Wishlist</span>
+            </div>
+            <span class="bg-[#e9e3dc] text-stone-600 font-medium text-[11px] px-2 py-0.5 rounded-md">
+              4 folios
+            </span>
+          </a>
+          <!-- Nav Item: Archival Wallet -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-[#eae2d8]/60 text-stone-700 font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Archival Wallet</span>
+            </div>
+          </a>
+        </nav>
+        <!-- Divider & Log Out Button -->
+        <div class="pt-6 mt-6 border-t border-[#e2dad2]">
+          <button
+            class="w-full flex items-center justify-center space-x-2 text-stone-700 hover:text-black font-semibold text-[13.5px] transition-colors py-2">
+            <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </aside>
+      <!-- END: LeftSidebar -->
+      <!-- BEGIN: ProfileOverviewContent -->
+      <section class="lg:col-span-8 bg-[#f5f0ec]/50 border border-[#e8e2dc] rounded-2xl p-8 lg:p-10 shadow-sm h-full"
+        data-purpose="profile-overview-panel">
+        <!-- Header -->
+        <div class="pb-6 mb-8 border-b border-[#e5ded6]">
+          <h1 class="font-serif text-3xl font-semibold text-[#1f1b18] tracking-tight">
+            Profile Overview
+          </h1>
+        </div>
+        <!-- Field 1: User Name -->
+        <div
+          class="bg-white border border-[#eae5de] rounded-xl p-5 mb-5 shadow-sm hover:border-[#dbd2c8] transition-colors">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <span class="block text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                USER NAME
+              </span>
+              <div class="flex flex-wrap items-baseline gap-2 pt-0.5">
+                <span class="text-[15px] font-semibold text-[#1c1917]">
+                  <%= user.name %>
+                </span>
+              </div>
+            </div>
+            <!-- Change Button -->
+            <a href="/profile/editName" aria-label="Change user name"
+              class="flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-700 hover:text-black pt-1">
+              <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- Field 2: Email Address -->
+        <div
+          class="bg-white border border-[#eae5de] rounded-xl p-5 mb-5 shadow-sm hover:border-[#dbd2c8] transition-colors">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <span class="block text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                EMAIL ADDRESS
+              </span>
+              <div class="flex flex-wrap items-center gap-2.5 pt-0.5">
+                <span class="text-[15px] font-medium text-[#1c1917]">
+                  <%= user.email %>
+                </span>
+                <!-- Verified Patron Colophon Badge -->
+                <span class="inline-flex items-center space-x-1 text-[11px] font-medium text-[#2d7a54]">
+                  <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+                      stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <span>Verified</span>
+                </span>
+              </div>
+            </div>
+            <!-- Change Button -->
+            <a href="/profile/editEmail" aria-label="Change email address"
+              class="flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-700 hover:text-black pt-1">
+              <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- Field 3: Password -->
+        <div class="bg-white border border-[#eae5de] rounded-xl p-5 shadow-sm hover:border-[#dbd2c8] transition-colors">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <span class="block text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                PASSWORD
+              </span>
+              <div class="pt-0.5">
+                <div class="text-[17px] tracking-[0.25em] text-[#1c1917] font-mono leading-none">
+                  <%= user.password ? '••••••••' : 'Not set' %>
+                </div>
+              </div>
+            </div>
+            <!-- Change Button -->
+            <a href="/profile/editPassword" aria-label="Change password"
+              class="flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-700 hover:text-black pt-1">
+              <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- END: ProfileOverviewContent -->
+    </div>
+  </main>
+  <!-- END: MainContent -->
+  <%- include('../partials/user/footer')%>
+
+
+</body>
+
+<script>
+  const editProfileImage = document.getElementById('editProfileImage')
+  const profileImageInput = document.getElementById('profileImageInput')
+
+  editProfileImage.addEventListener('click', function () {
+    profileImageInput.click()
+  })
+
+  profileImageInput.addEventListener('change',async function () {
+    const file = profileImageInput.files[0]
+
+    if (!file) {
+        return
+    }
+
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/webp']
+    if (!allowedTypes.includes(file.type)) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid File',
+            text: 'Please select a JPG, PNG or WebP image.'
+        })
+
+        profileImageInput.value = ''
+        return
+    }
+
+    // Validate file size (5 MB)
+    const maxSize = 5 * 1024 * 1024
+
+    if (file.size > maxSize) {
+        Swal.fire({
+            icon: 'error',
+            title: 'File Too Large',
+            text: 'Please select an image smaller than 5 MB.'
+        })
+
+        profileImageInput.value = ''
+        return
+    }
+
+    const formData = new FormData()
+    formData.append('profileImage', file)
+
+    try {
+      const response = await fetch('/profile/editImage', {
+        method: 'PATCH',
+        body: formData
+      })
+
+      const result = await response.json()
+
+      if (!response.ok) {
+        throw new Error(result.message)
+      }
+
+      const imageUrl = URL.createObjectURL(file)
+
+      const profileImageContainer = document.querySelector('.w-14.h-14.rounded-full')
+
+      profileImageContainer.innerHTML = `
+        <img
+          src="${imageUrl}"
+          alt="Profile picture"
+          class="w-full h-full object-cover rounded-full">
+      `
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: result.message
+      })
+
+    } catch (error) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Upload Failed',
+        text: error.message || 'Unable to upload profile image.'
+      })
+    } finally {
+      profileImageInput.value = ''
+    }
+
+  })
+
+</script>
+
+</html>
