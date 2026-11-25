@@ -5,6 +5,7 @@ const productController = require('../controllers/user/productController')
 const cartController = require('../controllers/user/cartController')
 const wishlistController = require('../controllers/user/wishlistController')
 const profileController = require('../controllers/user/profileController')
+const addressController = require('../controllers/user/addressController')
 const passport = require('../config/passport')
 const {loginLimiter, otpLimiter, forgotPasswordLimiter, resendOtpLimiter} = require('../middlewares/rateLimiter')
 const {isAuthenticated} = require('../middlewares/auth')
@@ -64,5 +65,13 @@ router.post('/profile/resendEmailOtp',isAuthenticated,profileController.resendEm
 router.get('/profile/editPassword',isAuthenticated,profileController.loadEditPassword)
 router.patch('/profile/editPassword',isAuthenticated,profileController.updatePassword)
 router.patch('/profile/editImage',isAuthenticated,upload.single('profileImage'),profileController.updateProfileImage)
+
+router.get('/address',isAuthenticated,addressController.loadAddress)
+router.get('/address/addAddress',isAuthenticated,addressController.loadAddAddress)
+router.post('/address/addAddress',isAuthenticated,addressController.saveAddress)
+router.patch('/address/select/:id',isAuthenticated,addressController.selectAddress)
+router.get('/address/edit/:id', isAuthenticated, addressController.loadEditAddress)
+router.patch('/address/edit/:id',isAuthenticated,addressController.editAddress)
+router.delete('/address/delete/:id',isAuthenticated,addressController.deleteAddress)
 
 module.exports = router

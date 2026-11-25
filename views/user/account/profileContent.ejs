@@ -1,0 +1,98 @@
+<%
+    const currentPath = requestPath;
+%>
+
+<!-- BEGIN: ProfileOverviewContent -->
+      <section class="bg-[#f5f0ec]/50 border border-[#e8e2dc] rounded-2xl p-8 lg:p-10 shadow-sm h-full"
+        data-purpose="profile-overview-panel">
+        <!-- Header -->
+        <div class="pb-6 mb-8 border-b border-[#e5ded6]">
+          <h1 class="font-serif text-3xl font-semibold text-[#1f1b18] tracking-tight">
+            Profile Overview
+          </h1>
+        </div>
+        <!-- Field 1: User Name -->
+        <div
+          class="bg-white border border-[#eae5de] rounded-xl p-5 mb-5 shadow-sm hover:border-[#dbd2c8] transition-colors">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <span class="block text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                USER NAME
+              </span>
+              <div class="flex flex-wrap items-baseline gap-2 pt-0.5">
+                <span class="text-[15px] font-semibold text-[#1c1917]">
+                  <%= user.name %>
+                </span>
+              </div>
+            </div>
+            <!-- Change Button -->
+            <a href="/profile/editName" aria-label="Change user name"
+              class="flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-700 hover:text-black pt-1">
+              <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- Field 2: Email Address -->
+        <div
+          class="bg-white border border-[#eae5de] rounded-xl p-5 mb-5 shadow-sm hover:border-[#dbd2c8] transition-colors">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <span class="block text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                EMAIL ADDRESS
+              </span>
+              <div class="flex flex-wrap items-center gap-2.5 pt-0.5">
+                <span class="text-[15px] font-medium text-[#1c1917]">
+                  <%= user.email %>
+                </span>
+                <!-- Verified Patron Colophon Badge -->
+                <span class="inline-flex items-center space-x-1 text-[11px] font-medium text-[#2d7a54]">
+                  <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path
+                      d="M9 12.75L11.25 15 15 9.75M21 12c0 1.268-.63 2.39-1.593 3.068a3.745 3.745 0 01-1.043 3.296 3.745 3.745 0 01-3.296 1.043A3.745 3.745 0 0112 21c-1.268 0-2.39-.63-3.068-1.593a3.746 3.746 0 01-3.296-1.043 3.745 3.745 0 01-1.043-3.296A3.745 3.745 0 013 12c0-1.268.63-2.39 1.593-3.068a3.745 3.745 0 011.043-3.296 3.746 3.746 0 013.296-1.043A3.746 3.746 0 0112 3c1.268 0 2.39.63 3.068 1.593a3.746 3.746 0 013.296 1.043 3.746 3.746 0 011.043 3.296A3.745 3.745 0 0121 12z"
+                      stroke-linecap="round" stroke-linejoin="round"></path>
+                  </svg>
+                  <span>Verified</span>
+                </span>
+              </div>
+            </div>
+            <!-- Change Button -->
+            <a href="/profile/editEmail" aria-label="Change email address"
+              class="flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-700 hover:text-black pt-1">
+              <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+        <!-- Field 3: Password -->
+        <div class="bg-white border border-[#eae5de] rounded-xl p-5 shadow-sm hover:border-[#dbd2c8] transition-colors">
+          <div class="flex items-start justify-between">
+            <div class="space-y-1">
+              <span class="block text-[10px] font-bold uppercase tracking-[0.14em] text-stone-500">
+                PASSWORD
+              </span>
+              <div class="pt-0.5">
+                <div class="text-[17px] tracking-[0.25em] text-[#1c1917] font-mono leading-none">
+                  <%= user.password ? '••••••••' : 'Not set' %>
+                </div>
+              </div>
+            </div>
+            <!-- Change Button -->
+            <a href="/profile/editPassword" aria-label="Change password"
+              class="flex items-center space-x-1.5 text-[11px] font-bold uppercase tracking-wider text-stone-700 hover:text-black pt-1">
+              <svg class="w-3.5 h-3.5 stroke-[2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+      <!-- END: ProfileOverviewContent -->

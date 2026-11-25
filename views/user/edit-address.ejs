@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Add Address — The Untold Stories: Rare Editions &amp; Literary Archive</title>
+    <!-- Tailwind CSS v3 CDN with Forms & Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        parchment: '#FAF7F2',
+                        'parchment-light': '#FDFCFA',
+                        'parchment-subtle': '#F4EFEA',
+                        'terracotta-rich': '#9A3B22',
+                        'terracotta-muted': '#B25D43',
+                        'charcoal-main': '#181716',
+                        'charcoal-soft': '#2B2927',
+                        'border-subtle': '#E7DFD5',
+                        'input-bg': '#FDFBF9',
+                    }
+                }
+            }
+        }
+    </script>
+    <style data-purpose="custom-layout">
+        body {
+            background-color: #FAF7F2;
+            color: #181716;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Input custom aesthetics */
+        .form-input-custom {
+            background-color: #FAF7F2;
+            border: 1px solid #DFD7CC;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-input-custom:focus {
+            background-color: #FFFFFF;
+            border-color: #181716;
+            outline: none;
+            box-shadow: 0 0 0 1px #181716;
+        }
+    </style>
+    <meta content="web_standard" name="shell-type">
+</head>
+
+<body class="min-h-screen flex flex-col font-sans selection:bg-stone-200">
+    <%- include('../partials/user/header') %>
+        <!-- BEGIN: MainContentArea -->
+        <main class="flex-1 py-10 px-4 sm:px-6">
+            <div class="flex flex-col w-full">
+                <!-- Archival Edit Address Container -->
+                <div class="w-full max-w-2xl mx-auto pb-16">
+
+                    <!-- Breadcrumb Navigation -->
+                    <div class="flex items-center justify-between mb-4">
+                        <div
+                            class="flex items-center space-x-2 text-[0.72rem] font-semibold tracking-wider uppercase text-[#857d74]">
+                            <a href="/address">
+                                <span class="text-[#555047] cursor-pointer hover:underline flex items-center gap-1.5">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
+                                        viewBox="0 0 24 24">
+                                        <path d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                    </svg>
+                                    ADDRESS
+                                </span>
+                            </a>
+                            <span class="text-[#b5ada3]">/</span>
+                            <span class="text-[#965b38] font-bold">
+                                EDIT ADDRESS
+                            </span>
+                        </div>
+                    </div>
+
+
+                    <!-- Form Card -->
+                    <div class="bg-white rounded-lg border border-[#EBE4D8] shadow-sm p-6 sm:p-10">
+                        <!-- Card Header -->
+                        <div class="pb-6 border-b border-[#EBE4D8] mb-8">
+                            <h1 class="font-serif text-3xl sm:text-4xl text-charcoal-main font-normal tracking-tight">
+                                Edit
+                                Address</h1>
+                            <p class="text-stone-600 text-[13px] sm:text-[14px] mt-1.5 leading-relaxed">
+                                Update delivery address details for your book orders and shipments.
+                            </p>
+                        </div>
+
+                        <!-- Interactive Form -->
+                        <form class="space-y-6" id="edit-address-form" novalidate>
+                            <!-- Address Type Selector -->
+                            <div>
+                                <label
+                                    class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2.5">
+                                    ADDRESS TYPE <span class="text-[#9A3B22]">*</span>
+                                </label>
+                                <div aria-label="Address Type" class="grid grid-cols-3 gap-3" role="radiogroup">
+                                    <!-- Option 1: HOME (Selected) -->
+                                    <label
+                                        class="flex items-center justify-center gap-2 py-3 px-4 rounded border border-charcoal-main bg-charcoal-main text-white cursor-pointer transition-all text-[11px] font-bold tracking-[0.14em] uppercase"
+                                        id="type-home">
+                                        <input class="sr-only" name="addressType" onchange="updateRadioSelection(this)"
+                                            type="radio" value="Home" <%=address.addressType==='Home' ? 'checked' : ''
+                                            %>>
+                                        <span class="material-symbols-outlined text-base">home</span>
+                                        <span>HOME</span>
+                                    </label>
+                                    <!-- Option 2: OFFICE -->
+                                    <label
+                                        class="flex items-center justify-center gap-2 py-3 px-4 rounded border border-[#DFD7CC] bg-[#FAF7F2] text-stone-700 hover:border-stone-400 cursor-pointer transition-all text-[11px] font-bold tracking-[0.14em] uppercase"
+                                        id="type-office">
+                                        <input class="sr-only" name="addressType" onchange="updateRadioSelection(this)"
+                                            type="radio" value="Office" <%=address.addressType==='Office' ? 'checked'
+                                            : '' %>>
+                                        <span
+                                            class="material-symbols-outlined text-base text-stone-500">apartment</span>
+                                        <span>OFFICE</span>
+                                    </label>
+                                    <!-- Option 3: OTHER -->
+                                    <label
+                                        class="flex items-center justify-center gap-2 py-3 px-4 rounded border border-[#DFD7CC] bg-[#FAF7F2] text-stone-700 hover:border-stone-400 cursor-pointer transition-all text-[11px] font-bold tracking-[0.14em] uppercase"
+                                        id="type-other">
+                                        <input class="sr-only" name="addressType" onchange="updateRadioSelection(this)"
+                                            type="radio" value="Other" <%=address.addressType==='Other' ? 'checked' : ''
+                                            %>>
+                                        <span
+                                            class="material-symbols-outlined text-base text-stone-500">location_on</span>
+                                        <span>OTHER</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Recipient Name -->
+                            <div>
+                                <label
+                                    class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                    for="recipient_name">
+                                    RECIPIENT NAME <span class="text-[#9A3B22]">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] px-3.5 py-3 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all pr-10"
+                                        id="recipient_name" name="name" required="" type="text"
+                                        value="<%= address.name %>">
+                                    <span
+                                        class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-stone-400">
+                                        <span class="material-symbols-outlined text-lg">person</span>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <!-- Telephony Grid (Two Columns) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <!-- Primary Phone -->
+                                <div>
+                                    <label
+                                        class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                        for="primary_phone">
+                                        PHONE <span class="text-[#9A3B22]">*</span>
+                                    </label>
+                                    <div class="relative">
+                                        <input
+                                            class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] px-3.5 py-3 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all pr-10"
+                                            id="primary_phone" name="phone" required="" type="tel"
+                                            value="<%= address.phone %>">
+                                        <span
+                                            class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-stone-400">
+                                            <span class="material-symbols-outlined text-lg">call</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <!-- Alternate Phone -->
+                                <div>
+                                    <label
+                                        class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                        for="secondary_phone">
+                                        ALTERNATE PHONE <span
+                                            class="font-normal text-stone-500 text-[10px]">(OPTIONAL)</span>
+                                    </label>
+                                    <div class="relative">
+                                        <input
+                                            class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] px-3.5 py-3 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all pr-10"
+                                            id="secondary_phone" name="altPhone" type="tel"
+                                            value="<%= address.altPhone || '' %>">
+                                        <span
+                                            class="absolute inset-y-0 right-0 flex items-center pr-3.5 pointer-events-none text-stone-400">
+                                            <span class="material-symbols-outlined text-lg">stay_current_portrait</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Full Address -->
+                            <div>
+                                <label
+                                    class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                    for="street_address">
+                                    FULL ADDRESS <span class="text-[#9A3B22]">*</span>
+                                </label>
+                                <textarea
+                                    class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] p-3.5 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all resize-y"
+                                    id="street_address" name="fullAddress" required=""
+                                    rows="3"><%= address.fullAddress %></textarea>
+                            </div>
+
+                            <!-- Landmark -->
+                            <div>
+                                <label
+                                    class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                    for="landmark">
+                                    LANDMARK <span class="font-normal text-stone-500 text-[10px]">(OPTIONAL)</span>
+                                </label>
+                                <input
+                                    class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] px-3.5 py-3 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all"
+                                    id="landmark" name="landmark" type="text" value="<%= address.landmark || '' %>">
+                            </div>
+
+                            <!-- City / State / Pin Code Grid (Three Columns) -->
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label
+                                        class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                        for="city">
+                                        CITY <span class="text-[#9A3B22]">*</span>
+                                    </label>
+                                    <input
+                                        class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] px-3.5 py-3 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all"
+                                        id="city" name="city" required="" type="text" value="<%= address.city %>">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                        for="state">
+                                        STATE <span class="text-[#9A3B22]">*</span>
+                                    </label>
+                                    <input
+                                        class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] px-3.5 py-3 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all"
+                                        id="state" name="state" required="" type="text" value="<%= address.state %>">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-[11px] font-bold tracking-[0.14em] text-stone-900 uppercase mb-2"
+                                        for="pincode">
+                                        PIN CODE <span class="text-[#9A3B22]">*</span>
+                                    </label>
+                                    <input
+                                        class="w-full bg-[#FAF7F2] focus:bg-white text-charcoal-main text-[14px] px-3.5 py-3 rounded border border-[#DFD7CC] focus:border-charcoal-main focus:ring-1 focus:ring-charcoal-main outline-none transition-all"
+                                        id="pincode" name="pincode" pattern="[0-9]{6}" required="" type="text"
+                                        value="<%= address.pincode %>">
+                                </div>
+                            </div>
+
+                            <!-- Action Buttons Row -->
+                            <div
+                                class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[#EBE4D8] mt-8">
+                                <button
+                                    class="w-full sm:w-auto text-center border border-[#DFD7CC] bg-[#FAF7F2] hover:bg-stone-200 text-charcoal-main text-[11px] font-bold tracking-[0.14em] uppercase py-3 px-6 rounded transition-colors"
+                                    type="button" onclick="window.location.href='/address'">
+                                    CANCEL &amp; RETURN
+                                </button>
+                                <button
+                                    class="w-full sm:w-auto inline-flex items-center justify-center bg-charcoal-main hover:bg-stone-800 text-white text-[11px] font-bold tracking-[0.14em] uppercase py-3 px-7 rounded shadow-sm transition-colors"
+                                    type="submit">
+                                    UPDATE ADDRESS
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <!-- END: MainContentArea -->
+        <%- include('../partials/user/footer') %>
+
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    const selectedAddressType = document.querySelector(
+        'input[name="addressType"]:checked'
+    )
+    if (selectedAddressType) {
+        updateRadioSelection(selectedAddressType)
+    }
+
+
+    function updateRadioSelection(selectedRadio) {
+        const options = ['home', 'office', 'other']
+        options.forEach(opt => {
+            const card = document.getElementById(`type-${opt}`)
+            const icon = card.querySelector('.material-symbols-outlined')
+            if (opt === selectedRadio.value.toLowerCase()) {
+                card.className = 'flex items-center justify-center gap-2 py-3 px-4 rounded border border-charcoal-main bg-charcoal-main text-white cursor-pointer transition-all text-[11px] font-bold tracking-[0.14em] uppercase'
+                if (icon) {
+                    icon.className = 'material-symbols-outlined text-base'
+                }
+            } else {
+                card.className = 'flex items-center justify-center gap-2 py-3 px-4 rounded border border-[#DFD7CC] bg-[#FAF7F2] text-stone-700 hover:border-stone-400 cursor-pointer transition-all text-[11px] font-bold tracking-[0.14em] uppercase'
+                if (icon) {
+                    icon.className = 'material-symbols-outlined text-base text-stone-500'
+                }
+            }
+        })
+    }
+
+
+
+
+
+
+
+
+    const editAddressForm = document.getElementById('edit-address-form')
+
+    editAddressForm.addEventListener('submit', async (event) => {
+        event.preventDefault()
+
+        const formData = new FormData(editAddressForm)
+        const addressData = Object.fromEntries(formData.entries())
+
+        try {
+            const response = await fetch('/address/edit/<%= address._id %>', {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(addressData)
+            })
+
+            const result = await response.json()
+
+            if (result.success) {
+                await Swal.fire({
+                    icon: 'success',
+                    title: 'Address Updated!',
+                    text: result.message,
+                    confirmButtonColor: '#292524'
+                })
+
+                window.location.href = '/address'
+            } else if (result.errors) {
+                const errorMessages = Object.values(result.errors)
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Please check your details',
+                    text: errorMessages.join('\n'),
+                    confirmButtonColor: '#292524'
+                })
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Update Failed',
+                    text: result.message || 'Unable to update address.',
+                    confirmButtonColor: '#292524'
+                })
+            }
+
+        } catch (error) {
+            console.error('Address update error:', error)
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went wrong',
+                text: 'Please try again later.',
+                confirmButtonColor: '#292524'
+            })
+        }
+    })
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</html>

@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Add Address — The Untold Stories: Rare Editions &amp; Literary Archive</title>
+    <!-- Tailwind CSS v3 CDN with Forms & Container Queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Cormorant Garamond & Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+                    },
+                    colors: {
+                        parchment: '#FAF7F2',
+                        'parchment-light': '#FDFCFA',
+                        'parchment-subtle': '#F4EFEA',
+                        'terracotta-rich': '#9A3B22',
+                        'terracotta-muted': '#B25D43',
+                        'charcoal-main': '#181716',
+                        'charcoal-soft': '#2B2927',
+                        'border-subtle': '#E7DFD5',
+                        'input-bg': '#FDFBF9',
+                    }
+                }
+            }
+        }
+    </script>
+    <style data-purpose="custom-layout">
+        body {
+            background-color: #FAF7F2;
+            color: #181716;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Input custom aesthetics */
+        .form-input-custom {
+            background-color: #FAF7F2;
+            border: 1px solid #DFD7CC;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .form-input-custom:focus {
+            background-color: #FFFFFF;
+            border-color: #181716;
+            outline: none;
+            box-shadow: 0 0 0 1px #181716;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col font-sans selection:bg-stone-200">
+    <%- include('../partials/user/header')%>
+        <!-- BEGIN: MainContentArea -->
+        <main class="flex-1 py-10 px-4 sm:px-6">
+            <div class="max-w-[760px] mx-auto">
+                <!-- Breadcrumbs Sub-navigation -->
+                <div class="flex items-center justify-between mb-4">
+                    <div
+                        class="flex items-center space-x-2 text-[0.72rem] font-semibold tracking-wider uppercase text-[#857d74]">
+                        <a href="/address">
+                            <span class="text-[#555047] cursor-pointer hover:underline flex items-center gap-1.5">
+                                <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    viewBox="0 0 24 24">
+                                    <path d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" stroke-linecap="round"
+                                        stroke-linejoin="round"></path>
+                                </svg>
+                                ADDRESS
+                            </span>
+                        </a>
+                        <span class="text-[#b5ada3]">/</span>
+                        <span class="text-[#965b38] font-bold">
+                            ADD ADDRESS
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Main Form Card Container -->
+                <section
+                    class="bg-white border border-[#E7DFD5] rounded-xl p-8 sm:p-11 shadow-[0_2px_12px_rgba(0,0,0,0.03)]"
+                    data-purpose="address-form-container">
+                    <!-- Form Header -->
+                    <header class="mb-7">
+                        <h1 class="font-serif text-[38px] font-medium text-stone-900 tracking-tight leading-tight mb-2">
+                            Add Address
+                        </h1>
+                        <p class="text-[13px] text-stone-500 font-normal">
+                            Add a delivery address for your book orders and shipments.
+                        </p>
+                        <div class="w-full h-px bg-[#EFE9DF] mt-6"></div>
+                    </header>
+                    <!-- Form Elements -->
+                    <form id="addressForm" class="space-y-6" novalidate>
+                        <input type="hidden" name="addressType" id="addressType" value="Home">
+                        <!-- Address Type Selector -->
+                        <div data-purpose="address-type-selection">
+                            <label
+                                class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2">
+                                ADDRESS TYPE <span class="text-[#9A3B22]">*</span>
+                            </label>
+                            <div class="grid grid-cols-3 gap-3">
+                                <!-- Home (Active) -->
+                                <button
+                                    class="flex items-center justify-center gap-2 py-2.5 px-3 rounded bg-charcoal-main text-white text-[11px] font-semibold tracking-wider transition-colors shadow-sm"
+                                    type="button" id="homeAddressBtn" data-address-type="Home">
+                                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span>HOME</span>
+                                </button>
+                                <!-- Office -->
+                                <button
+                                    class="flex items-center justify-center gap-2 py-2.5 px-3 rounded bg-[#FAF7F2] border border-[#DFD7CC] text-stone-700 text-[11px] font-semibold tracking-wider transition-colors"
+                                    type="button" id="officeAddressBtn" data-address-type="Office">
+                                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M3.75 21h16.5M4.5 3h15M5.25 3v18m13.5-18v18M9 6.75h1.5m-1.5 3h1.5m-1.5 3h1.5m3-6H15m-1.5 3H15m-1.5 3H15M9 21v-3.375c0-.621.504-1.125 1.125-1.125h3.75c.621 0 1.125.504 1.125 1.125V21"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span>OFFICE</span>
+                                </button>
+                                <!-- Other -->
+                                <button
+                                    class="flex items-center justify-center gap-2 py-2.5 px-3 rounded bg-[#FAF7F2] border border-[#DFD7CC] text-stone-700 text-[11px] font-semibold tracking-wider transition-colors"
+                                    type="button" id="otherAddressBtn" data-address-type="Other">
+                                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" stroke-linecap="round"
+                                            stroke-linejoin="round"></path>
+                                        <path
+                                            d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                    <span>OTHER</span>
+                                </button>
+                            </div>
+                        </div>
+                        <!-- Recipient Name -->
+                        <div>
+                            <label class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                for="recipient-name">
+                                RECIPIENT NAME <span class="text-[#9A3B22]">*</span>
+                            </label>
+                            <div class="relative">
+                                <input
+                                    class="bg-[#FAF7F2] border border-[#DFD7CC] form-input-custom w-full rounded py-2.5 pl-3.5 pr-10 text-[13.5px] text-stone-800 placeholder-stone-400"
+                                    id="recipient-name" type="text" name="name" placeholder="e.g. Aathira Gopalan"
+                                    required>
+                                <div
+                                    class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-stone-400">
+                                    <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"
+                                            stroke-linecap="round" stroke-linejoin="round"></path>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="nameError" class="text-red-600 text-xs mt-1"></p>
+                        </div>
+                        <!-- Phone Fields Row -->
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                    for="phone-primary">
+                                    PHONE <span class="text-[#9A3B22]">*</span>
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        class="bg-[#FAF7F2] border border-[#DFD7CC] form-input-custom w-full rounded py-2.5 pl-3.5 pr-10 text-[13.5px] text-stone-800 placeholder-stone-400"
+                                        id="phone-primary" type="tel" name="phone" placeholder="e.g. +91 00000 00000"
+                                        required>
+                                    <div
+                                        class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-stone-400">
+                                        <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M2.25 6.75c0 8.284 6.716 15 15 15h2.25a2.25 2.25 0 002.25-2.25v-1.372c0-.516-.351-.966-.852-1.091l-4.423-1.106c-.44-.11-.902.055-1.173.417l-.97 1.293c-.282.376-.769.542-1.21.38a12.035 12.035 0 01-7.143-7.143c-.162-.441.004-.928.38-1.21l1.293-.97c.363-.271.527-.734.417-1.173L6.963 3.102a1.125 1.125 0 00-1.091-.852H4.5A2.25 2.25 0 002.25 4.5v2.25z"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p id="phoneError" class="text-red-600 text-xs mt-1"></p>
+                            </div>
+                            <div>
+                                <label
+                                    class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                    for="phone-alternate">
+                                    ALTERNATE PHONE (OPTIONAL)
+                                </label>
+                                <div class="relative">
+                                    <input
+                                        class="bg-[#FAF7F2] border border-[#DFD7CC] form-input-custom w-full rounded py-2.5 pl-3.5 pr-10 text-[13.5px] text-stone-800 placeholder-stone-400"
+                                        id="phone-alternate" type="tel" name="altPhone"
+                                        placeholder="e.g. +91 00000 00000">
+                                    <div
+                                        class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-stone-400">
+                                        <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path
+                                                d="M10.5 1.5H8.25A2.25 2.25 0 006 3.75v16.5a2.25 2.25 0 002.25 2.25h7.5A2.25 2.25 0 0018 20.25V3.75a2.25 2.25 0 00-2.25-2.25H13.5m-3 0V3h3V1.5m-3 0h3m-3 18.75h3"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <p id="altPhoneError" class="text-red-600 text-xs mt-1"></p>
+                            </div>
+                        </div>
+                        <!-- Full Address Textarea -->
+                        <div>
+                            <label class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                for="full-address">
+                                FULL ADDRESS <span class="text-[#9A3B22]">*</span>
+                            </label>
+                            <textarea
+                                class="form-input-custom w-full rounded py-2.5 px-3.5 text-[13.5px] text-stone-800 placeholder-stone-400 resize-none"
+                                id="full-address" rows="3" name="fullAddress"
+                                placeholder="e.g. Flat 1203, Green Heights Apartment, MG Road, Ernamkulam"
+                                required></textarea>
+                            <p id="fullAddressError" class="text-red-600 text-xs mt-1"></p>
+                        </div>
+
+                        <!-- Landmark Field -->
+                        <div>
+                            <label class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                for="landmark">
+                                LANDMARK (OPTIONAL)
+                            </label>
+                            <input
+                                class="bg-[#FAF7F2] border border-[#DFD7CC] form-input-custom w-full rounded py-2.5 px-3.5 text-[13.5px] text-stone-800 placeholder-stone-400"
+                                id="landmark" type="text" name="landmark"
+                                placeholder="e.g. Near St. Jude's Chapel, Ernamkulam">
+                            <p id="landmarkError" class="text-red-600 text-xs mt-1"></p>
+                        </div>
+
+                        <!-- City / State / Pin Code Row -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div>
+                                <label
+                                    class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                    for="city">
+                                    CITY <span class="text-[#9A3B22]">*</span>
+                                </label>
+                                <input
+                                    class="bg-[#FAF7F2] border border-[#DFD7CC] form-input-custom w-full rounded py-2.5 px-3.5 text-[13.5px] text-stone-800 placeholder-stone-400"
+                                    id="city" type="text" name="city" placeholder="e.g. Kochi" required>
+                                <p id="cityError" class="text-red-600 text-xs mt-1"></p>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                    for="state">
+                                    STATE <span class="text-[#9A3B22]">*</span>
+                                </label>
+                                <input
+                                    class="bg-[#FAF7F2] border border-[#DFD7CC] form-input-custom w-full rounded py-2.5 px-3.5 text-[13.5px] text-stone-800 placeholder-stone-400"
+                                    id="state" name="state" type="text" placeholder="e.g. Keralam" required>
+                                <p id="stateError" class="text-red-600 text-xs mt-1"></p>
+                            </div>
+
+                            <div>
+                                <label
+                                    class="block text-[10.5px] font-bold tracking-[0.14em] text-stone-700 uppercase mb-2"
+                                    for="pin-code">
+                                    PIN CODE <span class="text-[#9A3B22]">*</span>
+                                </label>
+                                <input
+                                    class="bg-[#FAF7F2] border border-[#DFD7CC] form-input-custom w-full rounded py-2.5 px-3.5 text-[13.5px] text-stone-800 placeholder-stone-400"
+                                    id="pin-code" type="text" name="pincode" placeholder="e.g. 680589" required>
+                                <p id="pincodeError" class="text-red-600 text-xs mt-1"></p>
+                            </div>
+
+                        </div>
+                        <!-- Form Buttons -->
+                        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[#EBE4D8] mt-8 data-purpose="
+                            form-actions">
+                            <button
+                                class="px-5 py-2 rounded text-[0.72rem] font-bold uppercase tracking-wider text-[#35312d] bg-[#ece7df] hover:bg-[#e2dcd2] transition-colors"
+                                type="button" onclick="window.location.href='/address'">
+                                CANCEL &amp; RETURN
+                            </button>
+                            <button
+                                class="px-5 py-2 rounded text-[0.72rem] font-bold uppercase tracking-wider text-white bg-[#1b1a18] hover:bg-[#2f2c27] flex items-center space-x-1.5 transition-colors shadow-sm"
+                                type="submit">
+                                <span>SAVE ADDRESS</span>
+                            </button>
+                        </div>
+                    </form>
+                </section>
+            </div>
+        </main>
+        <!-- END: MainContentArea -->
+        <%- include('../partials/user/footer')%>
+
+
+
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                // Address Type Selection
+                const addressTypeButtons = document.querySelectorAll('[data-address-type]')
+                const addressTypeInput = document.getElementById('addressType')
+
+                const recipientName = document.getElementById('recipient-name')
+                const phone = document.getElementById('phone-primary')
+                const alternatePhone = document.getElementById('phone-alternate')
+                const fullAddress = document.getElementById('full-address')
+                const city = document.getElementById('city')
+                const state = document.getElementById('state')
+                const pincode = document.getElementById('pin-code')
+
+                const nameError = document.getElementById('nameError')
+                const phoneError = document.getElementById('phoneError')
+                const altPhoneError = document.getElementById('altPhoneError')
+                const fullAddressError = document.getElementById('fullAddressError')
+                const cityError = document.getElementById('cityError')
+                const stateError = document.getElementById('stateError')
+                const pincodeError = document.getElementById('pincodeError')
+
+                const addressForm = document.getElementById('addressForm')
+
+                addressTypeButtons.forEach(button => {
+                    button.addEventListener('click', () => {
+                        //Remove active style
+                        addressTypeButtons.forEach(btn => {
+                            btn.classList.remove('bg-charcoal-main', 'text-white', 'shadow-sm')
+                            btn.classList.add('bg-[#FAF7F2]', 'border', 'border-[#DFD7CC]', 'text-stone-700')
+                        })
+                        //active style
+                        button.classList.remove('bg-[#FAF7F2]', 'border', 'border-[#DFD7CC]', 'text-stone-700')
+                        button.classList.add('bg-charcoal-main', 'text-white', 'shadow-sm')
+
+                        addressTypeInput.value = button.dataset.addressType
+                    })
+                })
+
+
+                // Address Form Validation
+                addressForm.addEventListener('submit', (event) => {
+                    const nameValue = recipientName.value.trim()
+                    const phoneValue = phone.value.trim()
+                    const alternatePhoneValue = alternatePhone.value.trim()
+                    const fullAddressValue = fullAddress.value.trim()
+                    const cityValue = city.value.trim()
+                    const stateValue = state.value.trim()
+                    const pincodeValue = pincode.value.trim()
+
+                    let isValid = true
+
+                    if (nameValue === '') {
+                        nameError.textContent = 'Recipient name is required'
+                        isValid = false
+                    } else if (nameValue.length < 2 || nameValue.length > 50) {
+                        nameError.textContent = 'Name must be between 2 and 50 characters.'
+                        isValid = false
+                    } else {
+                        nameError.textContent = ''
+                    }
+
+                    if (phoneValue === '') {
+                        phoneError.textContent = 'Phone number is required'
+                        isValid = false
+                    } else if (!/^[6-9]\d{9}$/.test(phoneValue)) {
+                        phoneError.textContent = 'Enter a valid 10-digit mobile number'
+                        isValid = false
+                    } else {
+                        phoneError.textContent = ''
+                    }
+
+                    if (alternatePhoneValue !== '' && !/^[6-9]\d{9}$/.test(alternatePhoneValue)) {
+                        altPhoneError.textContent = 'Enter a valid 10-digit mobile number'
+                        isValid = false
+                    } else if (alternatePhoneValue !== '' && alternatePhoneValue === phoneValue) {
+                        altPhoneError.textContent = 'Alternate phone must be different'
+                        isValid = false
+                    } else {
+                        altPhoneError.textContent = ''
+                    }
+
+                    if (fullAddressValue === '') {
+                        fullAddressError.textContent = 'Full address is required'
+                        isValid = false
+                    } else if (fullAddressValue.length < 5 || fullAddressValue.length > 200) {
+                        fullAddressError.textContent = 'Address must be between 5 and 200 characters.'
+                        isValid = false
+                    } else {
+                        fullAddressError.textContent = ''
+                    }
+
+                    if (cityValue === '') {
+                        cityError.textContent = 'City is required'
+                        isValid = false
+                    } else if (cityValue.length < 2 || cityValue.length > 50) {
+                        cityError.textContent = 'City must be between 2 and 50 characters.'
+                        isValid = false
+                    } else {
+                        cityError.textContent = ''
+                    }
+
+                    if (stateValue === '') {
+                        stateError.textContent = 'State is required'
+                        isValid = false
+                    } else if (stateValue.length < 2 || stateValue.length > 50) {
+                        stateError.textContent = 'State must be between 2 and 50 characters'
+                        isValid = false
+                    }
+                    else {
+                        stateError.textContent = ''
+                    }
+
+                    if (pincodeValue === '') {
+                        pincodeError.textContent = 'Pincode is required'
+                        isValid = false
+                    } else if (!/^\d{6}$/.test(pincodeValue)) {
+                        pincodeError.textContent = 'Pincode must contain exactly 6 digits'
+                        isValid = false
+                    } else {
+                        pincodeError.textContent = ''
+                    }
+
+                    event.preventDefault()
+                    if (!isValid) {
+                        return
+                    }
+
+                    const formData = new FormData(addressForm)
+                    const addressData = Object.fromEntries(formData.entries())
+
+                    fetch('/address/addAddress', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(addressData)
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+
+                            if (data.success) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Success!',
+                                    text: data.message
+                                }).then(() => {
+                                    window.location.href = '/address'
+                                })
+                                return
+                            }
+
+                            if (data.errors?.addressLimit) {
+                                Swal.fire({
+                                    icon: 'warning',
+                                    title: 'Address Limit Reached',
+                                    text: data.errors.addressLimit
+                                })
+
+                                return
+                            }
+
+                            if (data.errors) {
+                                console.log(data.errors)
+                            }
+
+                        })
+                        .catch(error => {
+                            console.error('Address submission error:', error)
+
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Oops!',
+                                text: 'Something went wrong while saving your address.'
+                            })
+                        })
+
+
+                })
+
+                recipientName.addEventListener('input', () => {
+                    nameError.textContent = ''
+                })
+
+                phone.addEventListener('input', () => {
+                    phoneError.textContent = ''
+                })
+
+                alternatePhone.addEventListener('input', () => {
+                    altPhoneError.textContent = ''
+                })
+
+                fullAddress.addEventListener('input', () => {
+                    fullAddressError.textContent = ''
+                })
+
+                city.addEventListener('input', () => {
+                    cityError.textContent = ''
+                })
+
+                state.addEventListener('input', () => {
+                    stateError.textContent = ''
+                })
+
+                pincode.addEventListener('input', () => {
+                    pincodeError.textContent = ''
+                })
+
+
+
+            </script>
+
+
+</body>
+
+
+
+</html>
