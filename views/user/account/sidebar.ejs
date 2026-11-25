@@ -1,0 +1,131 @@
+<%
+    const currentPath = requestPath;
+%>
+
+<!-- BEGIN: LeftSidebar -->
+<aside class="bg-[#f3eeea]/80 border border-[#e8e2dc] rounded-2xl p-6 shadow-sm h-full">
+  <!-- User Summary Profile Card -->
+
+  <div class="flex items-center space-x-4 mb-6">
+    <div class="relative">
+
+      <div
+        class="w-14 h-14 rounded-full bg-[#1b1917] text-[#f7f3ee] flex items-center justify-center font-serif text-xl font-bold tracking-tight">
+        <% if(user.profileImage){ %>
+          <img src="<%= user.profileImage %>" alt="Profile picture" class="w-full h-full object-cover rounded-full">
+          <%}else{%>
+            <%= user.name .split(' ')
+                .map(name=>name.charAt(0))
+                .slice(0,2)
+                .join('')
+                .toUpperCase()
+              %>
+              <%}%>
+            </div>
+
+            <!-- Edit Icon Badge -->
+            <button
+              class="absolute -bottom-1 -right-1 w-5 h-5 bg-[#b27250] rounded-full text-white flex items-center justify-center shadow"
+              title="Edit avatar"
+              type="button"
+              id="editProfileImage">
+              <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                <path
+                  d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+            </button>
+            <input type="file" id="profileImageInput" accept="image/*" class="hidden">
+          </div>
+          <div class="overflow-hidden">
+            <h2 class="font-serif text-lg font-bold text-[#1f1b18] leading-tight"><%= user.name %></h2>
+            <p class="text-[12px] text-stone-500 truncate mt-0.5"><%= user.email %></p>
+          </div>
+        </div>
+
+        <!-- Sidebar Navigation List -->
+        <nav aria-label="Account Sections" class="space-y-1.5">
+          <!-- Active Nav Item: Profile & Identity -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl <%= currentPath === '/profile' ? 'bg-[#eadecd]/70 text-[#1f1b18]' : 'hover:bg-[#eae2d8]/60 text-stone-700' %> font-medium text-[13.5px] transition-colors"
+            href="/profile">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-[#8a5d40] stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M15 9h3.75M15 12h3.75M15 15h3.75M4.5 19.5h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5zm6-10.125a1.875 1.875 0 11-3.75 0 1.875 1.875 0 013.75 0zm1.294 6.336a6.721 6.721 0 01-3.169.789 6.721 6.721 0 01-3.168-.789 3.376 3.376 0 016.337 0z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Profile &amp; Identity</span>
+            </div>
+          </a>
+          <!-- Nav Item: Order History & Custody -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-[#eae2d8]/60 text-stone-700 font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Order History &amp; Custody</span>
+            </div>
+            <span class="bg-[#f5d9cc] text-[#934f2d] font-semibold text-[11px] px-2 py-0.5 rounded-md">
+              3 active
+            </span>
+          </a>
+          <!-- Nav Item: Vault Addresses & Transit -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl <%= currentPath.startsWith('/address') ? 'bg-[#eadecd]/70 text-[#1f1b18]' : 'hover:bg-[#eae2d8]/60 text-stone-700' %> font-medium text-[13.5px] transition-colors"
+            href="/address">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Vault Addresses</span>
+            </div>
+          </a>
+          <!-- Nav Item: Archival Wishlist -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-[#eae2d8]/60 text-stone-700 font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Archival Wishlist</span>
+            </div>
+            <span class="bg-[#e9e3dc] text-stone-600 font-medium text-[11px] px-2 py-0.5 rounded-md">
+              4 folios
+            </span>
+          </a>
+          <!-- Nav Item: Archival Wallet -->
+          <a class="flex items-center justify-between px-3.5 py-3 rounded-xl hover:bg-[#eae2d8]/60 text-stone-700 font-medium text-[13.5px] transition-colors"
+            href="#">
+            <div class="flex items-center space-x-3">
+              <svg class="w-4 h-4 text-stone-500 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                  d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 002.25-2.25V6.75A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25v10.5A2.25 2.25 0 004.5 19.5z"
+                  stroke-linecap="round" stroke-linejoin="round"></path>
+              </svg>
+              <span>Archival Wallet</span>
+            </div>
+          </a>
+        </nav>
+        <!-- Divider & Log Out Button -->
+        <div class="pt-6 mt-6 border-t border-[#e2dad2]">
+          <button
+            type="button"
+            class="w-full flex items-center justify-center space-x-2 text-red-600 hover:text-red-700 hover:bg-red-50 font-semibold text-[13.5px] transition-colors py-3 rounded-md">
+
+            <svg class="w-4 h-4 stroke-[1.8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path
+                    d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"
+                    stroke-linecap="round" stroke-linejoin="round">
+                </path>
+            </svg>
+            <span>Log Out</span>
+          </button>
+        </div>
+      </aside>
+      <!-- END: LeftSidebar -->

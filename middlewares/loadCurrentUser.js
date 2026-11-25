@@ -2,6 +2,7 @@ const User = require('../models/User')
 const Cart = require('../models/Cart')
 
 const loadCurrentUser = async(req,res,next) =>{
+    res.locals.requestPath = req.path
     try {
         res.locals.currentUser = null
         res.locals.cartCount = 0

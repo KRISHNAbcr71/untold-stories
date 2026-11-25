@@ -1,0 +1,251 @@
+<section class=" bg-[#f5f0ec]/50 border border-[#e8e2dc] rounded-2xl p-8 lg:p-10 shadow-sm h-full">
+    <!-- Header row of the Address section -->
+    <div class="flex items-center justify-between pb-6 border-b border-[#ebdcd0]">
+        <h1 class="font-serif text-3xl font-semibold text-[#1f1b18] tracking-tight">Address</h1>
+        <a href="/address/addAddress"
+            class="bg-[#121110] hover:bg-black text-white px-4 py-2 text-[11px] font-semibold tracking-wider rounded uppercase flex items-center space-x-1.5 transition-colors">
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewbox="0 0 24 24">
+                <path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round"></path>
+            </svg>
+            <span>ADD NEW ADDRESS</span>
+        </a>
+    </div>
+    <!-- Address Cards Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-6">
+        <!-- Card 1: Home (Default / Selected) -->
+        <% if (addresses.length===0) { %>
+            <div class="bg-white border border-[#ebdcd0] rounded-md p-10 text-center">
+                <div class="flex justify-center mb-4">
+                    <svg class="w-12 h-12 text-[#b95d33]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M17.657 16.657L13.414 20.9a2 2 0 01-2.828 0l-4.243-4.243a8 8 0 1111.314 0z">
+                        </path>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z">
+                        </path>
+                    </svg>
+                </div>
+                <h3 class="font-serif-title text-xl text-ink-900 mb-2">
+                    No Saved Addresses Yet
+                </h3>
+
+                <p class="text-sm text-ink-600 mb-6">
+                    You haven't added any delivery addresses. Add your first address to keep it handy.
+                </p>
+
+                <a href="/address/addAddress"
+                    class="inline-block bg-charcoal-main text-white px-6 py-3 rounded-md text-xs font-semibold uppercase tracking-wider hover:bg-ink-900 transition-colors">
+                    Add Your First Address
+                </a>
+
+            </div>
+            <%}else{%>
+                <% addresses.forEach(address=> { %>
+                    <div
+                        class="bg-white border border-[#ebdcd0] rounded-md p-5 flex flex-col justify-between shadow-sm relative">
+                        <div>
+                            <!-- Top bar tags & action buttons -->
+                            <div class="flex items-center justify-between mb-4">
+                                <!-- Address Type -->
+                                <span class="text-[10px] font-bold tracking-wider uppercase text-ink-800">
+                                    <%= address.addressType %>
+                                </span>
+                                <div class="flex items-center space-x-3 text-xs">
+
+                                    <!-- Select Address -->
+                                    <label class="flex items-center space-x-1.5 cursor-pointer text-[10.5px] font-bold tracking-wider
+                                    <%= address.isDefault ? 'text-terracotta' : 'text-ink-600' %>">
+                                        <input type="radio" name="selectedAddress"
+                                            class="select-address-btn w-3 h-3 accent-black cursor-pointer"
+                                            data-address-id="<%= address._id %>" <%=address.isDefault ? 'checked' : ''
+                                            %>>
+                                        <span>
+                                            <%= address.isDefault ? 'SELECTED' : 'SELECT' %>
+                                        </span>
+                                    </label>
+
+                                    <!-- Edit Icon -->
+                                    <a href="/address/edit/<%= address._id %>" aria-label="Edit address"
+                                        class="text-ink-600 hover:text-ink-900 transition-colors">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewbox="0 0 24 24">
+                                            <path
+                                                d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </a>
+                                    <!-- Trash Icon -->
+                                    <button aria-label="Delete address"
+                                        class="delete-address-btn text-ink-600 hover:text-ink-900 transition-colors"
+                                        type="button" data-address-id="<%= address._id %>">
+                                        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"
+                                            viewbox="0 0 24 24">
+                                            <path
+                                                d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- Recipient Name -->
+                            <h3 class="font-serif-title text-xl text-ink-900 font-normal">
+                                <%= address.name %>
+                            </h3>
+                            <!-- Address Lines -->
+                            <div class="mt-3 text-xs text-ink-600 space-y-0.5 leading-relaxed">
+                                <p class="font-medium text-ink-800">
+                                    <%= address.fullAddress %>
+                                </p>
+                                <% if (address.landmark) { %>
+                                    <p class="font-medium text-ink-800">
+                                        <%= address.landmark %>
+                                    </p>
+                                    <% } %>
+                                        <p>
+                                            <%= address.city %>
+                                        </p>
+                                        <p>
+                                            <%= address.state %>
+                                        </p>
+                                        <p>
+                                            <%= address.pincode %>
+                                        </p>
+                            </div>
+                            <!-- Phone Contact -->
+                            <!-- Phone Contact -->
+                            <div class="mt-4 pt-3 border-t border-[#ebdcd0]/70 space-y-2 text-xs text-ink-700">
+
+                                <!-- Primary Phone -->
+                                <div class="flex items-center space-x-2">
+                                    <svg class="w-3.5 h-3.5 text-terracotta flex-shrink-0" fill="none"
+                                        stroke="currentColor" viewBox="0 0 24 24">
+                                        <path
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                            stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                        </path>
+                                    </svg>
+                                    <span>+91 <%= address.phone %></span>
+                                </div>
+
+                                <!-- Alternate Phone -->
+                                <% if (address.altPhone) { %>
+                                    <div class="flex items-center space-x-2">
+                                        <svg class="w-3.5 h-3.5 text-terracotta flex-shrink-0" fill="none"
+                                            stroke="currentColor" viewBox="0 0 24 24">
+                                            <path
+                                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                                stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
+                                            </path>
+                                        </svg>
+                                        <span>Alt: +91 <%= address.altPhone %></span>
+                                    </div>
+                                    <% } %>
+                            </div>
+                        </div>
+                    </div>
+                    <% }) %>
+                        <% } %>
+    </div>
+</section>
+
+
+
+<script>
+    const selectButtons = document.querySelectorAll('.select-address-btn')
+
+    selectButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const addressId = button.dataset.addressId
+
+            try {
+                const response = await fetch(`/address/select/${addressId}`, {
+                    method: 'PATCH'
+                })
+
+                const data = await response.json()
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Unable to select address.')
+                }
+
+                selectButtons.forEach(otherButton => {
+                    const label = otherButton.closest('label')
+                    const text = label.querySelector('span')
+
+                    const isSelected = otherButton === button
+
+                    otherButton.checked = isSelected
+                    text.textContent = isSelected ? 'SELECTED' : 'SELECT'
+
+                    label.classList.toggle('text-terracotta', isSelected)
+                    label.classList.toggle('text-ink-600', !isSelected)
+                })
+
+
+
+            } catch (error) {
+                console.error('Address selection error:', error)
+                alert('Unable to select this address. Please try again.')
+            }
+        })
+    })
+
+
+
+    // delete address
+    const deleteButtons = document.querySelectorAll('.delete-address-btn')
+
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', async () => {
+            const addressId = button.dataset.addressId
+
+            const result = await Swal.fire({
+                title: 'Delete Address?',
+                text: 'Are you sure you want to delete this address?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#b45309',
+                cancelButtonColor: '#6b7280'
+            })
+
+            if (!result.isConfirmed) {
+                return
+            }
+
+            try {
+                const response = await fetch(`/address/delete/${addressId}`, {
+                    method: 'DELETE'
+                })
+
+                const data = await response.json()
+
+                if (!response.ok || !data.success) {
+                    throw new Error(data.message || 'Unable to delete address.')
+                }
+
+                await Swal.fire({
+                    title: 'Deleted!',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                })
+
+                window.location.reload()
+
+            } catch (error) {
+                console.error('Address deletion error:', error)
+
+                Swal.fire({
+                    title: 'Error',
+                    text: error.message || 'Unable to delete this address. Please try again.',
+                    icon: 'error'
+                })
+            }
+        })
+    })
+
+
+
+</script>
