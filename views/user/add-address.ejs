@@ -441,7 +441,7 @@
                     const formData = new FormData(addressForm)
                     const addressData = Object.fromEntries(formData.entries())
 
-                    fetch('/address/addAddress', {
+                    fetch(`/address/addAddress${window.location.search}`, {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json'
@@ -457,7 +457,13 @@
                                     title: 'Success!',
                                     text: data.message
                                 }).then(() => {
-                                    window.location.href = '/address'
+                                    const urlParams = new URLSearchParams(window.location.search)
+                                    const from = urlParams.get('from')
+                                    if(from === 'checkout'){
+                                        window.location.href = '/checkout'
+                                    }else {
+                                        window.location.href = '/address'
+                                    }
                                 })
                                 return
                             }

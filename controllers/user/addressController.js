@@ -149,6 +149,10 @@ const saveAddress = async (req, res) => {
 
         await newAddress.save()
 
+        if (req.query.from === 'checkout') {
+            req.session.selectedCheckoutAddress = newAddress._id.toString()
+        }
+
         return res.status(201).json({
             success: true,
             message: 'Address added successfully'

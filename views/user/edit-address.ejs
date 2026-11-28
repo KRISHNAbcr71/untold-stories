@@ -338,7 +338,7 @@
         const addressData = Object.fromEntries(formData.entries())
 
         try {
-            const response = await fetch('/address/edit/<%= address._id %>', {
+            const response = await fetch(`/address/edit/<%= address._id %>${window.location.search}`, {
                 method: 'PATCH',
                 headers: {
                     'Content-Type': 'application/json'
@@ -356,7 +356,15 @@
                     confirmButtonColor: '#292524'
                 })
 
-                window.location.href = '/address'
+                const urlParams = new URLSearchParams(window.location.search)
+                const from = urlParams.get('from')
+
+                if(from === 'checkout'){
+                    window.location.href = '/checkout'
+                }else{
+                    window.location.href = '/address'
+                }
+
             } else if (result.errors) {
                 const errorMessages = Object.values(result.errors)
 
@@ -386,19 +394,6 @@
             })
         }
     })
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 </script>

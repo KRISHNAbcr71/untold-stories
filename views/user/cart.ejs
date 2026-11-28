@@ -249,32 +249,11 @@
                                 <span id="cartTotal" class="font-serif text-3xl font-bold text-[#1C1917] tracking-tight">₹<%= subtotal.toLocaleString('en-IN') %></span>
                             </div>
                         </div>
-                        <!-- Coupon / Privilege Code Input -->
-                        <div class="space-y-2 pb-6 border-b border-[#EBE5E0]">
-                            <label class="text-[10px] tracking-widest font-semibold uppercase text-[#78716C] block"
-                                for="privilege-code">CURATORIAL PRIVILEGE CODE</label>
-                            <div class="flex">
-                                <input
-                                    class="w-full text-xs uppercase px-3 py-2 bg-[#FAF7F5] border border-[#DDD6CE] rounded-l-sm focus:outline-none focus:border-[#1C1917] placeholder:text-[#A8A29E] tracking-wider font-mono"
-                                    id="privilege-code" placeholder="E.G. UNTOLD15" type="text" />
-                                <button
-                                    class="bg-[#EFECE8] hover:bg-[#E5E0DA] text-[#1C1917] text-xs font-semibold px-4 py-2 rounded-r-sm uppercase tracking-wider transition-colors border border-l-0 border-[#DDD6CE]">
-                                    APPLY
-                                </button>
-                            </div>
-                            <p class="text-[11px] text-[#8D4327] flex items-center gap-1 pt-1 font-medium">
-                                <svg class="w-3.5 h-3.5 inline flex-shrink-0" fill="currentColor" viewbox="0 0 20 20">
-                                    <path clip-rule="evenodd"
-                                        d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
-                                        fill-rule="evenodd"></path>
-                                </svg>
-                                <span>Hint: Use UNTOLD15 for 15% solstice discount</span>
-                            </p>
-                        </div>
                         <!-- CTA Buttons -->
                         <div class="pt-6 space-y-3">
                             <!-- Primary Checkout Button -->
-                            <button
+                             
+                            <a href="/checkout"
                                 class="w-full bg-[#1C1917] hover:bg-black text-[#FAF7F5] py-3.5 px-4 text-xs font-semibold uppercase tracking-widest rounded-sm transition-all flex items-center justify-center gap-2 shadow-sm">
                                 <svg class="w-4 h-4 text-[#FAF7F5]" fill="none" stroke="currentColor" stroke-width="2"
                                     viewbox="0 0 24 24">
@@ -282,13 +261,13 @@
                                         d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"
                                         stroke-linecap="round" stroke-linejoin="round"></path>
                                 </svg>
-                                <span>PROCEED TO VAULT CHECKOUT</span>
+                                <span>PROCEED TO CHECKOUT</span>
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5"
                                     viewbox="0 0 24 24">
                                     <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round"
                                         stroke-linejoin="round"></path>
                                 </svg>
-                            </button>
+                            </a >
                             <!-- Secondary Alternative Payment Method -->
                             <button
                                 class="w-full bg-[#FAF7F5] hover:bg-[#F2ECE6] text-[#44403C] py-2.5 px-4 text-[10px] font-semibold tracking-wider uppercase rounded-sm border border-[#E0D9D2] transition-colors flex items-center justify-center gap-2">

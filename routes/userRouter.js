@@ -6,6 +6,8 @@ const cartController = require('../controllers/user/cartController')
 const wishlistController = require('../controllers/user/wishlistController')
 const profileController = require('../controllers/user/profileController')
 const addressController = require('../controllers/user/addressController')
+const checkoutController = require('../controllers/user/checkoutController')
+const orderController = require('../controllers/user/orderController')
 const passport = require('../config/passport')
 const {loginLimiter, otpLimiter, forgotPasswordLimiter, resendOtpLimiter} = require('../middlewares/rateLimiter')
 const {isAuthenticated} = require('../middlewares/auth')
@@ -73,5 +75,11 @@ router.patch('/address/select/:id',isAuthenticated,addressController.selectAddre
 router.get('/address/edit/:id', isAuthenticated, addressController.loadEditAddress)
 router.patch('/address/edit/:id',isAuthenticated,addressController.editAddress)
 router.delete('/address/delete/:id',isAuthenticated,addressController.deleteAddress)
+
+router.get('/checkout',isAuthenticated,checkoutController.loadCheckout)
+router.patch('/checkout/selectAddress/:id',isAuthenticated,checkoutController.selectCheckoutAddress)
+
+router.post('/checkout/placeOrder',isAuthenticated,orderController.placeOrder)
+router.get('/orderSuccess/:id', isAuthenticated, orderController.loadOrderSuccess)
 
 module.exports = router

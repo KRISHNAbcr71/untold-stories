@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Order Confirmation | The Untold Stories - Rare Editions &amp; Literary Archive</title>
+    <!-- Tailwind CSS v3 with forms and container queries -->
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <!-- Google Fonts: Playfair Display (editorial serif) & Plus Jakarta Sans / Inter for refined text -->
+    <link href="https://fonts.googleapis.com" rel="preconnect">
+    <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&amp;family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&amp;family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;family=Plus+Jakarta+Sans:wght@300;400;500;600;700&amp;display=swap"
+        rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        serif: ['"Playfair Display"', 'Georgia', 'serif'],
+                        newsreader: ['"Newsreader"', 'Georgia', 'serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        cinzel: ['"Cinzel"', 'serif'],
+                    },
+                    colors: {
+                        parchment: {
+                            50: '#FDFBF7',
+                            100: '#FAF6EE',
+                            150: '#F7F2E7',
+                            200: '#F3ECE0',
+                            300: '#E8DCC8',
+                            card: '#FBF8F5',
+                            subcard: '#F6EFE9',
+                        },
+                        terracotta: {
+                            DEFAULT: '#9E4A28',
+                            muted: '#B25A38',
+                            dot: '#B45309',
+                        },
+                        archival: {
+                            ink: '#161513',
+                            dark: '#1C1917',
+                            muted: '#57534E',
+                            subtle: '#78716C',
+                            line: '#E7E2DA'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- BEGIN: Custom Styles -->
+    <style data-purpose="base-styling">
+        body {
+            background-color: #FAF7F2;
+            color: #1C1917;
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+    <style data-purpose="illustration-decorations">
+        /* Subtle paper texture overlay or styling for the archival display */
+        .archival-shadow {
+            box-shadow: 0 4px 20px -2px rgba(44, 32, 20, 0.04);
+        }
+
+        .badge-amber-dot {
+            background-color: #B45309;
+        }
+    </style>
+    <!-- END: Custom Styles -->
+</head>
+
+<body class="min-h-screen flex flex-col font-sans">
+    <%- include('../partials/user/header') %>
+    <!-- BEGIN: Breadcrumb Navigation -->
+    <section class="w-full mx-auto px-6 pt-7 pb-4 max-w-[1140px]" data-purpose="breadcrumbs">
+        <nav class="flex items-center text-[10.5px] font-semibold tracking-[0.14em] uppercase space-x-2">
+            <a class="text-[#4E4B46] hover:text-black" href="#">Home</a>
+            <span class="text-[#A59F94]">/</span>
+            <a class="text-[#4E4B46] hover:text-black" href="#">Checkout</a>
+            <span class="text-[#A59F94]">/</span>
+            <span class="text-[#9E4A28]">Order Confirmation</span>
+        </nav>
+    </section>
+    <!-- END: Breadcrumb Navigation -->
+    <!-- BEGIN: MainConfirmationCard -->
+    <main class="flex-grow max-w-[1140px] w-full mx-auto px-6 pb-20 pt-2" data-purpose="confirmation-content">
+        <!-- Outer Card Shell -->
+        <div
+            class="bg-[#FAF7F4] border border-[#EBE4DA] rounded-[18px] p-8 md:p-14 text-center archival-shadow flex flex-col items-center">
+            <!-- Manuscript & Parcel Illustration (Exact replica from source snapshot) -->
+            <div class="w-full max-w-[560px] flex items-center justify-center mb-5 bg-transparent"
+                data-purpose="order-illustration">
+                <img alt="Archival sealed package and antique book manuscript"
+                    class="max-h-[300px] w-auto object-contain pointer-events-none mix-blend-multiply"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtZYkiK03HnUU0ilgJTEnhk8yMBKzRBIg4ACVUNSks6iSY7pTf3Vh2nd20nXdDY89rwtkjFU7CrhIf_X5KJ_vubIMnibZ851PnegJMwmyb91wJIRnsM_WjbdCCtX4MYIH9Wvo9cMacjn6qz6w85bhmpRARnk8U-51qgH-IEG-AXRqJ4eLGNRkQZHlR2JpJjUqIsKZgngtkHkwdhkcs3HxBtUG0gXcAAXmy4pcDcE1A">
+            </div>
+            <!-- Order Status Pill -->
+            <div class="inline-flex items-center gap-2 bg-[#F4EDE4] px-3.5 py-1 rounded-full mb-4 border border-[#E2D9CB]"
+                data-purpose="status-badge">
+                <span class="w-2 h-2 rounded-full badge-amber-dot"></span>
+                <span class="text-[10.5px] uppercase tracking-[0.18em] font-semibold text-[#665D4F]">Order
+                    Confirmed</span>
+            </div>
+            <!-- Main Heading -->
+            <h1 class="font-serif text-[42px] md:text-[50px] font-normal tracking-tight text-[#161513] mb-3">
+                Thank you for your order.
+            </h1>
+            <!-- Subtitle Description -->
+            <p class="text-[#5E5A54] text-[15px] md:text-[16px] max-w-[540px] font-normal leading-relaxed mb-9">
+                We have received your order and are preparing your books for delivery.
+            </p>
+            <!-- BEGIN: Order Details Card Box -->
+            <div class="w-full max-w-[690px] bg-[#EFE9E0] border border-[#E2D9CB] rounded-xl p-5 mb-10 text-left"
+                data-purpose="order-summary-box">
+                <!-- Header row of the order summary box -->
+                <div class="flex items-center justify-between pb-3.5 mb-3 border-b border-[#E3DBD0]/80">
+                    <div class="flex items-center space-x-2 text-[#463F35]">
+                        <svg class="w-4 h-4 text-[#8C4626]" fill="none" stroke="currentColor" stroke-width="1.8"
+                            viewBox="0 0 24 24">
+                            <path
+                                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
+                                stroke-linecap="round" stroke-linejoin="round"></path>
+                        </svg>
+                        <span class="text-[10px] tracking-[0.15em] font-bold uppercase text-[#474037]">Order
+                            Details</span>
+                    </div>
+                    <div
+                        class="flex items-center space-x-1.5 text-[9.5px] uppercase tracking-[0.16em] font-semibold text-[#8B482A]">
+                        <span class="w-1.5 h-1.5 rounded-full bg-[#8B482A]"></span>
+                        <span>Order Confirmed</span>
+                    </div>
+                </div>
+                <!-- 3-Column Info Cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <!-- Column 1: Order Reference -->
+                    <div
+                        class="bg-white rounded-lg p-4 border border-[#ECE5DA] shadow-sm flex flex-col justify-between">
+                        <span class="text-[9.5px] uppercase tracking-[0.14em] font-semibold text-[#888073]">Order
+                            Reference</span>
+                        <span class="font-serif text-[17px] font-bold text-[#1C1A17] my-1">#<%= order._id %></span>
+                        <span class="text-[11.5px] text-[#6E685E]">Archival Registration</span>
+                    </div>
+                    <!-- Column 2: Dispatched Via -->
+                    <div
+                        class="bg-white rounded-lg p-4 border border-[#ECE5DA] shadow-sm flex flex-col justify-between">
+                        <span class="text-[9.5px] uppercase tracking-[0.14em] font-semibold text-[#888073]">Dispatched
+                            Via</span>
+                        <span class="font-serif text-[17px] font-bold text-[#1C1A17] my-1">3–5 Business Days</span>
+                        <a class="text-[11.5px] text-[#9E4A28] hover:underline" href="#">Express Courier Delivery</a>
+                    </div>
+                    <!-- Column 3: Total Settled -->
+                    <div
+                        class="bg-white rounded-lg p-4 border border-[#ECE5DA] shadow-sm flex flex-col justify-between">
+                        <span class="text-[9.5px] uppercase tracking-[0.14em] font-semibold text-[#888073]">Total
+                            Settled</span>
+                        <span class="font-serif text-[17px] font-bold text-[#1C1A17] my-1">₹<%= order.finalAmount.toLocaleString('en-IN') %></span>
+                        <span class="text-[11.5px] text-[#6E685E]">
+                            <%= order.paymentMethod === 'COD' ? 'Cash on Delivery' : order.paymentMethod %> · <%= order.paymentStatus %>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <!-- END: Order Details Card Box -->
+            <!-- Action Buttons Row -->
+            <div class="flex flex-col sm:flex-row items-center gap-3.5 w-full justify-center"
+                data-purpose="order-actions">
+                <!-- View Order Details CTA -->
+                <a class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#1C1A17] hover:bg-black text-white text-[11px] font-semibold tracking-[0.14em] uppercase px-7 py-3.5 rounded-sm transition-all"
+                    href="#">
+                    <span>View Order Details</span>
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                        <path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round">
+                        </path>
+                    </svg>
+                </a>
+                <!-- Continue Shopping Secondary CTA -->
+                <a class="w-full sm:w-auto inline-flex items-center justify-center bg-[#EFE9E0] hover:bg-[#E5DCD1] text-[#2D2A26] border border-[#DDD3C5] text-[11px] font-semibold tracking-[0.14em] uppercase px-7 py-3.5 rounded-sm transition-all"
+                    href="/shop">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </main>
+    <!-- END: MainConfirmationCard -->
+     <%- include('../partials/user/footer') %>
+    
+
+
+</body>
+
+</html>
